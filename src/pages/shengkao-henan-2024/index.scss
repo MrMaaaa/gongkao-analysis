@@ -1,0 +1,82 @@
+.App {
+  min-height: 100vh;
+  background-color: #282c34;
+  color: #fff;
+}
+
+.table-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 0 1;
+}
+
+.table-item {
+  width: 120px;
+}
+
+.data-source-tips {
+  font-size: 22px;
+  color: #6f6f6f;
+}
+
+.input {
+  width: 50px;
+  border: 0;
+  border-bottom: 1px solid #fff;
+  background-color: transparent;
+  color: #fff;
+  appearance: none;
+  text-align: center;
+}
+
+.post-name {
+  display: inline-block;
+  color: #fff;
+  font-size: 1.2em;
+}
+
+.score-section__score,
+.score-section__input {
+  display: inline-block;
+  width: 50px;
+  padding: 0 6px;
+  outline: none;
+  font-family: fantasy;
+  font-size: 22px;
+  text-align: right;
+}
+
+.score-section__input {
+  text-align: center;
+}
+
+.score-section__input-post {
+  width: 100px;
+}
+
+.score-section__score-no-width {
+  width: fit-content;
+}
+
+.score-range__split {
+  display: inline-block;
+  margin: 0 4px;
+}
+
+.container {
+  padding: 12px;
+  font-size: 16px;
+  overflow: scroll;
+}
+
+.title {
+  margin: 4px 0;
+  padding: 4px 12px;
+  border-left: 6px solid lightseagreen;
+  font-size: 20px;
+}
+
+.group {
+  margin: 6px 0;
+}

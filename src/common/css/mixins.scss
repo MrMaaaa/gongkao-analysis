@@ -1,0 +1,58 @@
+@mixin flex($jc: center, $ai: center) {
+  display: flex;
+  justify-content: $jc;
+  align-items: $ai;
+}
+
+@mixin box(
+  $width: initial,
+  $height: initial,
+  $margin: initial,
+  $padding: initial,
+  $border: initial
+) {
+  width: $width;
+  height: $height;
+  margin: $margin;
+  padding: $padding;
+  border: $border;
+}
+
+@mixin text($color: inherit, $fontSize: inherit, $textAlign: inherit) {
+  color: $color;
+  font-size: $fontSize;
+  text-align: $textAlign;
+}
+
+@mixin text-overflow {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin text-multi-overflow($line: 2) {
+  display: -webkit-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $line;
+}
+
+@mixin pos(
+  $pos: absolute,
+  $top: initial,
+  $right: initial,
+  $bottom: initial,
+  $left: initial,
+  $zIndex: initial
+) {
+  position: $pos;
+  top: $top;
+  left: $left;
+  right: $right;
+  bottom: $bottom;
+  z-index: $zIndex;
+}
+
+$primaryColor: #1db581;
+$mainBackgroundColor: #f5f5f5;
