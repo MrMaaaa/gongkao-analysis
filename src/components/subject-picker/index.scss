@@ -1,0 +1,26 @@
+.subject-picker {
+  position: relative;
+  @include box(200px, 30px, 10px);
+  &-input {
+    box-sizing: border-box;
+    display: block;
+    @include box(100%, 100%);
+    padding-left: 4px;
+    background-color: #fff;
+    font-size: 14px;
+  }
+  &-list {
+    @include pos(absolute, 100%, 0, initial, 0);
+    @include text(#333, 14px);
+    @include box(100%, 250px);
+    background-color: #fff;
+    overflow-y: scroll;
+    &__item {
+      padding: 4px 6px;
+      cursor: pointer;
+      &:hover {
+        background-color: rgb(243, 243, 243);
+      }
+    }
+  }
+}

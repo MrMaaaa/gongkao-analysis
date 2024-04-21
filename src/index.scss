@@ -1,3 +1,5 @@
+@import-normalize;
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -7,6 +9,16 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+input {
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background-color: transparent;
+  appearance: none;
+  &::focus {
+    appearance: none;
+  }
+}
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
