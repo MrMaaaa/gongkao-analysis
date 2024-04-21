@@ -1,4 +1,4 @@
-.subject-picker {
+.major-picker {
   position: relative;
   @include box(200px, 30px, 10px);
   &-input {
@@ -8,6 +8,13 @@
     padding-left: 4px;
     background-color: #fff;
     font-size: 14px;
+    &__clear {
+      @include pos(absolute, 50%, 4px);
+      @include box(12px, 12px);
+      transform: translateY(-50%);
+      background: url('../../images/close.svg') center / 100% 100% no-repeat;
+      cursor: pointer;
+    }
   }
   &-list {
     @include pos(absolute, 100%, 0, initial, 0);
