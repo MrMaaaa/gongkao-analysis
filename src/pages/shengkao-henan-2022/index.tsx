@@ -426,10 +426,10 @@ const App: React.FC = () => {
         <div className="data-source-tips">
           数据来源：
           <a
-            href="http://www.lysrsks.gov.cn/index/news/detail.html?id=767"
+            href="http://www.lysrsks.gov.cn/index/news/detail.html?id=623"
             target="_blank"
           >
-            河南省2023年度统一考试录用公务员洛阳职位面试确认人员名单
+            河南省2022年度统一考试录用公务员洛阳职位面试确认人员名单
           </a>
         </div>
         <div className="data-source-tips">
