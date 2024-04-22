@@ -7,6 +7,9 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+  background-color: #282c34;
+  color: #fff;
 }
 
 input {
@@ -22,4 +25,7 @@ input {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+a {
+  color: #fff;
 }

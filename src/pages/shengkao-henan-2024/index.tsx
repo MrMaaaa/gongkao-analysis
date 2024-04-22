@@ -375,8 +375,6 @@ const App: React.FC = () => {
         }
       });
     });
-
-    console.log('filterData', obj);
     setFilterData(obj);
   });
 
@@ -499,10 +497,6 @@ const App: React.FC = () => {
   });
 
   useMount(() => {
-    // console.log('originList', list);
-    fetch('./test.json')
-      .then((res) => res.json())
-      .then((res) => console.log(res));
     transOriginList(list);
   });
 
@@ -538,160 +532,155 @@ const App: React.FC = () => {
   }, [selectedPostId, filterData]);
 
   return (
-    <div className="App">
-      <div className="container">
-        <div>
-          <div className="data-source-tips">
-            数据来源：河南省2024年度统一考试录用公务员洛阳职位面试确认人员名单
-          </div>
-          <div className="title">进面分数</div>
-          <div className="group">
-            最高分：
-            <ScoreSection score={filterData.score.max?.score} />
-            ，行测最高
-            <ScoreSection score={filterData.score.max?.xingce} />
-            ，申论最高
-            <ScoreSection score={filterData.score.max?.shenlun} />
-          </div>
-          <div className="group">
-            最低分：
-            <ScoreSection score={filterData.score.min?.score} />
-            ，行测最低
-            <ScoreSection score={filterData.score.min?.xingce} />
-            ，申论最低
-            <ScoreSection score={filterData.score.min?.shenlun} />
-          </div>
-          <div className="group">
-            平均分：
-            <ScoreSection score={filterData.score.ave} />
-            ，行测平均
-            <ScoreSection score={filterData.xingce.ave} />
-            ，申论平均
-            <ScoreSection score={filterData.shenlun.ave} />
-          </div>
-          <div className="title">岗位情况</div>
-          <div className="group">
-            总分波动最大岗位：
-            <span className="post-name">
-              {filterData.postData.diff.score.max?.post}
-            </span>
-            ，相差
-            <ScoreSection
-              score={filterData.postData.diff.score.max?.score.diff}
-            />
-            (
-            <ScoreRange
-              scorePrev={filterData.postData.diff.score.max?.score.max?.score}
-              scoreAfter={filterData.postData.diff.score.max?.score.min?.score}
-            />
-            )
-          </div>
-          <div className="group">
-            行测波动最大岗位：
-            <span className="post-name">
-              {filterData.postData.diff.xingce.max?.post}
-            </span>
-            ，相差
-            <ScoreSection
-              score={filterData.postData.diff.xingce.max?.xingce.diff}
-            />
-            (
-            <ScoreRange
-              scorePrev={
-                filterData.postData.diff.xingce.max?.xingce.max?.xingce
-              }
-              scoreAfter={
-                filterData.postData.diff.xingce.max?.xingce.min?.xingce
-              }
-            />
-            )
-          </div>
-          <div className="group">
-            申论波动最大岗位：
-            <span className="post-name">
-              {filterData.postData.diff.shenlun.max?.post}
-            </span>
-            ，相差
-            <ScoreSection
-              score={filterData.postData.diff.shenlun.max?.shenlun.diff}
-            />
-            (
-            <ScoreRange
-              scorePrev={
-                filterData.postData.diff.shenlun.max?.shenlun.max?.shenlun
-              }
-              scoreAfter={
-                filterData.postData.diff.shenlun.max?.shenlun.min?.shenlun
-              }
-            />
-            )
-          </div>
-          <div className="group">
-            总分波动最小岗位：
-            <span className="post-name">
-              {filterData.postData.diff.score.min?.post}
-            </span>
-            ，相差
-            <ScoreSection
-              score={filterData.postData.diff.score.min?.score.diff}
-            />
-            (
-            <ScoreRange
-              scorePrev={filterData.postData.diff.score.min?.score.max?.score}
-              scoreAfter={filterData.postData.diff.score.min?.score.min?.score}
-            />
-            )
-          </div>
-          <div className="group">
-            行测波动最小岗位：
-            <span className="post-name">
-              {filterData.postData.diff.xingce.min?.post}
-            </span>
-            ，相差
-            <ScoreSection
-              score={filterData.postData.diff.xingce.min?.xingce.diff}
-            />
-            (
-            <ScoreRange
-              scorePrev={
-                filterData.postData.diff.xingce.min?.xingce.max?.xingce
-              }
-              scoreAfter={
-                filterData.postData.diff.xingce.min?.xingce.min?.xingce
-              }
-            />
-            )
-          </div>
-          <div className="group">
-            申论波动最小岗位：
-            <span className="post-name">
-              {filterData.postData.diff.shenlun.min?.post}
-            </span>
-            ，相差
-            <ScoreSection
-              score={filterData.postData.diff.shenlun.min?.shenlun.diff}
-            />
-            (
-            <ScoreRange
-              scorePrev={
-                filterData.postData.diff.shenlun.min?.shenlun.max?.shenlun
-              }
-              scoreAfter={
-                filterData.postData.diff.shenlun.min?.shenlun.min?.shenlun
-              }
-            />
-            )
-          </div>
-          <div className="group">
-            竞争最激烈的岗位：
-            <span className="post-name">
-              {filterData.postData.ave.score.max?.post}
-            </span>
-            ，平均分：
-            <ScoreSection
-              score={filterData.postData.ave.score.max?.score.ave}
-            />
-            {/* ，行测最高分
+    <div className="container">
+      <div>
+        <div className="data-source-tips">
+          数据来源：
+          <a
+            href="http://www.lysrsks.gov.cn/index/news/detail.html?id=1323"
+            target="_blank"
+          >
+            河南省2024年度统一考试录用公务员洛阳职位面试确认人员名单
+          </a>
+        </div>
+        <div className="title">进面分数</div>
+        <div className="group">
+          最高分：
+          <ScoreSection score={filterData.score.max?.score} />
+          ，行测最高
+          <ScoreSection score={filterData.score.max?.xingce} />
+          ，申论最高
+          <ScoreSection score={filterData.score.max?.shenlun} />
+        </div>
+        <div className="group">
+          最低分：
+          <ScoreSection score={filterData.score.min?.score} />
+          ，行测最低
+          <ScoreSection score={filterData.score.min?.xingce} />
+          ，申论最低
+          <ScoreSection score={filterData.score.min?.shenlun} />
+        </div>
+        <div className="group">
+          平均分：
+          <ScoreSection score={filterData.score.ave} />
+          ，行测平均
+          <ScoreSection score={filterData.xingce.ave} />
+          ，申论平均
+          <ScoreSection score={filterData.shenlun.ave} />
+        </div>
+        <div className="title">岗位情况</div>
+        <div className="group">
+          总分波动最大岗位：
+          <span className="post-name">
+            {filterData.postData.diff.score.max?.post}
+          </span>
+          ，相差
+          <ScoreSection
+            score={filterData.postData.diff.score.max?.score.diff}
+          />
+          (
+          <ScoreRange
+            scorePrev={filterData.postData.diff.score.max?.score.max?.score}
+            scoreAfter={filterData.postData.diff.score.max?.score.min?.score}
+          />
+          )
+        </div>
+        <div className="group">
+          行测波动最大岗位：
+          <span className="post-name">
+            {filterData.postData.diff.xingce.max?.post}
+          </span>
+          ，相差
+          <ScoreSection
+            score={filterData.postData.diff.xingce.max?.xingce.diff}
+          />
+          (
+          <ScoreRange
+            scorePrev={filterData.postData.diff.xingce.max?.xingce.max?.xingce}
+            scoreAfter={filterData.postData.diff.xingce.max?.xingce.min?.xingce}
+          />
+          )
+        </div>
+        <div className="group">
+          申论波动最大岗位：
+          <span className="post-name">
+            {filterData.postData.diff.shenlun.max?.post}
+          </span>
+          ，相差
+          <ScoreSection
+            score={filterData.postData.diff.shenlun.max?.shenlun.diff}
+          />
+          (
+          <ScoreRange
+            scorePrev={
+              filterData.postData.diff.shenlun.max?.shenlun.max?.shenlun
+            }
+            scoreAfter={
+              filterData.postData.diff.shenlun.max?.shenlun.min?.shenlun
+            }
+          />
+          )
+        </div>
+        <div className="group">
+          总分波动最小岗位：
+          <span className="post-name">
+            {filterData.postData.diff.score.min?.post}
+          </span>
+          ，相差
+          <ScoreSection
+            score={filterData.postData.diff.score.min?.score.diff}
+          />
+          (
+          <ScoreRange
+            scorePrev={filterData.postData.diff.score.min?.score.max?.score}
+            scoreAfter={filterData.postData.diff.score.min?.score.min?.score}
+          />
+          )
+        </div>
+        <div className="group">
+          行测波动最小岗位：
+          <span className="post-name">
+            {filterData.postData.diff.xingce.min?.post}
+          </span>
+          ，相差
+          <ScoreSection
+            score={filterData.postData.diff.xingce.min?.xingce.diff}
+          />
+          (
+          <ScoreRange
+            scorePrev={filterData.postData.diff.xingce.min?.xingce.max?.xingce}
+            scoreAfter={filterData.postData.diff.xingce.min?.xingce.min?.xingce}
+          />
+          )
+        </div>
+        <div className="group">
+          申论波动最小岗位：
+          <span className="post-name">
+            {filterData.postData.diff.shenlun.min?.post}
+          </span>
+          ，相差
+          <ScoreSection
+            score={filterData.postData.diff.shenlun.min?.shenlun.diff}
+          />
+          (
+          <ScoreRange
+            scorePrev={
+              filterData.postData.diff.shenlun.min?.shenlun.max?.shenlun
+            }
+            scoreAfter={
+              filterData.postData.diff.shenlun.min?.shenlun.min?.shenlun
+            }
+          />
+          )
+        </div>
+        <div className="group">
+          竞争最激烈的岗位：
+          <span className="post-name">
+            {filterData.postData.ave.score.max?.post}
+          </span>
+          ，平均分：
+          <ScoreSection score={filterData.postData.ave.score.max?.score.ave} />
+          {/* ，行测最高分
               <ScoreSection
                 score={filterData.postData.ave.score.max?.xingce.max?.xingce}
               />
@@ -715,17 +704,15 @@ const App: React.FC = () => {
               <ScoreSection
                 score={filterData.postData.ave.score.max?.xingce.ave}
               /> */}
-          </div>
-          <div className="group">
-            竞争最温和的岗位：
-            <span className="post-name">
-              {filterData.postData.ave.score.min?.post}
-            </span>
-            ，平均分：
-            <ScoreSection
-              score={filterData.postData.ave.score.min?.score.ave}
-            />
-            {/* ， 行测最高分
+        </div>
+        <div className="group">
+          竞争最温和的岗位：
+          <span className="post-name">
+            {filterData.postData.ave.score.min?.post}
+          </span>
+          ，平均分：
+          <ScoreSection score={filterData.postData.ave.score.min?.score.ave} />
+          {/* ， 行测最高分
               <ScoreSection
                 score={filterData.postData.ave.score.min?.xingce.max?.xingce}
               />
@@ -749,102 +736,98 @@ const App: React.FC = () => {
               <ScoreSection
                 score={filterData.postData.ave.score.min?.xingce.ave}
               /> */}
-          </div>
-          <div className="title">我的成绩</div>
-          <div className="group">
-            行测：
-            <input
-              className="input score-section__input"
-              type="text"
-              value={xingce}
-              onChange={(e) => setXingce(e.target.value)}
-            />
-            申论：
-            <input
-              className="input score-section__input"
-              type="text"
-              value={shenlun}
-              onChange={(e) => setShenlun(e.target.value)}
-            />
-            总成绩：
-            <input
-              className="input score-section__input"
-              type="text"
-              value={userResult.userScore}
-              disabled
-            />
-            {/* <ScoreSection score={userResult.userScore} /> */}
-          </div>
-          <div className="group">
-            在进入面试的
-            <ScoreSection score={examineeCount} suffix={'名'} />
-            考生中
-          </div>
-          <div className="group">
-            总分超过了
-            <ScoreSection score={userResult.scoreAmountSum} suffix={'人'} />
-            ，排名前
-            <ScoreSection score={userResult.scoreRankAmount} suffix={'%'} />
-          </div>
-          <div className="group">
-            行测超过了
-            <ScoreSection score={userResult.xingceAmountSum} suffix={'人'} />
-            ，排名前
-            <ScoreSection score={userResult.xingceRankAmount} suffix={'%'} />
-          </div>
-          <div className="group">
-            申论超过了
-            <ScoreSection score={userResult.shenlunAmountSum} suffix={'人'} />
-            ，排名前
-            <ScoreSection score={userResult.shenlunRankAmount} suffix={'%'} />
-          </div>
-          <div className="group">
-            可以在
-            <ScoreSection
-              score={userResult.passPostNames.length}
-              suffix={'个'}
-            />
-            岗位进入面试，无缘
-            <ScoreSection
-              score={userResult.noPassPostNames.length}
-              suffix={'个'}
-            />
-            岗位，在
-            <ScoreSection
-              score={userResult.scoreRankInPosts.postInfo.length}
-              suffix={'个'}
-            />
-            岗位名次最高，位列
-            <ScoreSection
-              score={userResult.scoreRankInPosts.topRank}
-              suffix={'名'}
-            />
-          </div>
-          <div className="group">
-            岗位代码：
-            <input
-              className="input score-section__input score-section__input-post"
-              type="text"
-              value={selectedPostId}
-              onChange={(e) => setSelectedPostId(e.target.value)}
-            />
-            ， 你选择的岗位是：
-            <span className="post-name">{postRankInfo.post}</span>
-          </div>
-          <div className="group">
-            平均分
-            <ScoreSection score={postRankInfo.score?.ave} suffix={''} />
-            ，最高分
-            <ScoreSection score={postRankInfo.score?.max?.score} suffix={''} />
-            ，最低分
-            <ScoreSection score={postRankInfo.score?.min?.score} suffix={''} />
-            ，平均分在全部
-            <ScoreSection score={postCount} suffix={'个'} />
-            岗位中排名
-            <ScoreSection score={postRankInfo.postRank} suffix={'名'} />
-            ，位列前
-            <ScoreSection score={postRankInfo.postRankAmount} suffix={'%'} />
-          </div>
+        </div>
+        <div className="title">我的成绩</div>
+        <div className="group">
+          行测：
+          <input
+            className="input score-section__input"
+            type="text"
+            value={xingce}
+            onChange={(e) => setXingce(e.target.value)}
+          />
+          申论：
+          <input
+            className="input score-section__input"
+            type="text"
+            value={shenlun}
+            onChange={(e) => setShenlun(e.target.value)}
+          />
+          总成绩：
+          <input
+            className="input score-section__input"
+            type="text"
+            value={userResult.userScore}
+            disabled
+          />
+          {/* <ScoreSection score={userResult.userScore} /> */}
+        </div>
+        <div className="group">
+          在进入面试的
+          <ScoreSection score={examineeCount} suffix={'名'} />
+          考生中
+        </div>
+        <div className="group">
+          总分超过了
+          <ScoreSection score={userResult.scoreAmountSum} suffix={'人'} />
+          ，排名前
+          <ScoreSection score={userResult.scoreRankAmount} suffix={'%'} />
+        </div>
+        <div className="group">
+          行测超过了
+          <ScoreSection score={userResult.xingceAmountSum} suffix={'人'} />
+          ，排名前
+          <ScoreSection score={userResult.xingceRankAmount} suffix={'%'} />
+        </div>
+        <div className="group">
+          申论超过了
+          <ScoreSection score={userResult.shenlunAmountSum} suffix={'人'} />
+          ，排名前
+          <ScoreSection score={userResult.shenlunRankAmount} suffix={'%'} />
+        </div>
+        <div className="group">
+          可以在
+          <ScoreSection score={userResult.passPostNames.length} suffix={'个'} />
+          岗位进入面试，无缘
+          <ScoreSection
+            score={userResult.noPassPostNames.length}
+            suffix={'个'}
+          />
+          岗位，在
+          <ScoreSection
+            score={userResult.scoreRankInPosts.postInfo.length}
+            suffix={'个'}
+          />
+          岗位名次最高，位列
+          <ScoreSection
+            score={userResult.scoreRankInPosts.topRank}
+            suffix={'名'}
+          />
+        </div>
+        <div className="group">
+          岗位代码：
+          <input
+            className="input score-section__input score-section__input-post"
+            type="text"
+            value={selectedPostId}
+            onChange={(e) => setSelectedPostId(e.target.value)}
+          />
+          ， 你选择的岗位是：
+          <span className="post-name">{postRankInfo.post}</span>
+        </div>
+        <div className="group">
+          平均分
+          <ScoreSection score={postRankInfo.score?.ave} suffix={''} />
+          ，最高分
+          <ScoreSection score={postRankInfo.score?.max?.score} suffix={''} />
+          ，最低分
+          <ScoreSection score={postRankInfo.score?.min?.score} suffix={''} />
+          ，平均分在全部
+          <ScoreSection score={postCount} suffix={'个'} />
+          岗位中排名
+          <ScoreSection score={postRankInfo.postRank} suffix={'名'} />
+          ，位列前
+          <ScoreSection score={postRankInfo.postRankAmount} suffix={'%'} />
         </div>
       </div>
     </div>
