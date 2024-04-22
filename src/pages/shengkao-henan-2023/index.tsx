@@ -5,16 +5,12 @@ import scorejson from './score.json';
 import './index.scss';
 
 interface ScoreItem {
-  no: string;
   id: string;
-  rank: string;
+  rank: number;
   name: string;
   post: string;
   postId: string;
   score: number;
-  shenlun: number;
-  xingce: number;
-  gongan: number;
 }
 
 interface ScoreObjItemCell {
@@ -26,9 +22,6 @@ interface ScoreObjItemCell {
 
 interface ScoreObjItem {
   score: ScoreObjItemCell;
-  shenlun: ScoreObjItemCell;
-  xingce: ScoreObjItemCell;
-  gongan: ScoreObjItemCell;
 }
 
 interface PostsItem extends ScoreObjItem {
@@ -43,33 +36,9 @@ interface PostData {
       max?: PostsItem;
       min?: PostsItem;
     };
-    xingce: {
-      max?: PostsItem;
-      min?: PostsItem;
-    };
-    shenlun: {
-      max?: PostsItem;
-      min?: PostsItem;
-    };
-    gongan: {
-      max?: PostsItem;
-      min?: PostsItem;
-    };
   };
   ave: {
     score: {
-      max?: PostsItem;
-      min?: PostsItem;
-    };
-    xingce: {
-      max?: PostsItem;
-      min?: PostsItem;
-    };
-    shenlun: {
-      max?: PostsItem;
-      min?: PostsItem;
-    };
-    gongan: {
       max?: PostsItem;
       min?: PostsItem;
     };
@@ -129,7 +98,7 @@ const ScoreRange: React.FC<{
 };
 
 const App: React.FC = () => {
-  const [list, setList] = useSafeState<ScoreItem[]>(scorejson);
+  const [list] = useSafeState<ScoreItem[]>(scorejson as ScoreItem[]);
   const [listHeader, setListHeader] = useSafeState('');
   const [listTitle, setListTitle] = useSafeState<string[]>([]);
   const [filterData, setFilterData] = useSafeState<ScoreObj>({
@@ -139,36 +108,12 @@ const App: React.FC = () => {
       ave: 0,
       diff: 0,
     },
-    xingce: {
-      max: undefined,
-      min: undefined,
-      ave: 0,
-      diff: 0,
-    },
-    shenlun: {
-      max: undefined,
-      min: undefined,
-      ave: 0,
-      diff: 0,
-    },
-    gongan: {
-      max: undefined,
-      min: undefined,
-      ave: 0,
-      diff: 0,
-    },
     postData: {
       diff: {
         score: {},
-        xingce: {},
-        shenlun: {},
-        gongan: {},
       },
       ave: {
         score: {},
-        xingce: {},
-        shenlun: {},
-        gongan: {},
       },
     },
     posts: {},
@@ -177,9 +122,6 @@ const App: React.FC = () => {
   const transOriginList = useMemoizedFn((originList: ScoreItem[]) => {
     const scoreTypeList = [
       'score',
-      'xingce',
-      'shenlun',
-      'gongan',
     ] as (keyof ScoreObjItem)[];
 
     const obj: ScoreObj = {
@@ -189,36 +131,12 @@ const App: React.FC = () => {
         ave: 0,
         diff: 0,
       },
-      xingce: {
-        max: undefined,
-        min: undefined,
-        ave: 0,
-        diff: 0,
-      },
-      shenlun: {
-        max: undefined,
-        min: undefined,
-        ave: 0,
-        diff: 0,
-      },
-      gongan: {
-        max: undefined,
-        min: undefined,
-        ave: 0,
-        diff: 0,
-      },
       postData: {
         diff: {
           score: {},
-          xingce: {},
-          shenlun: {},
-          gongan: {},
         },
         ave: {
           score: {},
-          xingce: {},
-          shenlun: {},
-          gongan: {},
         },
       },
       posts: {},
@@ -226,12 +144,9 @@ const App: React.FC = () => {
 
     const sumValue = {
       score: 0,
-      xingce: 0,
-      shenlun: 0,
-      gongan: 0,
     };
     originList.forEach((ori) => {
-      // 获取总成绩、行测、申论、公安的最高、最低分
+      // 获取总成绩的最高、最低分
       scoreTypeList.forEach((item) => {
         if (!obj[item] || !ori[item]) return;
         sumValue[item] += ori[item];
@@ -259,25 +174,7 @@ const App: React.FC = () => {
             min: undefined,
             ave: 0,
             diff: 0,
-          },
-          xingce: {
-            max: undefined,
-            min: undefined,
-            ave: 0,
-            diff: 0,
-          },
-          shenlun: {
-            max: undefined,
-            min: undefined,
-            ave: 0,
-            diff: 0,
-          },
-          gongan: {
-            max: undefined,
-            min: undefined,
-            ave: 0,
-            diff: 0,
-          },
+          }
         };
       } else {
         obj.posts[ori.postId].list.push({ ...ori });
@@ -382,7 +279,7 @@ const App: React.FC = () => {
 
   const [xingce, setXingce] = useSafeState('61.6');
   const [shenlun, setShenlun] = useSafeState('57.5');
-  const [selectedPostId, setSelectedPostId] = useSafeState('13147022');
+  const [selectedPostId, setSelectedPostId] = useSafeState('13102012');
   const [userResult, setUserResult] = useSafeState<{
     userScore: number;
     scoreRankAmount: string;
@@ -437,12 +334,6 @@ const App: React.FC = () => {
     list.forEach((item) => {
       if (userScore > item.score) {
         scoreOverSum += 1;
-      }
-      if (xingce_n > item.xingce) {
-        xingceOverSum += 1;
-      }
-      if (shenlun_n > item.shenlun) {
-        shenlunOverSum += 1;
       }
     });
     Object.values(filterData.posts).forEach((item) => {
@@ -542,32 +433,23 @@ const App: React.FC = () => {
       <div className="container">
         <div>
           <div className="data-source-tips">
-            数据来源：河南省2024年度统一考试录用公务员洛阳职位面试确认人员名单
+            数据来源：河南省2023年度统一考试录用公务员洛阳职位面试确认人员名单
+          </div>
+          <div className="data-source-tips">
+            注：因23年面试公告未公示行测申论分数，因此这里只显示总成绩相关数据
           </div>
           <div className="title">进面分数</div>
           <div className="group">
             最高分：
             <ScoreSection score={filterData.score.max?.score} />
-            ，行测最高
-            <ScoreSection score={filterData.score.max?.xingce} />
-            ，申论最高
-            <ScoreSection score={filterData.score.max?.shenlun} />
           </div>
           <div className="group">
             最低分：
             <ScoreSection score={filterData.score.min?.score} />
-            ，行测最低
-            <ScoreSection score={filterData.score.min?.xingce} />
-            ，申论最低
-            <ScoreSection score={filterData.score.min?.shenlun} />
           </div>
           <div className="group">
             平均分：
             <ScoreSection score={filterData.score.ave} />
-            ，行测平均
-            <ScoreSection score={filterData.xingce.ave} />
-            ，申论平均
-            <ScoreSection score={filterData.shenlun.ave} />
           </div>
           <div className="title">岗位情况</div>
           <div className="group">
@@ -587,46 +469,6 @@ const App: React.FC = () => {
             )
           </div>
           <div className="group">
-            行测波动最大岗位：
-            <span className="post-name">
-              {filterData.postData.diff.xingce.max?.post}
-            </span>
-            ，相差
-            <ScoreSection
-              score={filterData.postData.diff.xingce.max?.xingce.diff}
-            />
-            (
-            <ScoreRange
-              scorePrev={
-                filterData.postData.diff.xingce.max?.xingce.max?.xingce
-              }
-              scoreAfter={
-                filterData.postData.diff.xingce.max?.xingce.min?.xingce
-              }
-            />
-            )
-          </div>
-          <div className="group">
-            申论波动最大岗位：
-            <span className="post-name">
-              {filterData.postData.diff.shenlun.max?.post}
-            </span>
-            ，相差
-            <ScoreSection
-              score={filterData.postData.diff.shenlun.max?.shenlun.diff}
-            />
-            (
-            <ScoreRange
-              scorePrev={
-                filterData.postData.diff.shenlun.max?.shenlun.max?.shenlun
-              }
-              scoreAfter={
-                filterData.postData.diff.shenlun.max?.shenlun.min?.shenlun
-              }
-            />
-            )
-          </div>
-          <div className="group">
             总分波动最小岗位：
             <span className="post-name">
               {filterData.postData.diff.score.min?.post}
@@ -639,46 +481,6 @@ const App: React.FC = () => {
             <ScoreRange
               scorePrev={filterData.postData.diff.score.min?.score.max?.score}
               scoreAfter={filterData.postData.diff.score.min?.score.min?.score}
-            />
-            )
-          </div>
-          <div className="group">
-            行测波动最小岗位：
-            <span className="post-name">
-              {filterData.postData.diff.xingce.min?.post}
-            </span>
-            ，相差
-            <ScoreSection
-              score={filterData.postData.diff.xingce.min?.xingce.diff}
-            />
-            (
-            <ScoreRange
-              scorePrev={
-                filterData.postData.diff.xingce.min?.xingce.max?.xingce
-              }
-              scoreAfter={
-                filterData.postData.diff.xingce.min?.xingce.min?.xingce
-              }
-            />
-            )
-          </div>
-          <div className="group">
-            申论波动最小岗位：
-            <span className="post-name">
-              {filterData.postData.diff.shenlun.min?.post}
-            </span>
-            ，相差
-            <ScoreSection
-              score={filterData.postData.diff.shenlun.min?.shenlun.diff}
-            />
-            (
-            <ScoreRange
-              scorePrev={
-                filterData.postData.diff.shenlun.min?.shenlun.max?.shenlun
-              }
-              scoreAfter={
-                filterData.postData.diff.shenlun.min?.shenlun.min?.shenlun
-              }
             />
             )
           </div>
@@ -785,18 +587,6 @@ const App: React.FC = () => {
             <ScoreSection score={userResult.scoreAmountSum} suffix={'人'} />
             ，排名前
             <ScoreSection score={userResult.scoreRankAmount} suffix={'%'} />
-          </div>
-          <div className="group">
-            行测超过了
-            <ScoreSection score={userResult.xingceAmountSum} suffix={'人'} />
-            ，排名前
-            <ScoreSection score={userResult.xingceRankAmount} suffix={'%'} />
-          </div>
-          <div className="group">
-            申论超过了
-            <ScoreSection score={userResult.shenlunAmountSum} suffix={'人'} />
-            ，排名前
-            <ScoreSection score={userResult.shenlunRankAmount} suffix={'%'} />
           </div>
           <div className="group">
             可以在
