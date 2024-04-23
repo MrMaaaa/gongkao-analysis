@@ -1,24 +1,9 @@
 import React, { useEffect } from 'react';
 import { useMemoizedFn, useSafeState, useMount, useCreation } from 'ahooks';
 import cls from 'classnames';
+import { ScoreItem, ScoreObjItemCell } from '@/interface';
 import scorejson from './score.json';
 import './index.scss';
-
-interface ScoreItem {
-  id: string;
-  rank: number;
-  name: string;
-  post: string;
-  postId: string;
-  score: number;
-}
-
-interface ScoreObjItemCell {
-  max?: ScoreItem;
-  min?: ScoreItem;
-  ave: number;
-  diff: number;
-}
 
 interface ScoreObjItem {
   score: ScoreObjItemCell;
@@ -98,9 +83,7 @@ const ScoreRange: React.FC<{
 };
 
 const App: React.FC = () => {
-  const [list] = useSafeState<ScoreItem[]>(scorejson as unknown as ScoreItem[]);
-  const [listHeader, setListHeader] = useSafeState('');
-  const [listTitle, setListTitle] = useSafeState<string[]>([]);
+  const [list] = useSafeState<ScoreItem[]>(scorejson);
   const [filterData, setFilterData] = useSafeState<ScoreObj>({
     score: {
       max: undefined,

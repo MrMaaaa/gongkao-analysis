@@ -1,40 +1,21 @@
 import React, { useEffect } from 'react';
 import { useMemoizedFn, useSafeState, useMount, useCreation } from 'ahooks';
 import cls from 'classnames';
+import { ScoreFullItem, ScoreObjItemCell } from '@/interface';
 import scorejson from './score.json';
 import './index.scss';
 
-interface ScoreItem {
-  no: string;
-  id: string;
-  rank: string;
-  name: string;
-  post: string;
-  postId: string;
-  score: number;
-  shenlun: number;
-  xingce: number;
-  gongan: number;
-}
-
-interface ScoreObjItemCell {
-  max?: ScoreItem;
-  min?: ScoreItem;
-  ave: number;
-  diff: number;
-}
-
 interface ScoreObjItem {
-  score: ScoreObjItemCell;
-  shenlun: ScoreObjItemCell;
-  xingce: ScoreObjItemCell;
-  gongan: ScoreObjItemCell;
+  score: ScoreObjItemCell<ScoreFullItem>;
+  shenlun: ScoreObjItemCell<ScoreFullItem>;
+  xingce: ScoreObjItemCell<ScoreFullItem>;
+  gongan: ScoreObjItemCell<ScoreFullItem>;
 }
 
 interface PostsItem extends ScoreObjItem {
   postId: string;
   post: string;
-  list: ScoreItem[];
+  list: ScoreFullItem[];
 }
 
 interface PostData {
@@ -85,7 +66,7 @@ interface ScoreObj extends ScoreObjItem {
 
 interface ScoreRankInPosts {
   topRank: number;
-  postInfo: ScoreItem[];
+  postInfo: ScoreFullItem[];
 }
 
 const ScoreSection: React.FC<{
@@ -129,7 +110,7 @@ const ScoreRange: React.FC<{
 };
 
 const App: React.FC = () => {
-  const [list, setList] = useSafeState<ScoreItem[]>(scorejson);
+  const [list, setList] = useSafeState<ScoreFullItem[]>(scorejson);
   const [listHeader, setListHeader] = useSafeState('');
   const [listTitle, setListTitle] = useSafeState<string[]>([]);
   const [filterData, setFilterData] = useSafeState<ScoreObj>({
@@ -174,7 +155,7 @@ const App: React.FC = () => {
     posts: {},
   });
 
-  const transOriginList = useMemoizedFn((originList: ScoreItem[]) => {
+  const transOriginList = useMemoizedFn((originList: ScoreFullItem[]) => {
     const scoreTypeList = [
       'score',
       'xingce',
