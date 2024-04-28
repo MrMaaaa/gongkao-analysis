@@ -404,7 +404,7 @@ const App: React.FC = () => {
   }, [selectedPostId, filterData]);
 
   return (
-    <div className="container">
+    <div className="analysis-container">
       <div>
         <div className="data-source-tips">
           数据来源：

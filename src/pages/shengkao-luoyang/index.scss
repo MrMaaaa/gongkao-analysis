@@ -1,0 +1,66 @@
+$width: 1200px;
+
+.shengkao-luoyang-container {
+  width: $width;
+  margin: 0 auto;
+  .history-score-chart {
+    width: $width;
+  }
+  .filter-line {
+    border-left: 6px solid lightseagreen;
+    padding-left: 4px;
+    .input {
+      @include text(#fff, 18px, left);
+      width: 200px;
+      margin-left: 15px;
+    }
+    .list-sort-toggle {
+      @include text(rgb(117, 117, 117), 14px);
+      display: block;
+      float: right;
+      margin-left: 15px;
+      padding: 2px 4px;
+      cursor: pointer;
+    }
+  }
+  .history-score-list {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    &__item {
+      display: flex;
+      box-sizing: border-box;
+      width: 25%;
+      padding: 15px;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      &-title {
+        margin-bottom: 15px;
+      }
+      &-cell {
+        display: flex;
+        box-sizing: border-box;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        gap: 2px;
+        &-ave {
+          font-size: 1.3em;
+          font-weight: bolder;
+        }
+      }
+      &-content {
+        display: flex;
+        box-sizing: border-box;
+        justify-content: center;
+        align-items: center;
+        gap: 15px;
+        &__year {
+          display: block;
+          font-size: 9px;
+        }
+      }
+    }
+  }
+}
