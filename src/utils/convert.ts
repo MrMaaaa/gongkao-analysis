@@ -19,7 +19,7 @@ export const parsePDF2JSON = (
 };
 
 // 河南省考成绩pdf格式化方法
-const gongkaoluoyangFormat = async (doc: PDFDocumentProxy) => {
+export const gongkaoluoyangFormat = async (doc: PDFDocumentProxy) => {
   let titles: string[] = [];
   let pdfTexts: any[] = [];
   for (let idx = 1; idx <= doc.numPages; idx++) {

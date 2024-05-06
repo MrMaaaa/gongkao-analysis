@@ -5,8 +5,6 @@ import { ScoreItem, ScoreObjItemCell } from '@/interface';
 import scorejson from './score.json';
 import './index.scss';
 
-
-
 interface ScoreObjItem {
   score: ScoreObjItemCell;
 }
