@@ -1,12 +1,14 @@
 // 对xls或者pdf文件格式进行转换
+import { Input } from 'antd';
 import { useMount } from 'ahooks';
+import { ScoreItem } from '@/interface'; // 进面名单文件需要转换成的json格式类型
 import xlsx from 'xlsx';
 
 const Test: React.FC = () => {
   // 获取省考岗位数据
-  const getJSONFromXlsx = async () => {
+  const getPostJSONFromXlsx = async (filepath = './post.xls') => {
     // 注意，这里的相对路径是相对于/public目录
-    const f = await fetch('./post.xls');
+    const f = await fetch(filepath);
     const ab = await f.arrayBuffer();
     const wb = xlsx.read(ab);
     let titles: Record<string, string | number> = {};
@@ -42,22 +44,46 @@ const Test: React.FC = () => {
       });
     }).reduce((p, c) => [...p, ...c], []);
     console.log(JSON.stringify(data));
-    // const parseData = data.slice(1).map((item: any) => {
-    //   return {
-    //     id: String(item.__EMPTY_3),
-    //     name: item.__EMPTY_2,
-    //     rank: item.__EMPTY_6,
-    //     post: item.__EMPTY,
-    //     postId: String(item.__EMPTY_1),
-    //     score: item.__EMPTY_4,
-    //   };
-    // });
-    // console.log(JSON.stringify(parseData));
+  };
+
+  const getScoreJSONFromXlsx = async (
+    filepath = './shengkao-zhengzhou-2024-score.xlsx',
+  ) => {
+    // 注意，这里的相对路径是相对于/public目录
+    const f = await fetch(filepath);
+    const ab = await f.arrayBuffer();
+    const wb = xlsx.read(ab);
+    const olist = xlsx.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+    const list = olist.slice(2);
+    const result = list.map((item: any) => {
+      return {
+        id: item.__EMPTY_2,
+        rank: item.__EMPTY_8,
+        name: item.__EMPTY_3,
+        post: item.__EMPTY,
+        postId: item.__EMPTY_1,
+        score: Number(item.__EMPTY_7),
+        xingce: Number(item.__EMPTY_4),
+        shenlun: Number(item.__EMPTY_5),
+        gongan: item.__EMPTY_6 === '-' ? '' : Number(item.__EMPTY_6),
+      };
+    });
+    console.log(JSON.stringify(result));
   };
   useMount(() => {
-    getJSONFromXlsx();
+    getScoreJSONFromXlsx();
   });
-  return <div></div>;
+  return (
+    <div>
+      <Input
+        type="file"
+        placeholder="这里上传省考进面名单信息"
+        onChange={(e) => {
+          console.log(e);
+        }}
+      />
+    </div>
+  );
 };
 
 export default Test;
