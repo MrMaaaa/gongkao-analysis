@@ -1,9 +1,9 @@
 import { useCreation, useMemoizedFn, useMount, useSafeState } from 'ahooks';
 import { Line } from '@ant-design/plots';
 import { ScoreItem, ScoreObjItemCell } from '@/interface';
-import score2022 from '@/pages/shengkao-luoyang-2022/score.json';
-import score2023 from '@/pages/shengkao-luoyang-2023/score.json';
-import score2024 from '@/pages/shengkao-luoyang-2024/score.json';
+import score2022 from '@/files/score-shengkao-luoyang-2022.json';
+import score2023 from '@/files/score-shengkao-luoyang-2023.json';
+import score2024 from '@/files/score-shengkao-luoyang-2024.json';
 import './index.scss';
 
 const score = {

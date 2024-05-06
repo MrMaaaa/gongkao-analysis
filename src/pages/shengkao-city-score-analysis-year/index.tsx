@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { useMemoizedFn, useSafeState, useMount, useCreation } from 'ahooks';
 import cls from 'classnames';
+import ConditionComponent from '@/components/condition-component';
 import { ScoreFullItem, ScoreObjItemCell } from '@/interface';
-import scorejson from './score.json';
 import './index.scss';
 
 interface ScoreObjItem {
@@ -72,10 +73,10 @@ interface ScoreRankInPosts {
 const ScoreSection: React.FC<{
   score: string | number | undefined;
   suffix?: string;
-}> = ({ score, suffix = '分' }) => {
+}> = ({ score = '', suffix = '分' }) => {
   if (score === undefined) return null;
   if (suffix === '分') {
-    score = Number(score).toFixed(2);
+    score = Number(score || '0').toFixed(2);
   }
 
   return (
@@ -110,9 +111,8 @@ const ScoreRange: React.FC<{
 };
 
 const App: React.FC = () => {
-  const [list, setList] = useSafeState<ScoreFullItem[]>(scorejson);
-  const [listHeader, setListHeader] = useSafeState('');
-  const [listTitle, setListTitle] = useSafeState<string[]>([]);
+  const routerParams = useParams();
+  const [list, setList] = useSafeState<ScoreFullItem[]>([]);
   const [filterData, setFilterData] = useSafeState<ScoreObj>({
     score: {
       max: undefined,
@@ -376,11 +376,11 @@ const App: React.FC = () => {
   }>({
     userScore: 0,
     scoreRankAmount: '',
-    scoreAmountSum: 0,
+    scoreAmountSum: -1,
     xingceRankAmount: '',
-    xingceAmountSum: 0,
+    xingceAmountSum: -1,
     shenlunRankAmount: '',
-    shenlunAmountSum: 0,
+    shenlunAmountSum: -1,
     passPostNames: [],
     noPassPostNames: [],
     scoreRankInPosts: {
@@ -400,7 +400,7 @@ const App: React.FC = () => {
   const getRankAmount = useMemoizedFn<
     (rank: string | number, total: number) => string
   >((rank, total) => {
-    return ((Number(rank) / total) * 100).toFixed(2);
+    return ((Number(rank || 0) / total || 1) * 100).toFixed(2);
   });
 
   const generateUserResult = useMemoizedFn(() => {
@@ -478,7 +478,14 @@ const App: React.FC = () => {
   });
 
   useMount(() => {
-    transOriginList(list);
+    try {
+      const list = require(`@/files/score-shengkao-${routerParams.city}-${routerParams.year}.json`);
+      setList(list);
+      transOriginList(list);
+    } catch (e: any) {
+      if (e.message.startsWith('Cannot find module')) {
+      }
+    }
   });
 
   useEffect(() => {
@@ -512,42 +519,61 @@ const App: React.FC = () => {
     getPostRankInPosts();
   }, [selectedPostId, filterData]);
 
+  const onlyTotal = useCreation(() => {
+    return !filterData.score.max?.xingce;
+  }, [filterData.score.max?.xingce]);
+
   return (
     <div className="analysis-container">
       <div>
-        <div className="data-source-tips">
-          数据来源：
-          <a
-            href="http://www.lysrsks.gov.cn/index/news/detail.html?id=1323"
-            target="_blank"
-          >
-            河南省2024年度统一考试录用公务员洛阳职位面试确认人员名单
-          </a>
-        </div>
         <div className="title">进面分数</div>
         <div className="group">
           最高分：
           <ScoreSection score={filterData.score.max?.score} />
-          ，行测最高
-          <ScoreSection score={filterData.score.max?.xingce} />
-          ，申论最高
-          <ScoreSection score={filterData.score.max?.shenlun} />
+          <ConditionComponent condition={!onlyTotal}>
+            <>
+              ，行测最高
+              <ScoreSection score={filterData.score.max?.xingce} />
+            </>
+          </ConditionComponent>
+          <ConditionComponent condition={!onlyTotal}>
+            <>
+              ，申论最高
+              <ScoreSection score={filterData.score.max?.shenlun} />
+            </>
+          </ConditionComponent>
         </div>
         <div className="group">
           最低分：
           <ScoreSection score={filterData.score.min?.score} />
-          ，行测最低
-          <ScoreSection score={filterData.score.min?.xingce} />
-          ，申论最低
-          <ScoreSection score={filterData.score.min?.shenlun} />
+          <ConditionComponent condition={!onlyTotal}>
+            <>
+              ，行测最低
+              <ScoreSection score={filterData.score.min?.xingce} />
+            </>
+          </ConditionComponent>
+          <ConditionComponent condition={!onlyTotal}>
+            <>
+              ，申论最低
+              <ScoreSection score={filterData.score.min?.shenlun} />
+            </>
+          </ConditionComponent>
         </div>
         <div className="group">
           平均分：
           <ScoreSection score={filterData.score.ave} />
-          ，行测平均
-          <ScoreSection score={filterData.xingce.ave} />
-          ，申论平均
-          <ScoreSection score={filterData.shenlun.ave} />
+          <ConditionComponent condition={!onlyTotal}>
+            <>
+              ，行测平均
+              <ScoreSection score={filterData.xingce.ave} />
+            </>
+          </ConditionComponent>
+          <ConditionComponent condition={!onlyTotal}>
+            <>
+              ，申论平均
+              <ScoreSection score={filterData.shenlun.ave} />
+            </>
+          </ConditionComponent>
         </div>
         <div className="title">岗位情况</div>
         <div className="group">
@@ -566,42 +592,54 @@ const App: React.FC = () => {
           />
           )
         </div>
-        <div className="group">
-          行测波动最大岗位：
-          <span className="post-name">
-            {filterData.postData.diff.xingce.max?.post}
-          </span>
-          ，相差
-          <ScoreSection
-            score={filterData.postData.diff.xingce.max?.xingce.diff}
-          />
-          (
-          <ScoreRange
-            scorePrev={filterData.postData.diff.xingce.max?.xingce.max?.xingce}
-            scoreAfter={filterData.postData.diff.xingce.max?.xingce.min?.xingce}
-          />
-          )
-        </div>
-        <div className="group">
-          申论波动最大岗位：
-          <span className="post-name">
-            {filterData.postData.diff.shenlun.max?.post}
-          </span>
-          ，相差
-          <ScoreSection
-            score={filterData.postData.diff.shenlun.max?.shenlun.diff}
-          />
-          (
-          <ScoreRange
-            scorePrev={
-              filterData.postData.diff.shenlun.max?.shenlun.max?.shenlun
-            }
-            scoreAfter={
-              filterData.postData.diff.shenlun.max?.shenlun.min?.shenlun
-            }
-          />
-          )
-        </div>
+        <ConditionComponent
+          condition={!onlyTotal}
+        >
+          <div className="group">
+            行测波动最大岗位：
+            <span className="post-name">
+              {filterData.postData.diff.xingce.max?.post}
+            </span>
+            ，相差
+            <ScoreSection
+              score={filterData.postData.diff.xingce.max?.xingce.diff}
+            />
+            (
+            <ScoreRange
+              scorePrev={
+                filterData.postData.diff.xingce.max?.xingce.max?.xingce
+              }
+              scoreAfter={
+                filterData.postData.diff.xingce.max?.xingce.min?.xingce
+              }
+            />
+            )
+          </div>
+        </ConditionComponent>
+        <ConditionComponent
+          condition={!onlyTotal}
+        >
+          <div className="group">
+            申论波动最大岗位：
+            <span className="post-name">
+              {filterData.postData.diff.shenlun.max?.post}
+            </span>
+            ，相差
+            <ScoreSection
+              score={filterData.postData.diff.shenlun.max?.shenlun.diff}
+            />
+            (
+            <ScoreRange
+              scorePrev={
+                filterData.postData.diff.shenlun.max?.shenlun.max?.shenlun
+              }
+              scoreAfter={
+                filterData.postData.diff.shenlun.max?.shenlun.min?.shenlun
+              }
+            />
+            )
+          </div>
+        </ConditionComponent>
         <div className="group">
           总分波动最小岗位：
           <span className="post-name">
@@ -618,42 +656,54 @@ const App: React.FC = () => {
           />
           )
         </div>
-        <div className="group">
-          行测波动最小岗位：
-          <span className="post-name">
-            {filterData.postData.diff.xingce.min?.post}
-          </span>
-          ，相差
-          <ScoreSection
-            score={filterData.postData.diff.xingce.min?.xingce.diff}
-          />
-          (
-          <ScoreRange
-            scorePrev={filterData.postData.diff.xingce.min?.xingce.max?.xingce}
-            scoreAfter={filterData.postData.diff.xingce.min?.xingce.min?.xingce}
-          />
-          )
-        </div>
-        <div className="group">
-          申论波动最小岗位：
-          <span className="post-name">
-            {filterData.postData.diff.shenlun.min?.post}
-          </span>
-          ，相差
-          <ScoreSection
-            score={filterData.postData.diff.shenlun.min?.shenlun.diff}
-          />
-          (
-          <ScoreRange
-            scorePrev={
-              filterData.postData.diff.shenlun.min?.shenlun.max?.shenlun
-            }
-            scoreAfter={
-              filterData.postData.diff.shenlun.min?.shenlun.min?.shenlun
-            }
-          />
-          )
-        </div>
+        <ConditionComponent
+          condition={!onlyTotal}
+        >
+          <div className="group">
+            行测波动最小岗位：
+            <span className="post-name">
+              {filterData.postData.diff.xingce.min?.post}
+            </span>
+            ，相差
+            <ScoreSection
+              score={filterData.postData.diff.xingce.min?.xingce.diff}
+            />
+            (
+            <ScoreRange
+              scorePrev={
+                filterData.postData.diff.xingce.min?.xingce.max?.xingce
+              }
+              scoreAfter={
+                filterData.postData.diff.xingce.min?.xingce.min?.xingce
+              }
+            />
+            )
+          </div>
+        </ConditionComponent>
+        <ConditionComponent
+          condition={!onlyTotal}
+        >
+          <div className="group">
+            申论波动最小岗位：
+            <span className="post-name">
+              {filterData.postData.diff.shenlun.min?.post}
+            </span>
+            ，相差
+            <ScoreSection
+              score={filterData.postData.diff.shenlun.min?.shenlun.diff}
+            />
+            (
+            <ScoreRange
+              scorePrev={
+                filterData.postData.diff.shenlun.min?.shenlun.max?.shenlun
+              }
+              scoreAfter={
+                filterData.postData.diff.shenlun.min?.shenlun.min?.shenlun
+              }
+            />
+            )
+          </div>
+        </ConditionComponent>
         <div className="group">
           竞争最激烈的岗位：
           <span className="post-name">
@@ -754,18 +804,22 @@ const App: React.FC = () => {
           ，排名前
           <ScoreSection score={userResult.scoreRankAmount} suffix={'%'} />
         </div>
-        <div className="group">
-          行测超过了
-          <ScoreSection score={userResult.xingceAmountSum} suffix={'人'} />
-          ，排名前
-          <ScoreSection score={userResult.xingceRankAmount} suffix={'%'} />
-        </div>
-        <div className="group">
-          申论超过了
-          <ScoreSection score={userResult.shenlunAmountSum} suffix={'人'} />
-          ，排名前
-          <ScoreSection score={userResult.shenlunRankAmount} suffix={'%'} />
-        </div>
+        <ConditionComponent condition={!onlyTotal}>
+          <div className="group">
+            行测超过了
+            <ScoreSection score={userResult.xingceAmountSum} suffix={'人'} />
+            ，排名前
+            <ScoreSection score={userResult.xingceRankAmount} suffix={'%'} />
+          </div>
+        </ConditionComponent>
+        <ConditionComponent condition={!onlyTotal}>
+          <div className="group">
+            申论超过了
+            <ScoreSection score={userResult.shenlunAmountSum} suffix={'人'} />
+            ，排名前
+            <ScoreSection score={userResult.shenlunRankAmount} suffix={'%'} />
+          </div>
+        </ConditionComponent>
         <div className="group">
           可以在
           <ScoreSection score={userResult.passPostNames.length} suffix={'个'} />
