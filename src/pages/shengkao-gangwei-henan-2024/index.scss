@@ -1,4 +1,10 @@
 .shengkao-gangwei-henan-2024 {
+  .copy-wrapper {
+    cursor: pointer;
+    .copy-icon {
+      margin-left: 4px;
+    }
+  }
   .form {
     margin: 20px;
     .post-count {

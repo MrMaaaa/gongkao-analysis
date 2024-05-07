@@ -1,5 +1,5 @@
 import { useMemoizedFn, useSafeState } from 'ahooks';
-import { Table, Form, Input, Button } from 'antd';
+import { Table, Form, Input, Button, message } from 'antd';
 import { TableProps } from 'antd/lib/table';
 import { CopyOutlined } from '@ant-design/icons';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
@@ -14,22 +14,27 @@ interface FormSubmit {
   postId: string;
 }
 
+const CopyComponent: React.FC<{ value: string }> = ({ value }) => {
+  const onCopySuccess = useMemoizedFn(() => {
+    message.success('复制成功');
+  });
+  return (
+    <CopyToClipboard text={value} onCopy={onCopySuccess}>
+      <div className="copy-wrapper">
+        {value}
+        <CopyOutlined className="copy-icon" />
+      </div>
+    </CopyToClipboard>
+  );
+};
+
 const columns: TableProps['columns'] = [
   {
     title: PostRecruitmentItemKeyMapper.recruitmentInstitution,
     width: 200,
     dataIndex: 'recruitmentInstitution',
     fixed: 'left',
-    render: (value) => (
-      <>
-        <CopyToClipboard text={value}>
-          <>
-            {value}
-            <CopyOutlined />
-          </>
-        </CopyToClipboard>
-      </>
-    ),
+    render: (value) => <CopyComponent value={value} />,
   },
   {
     title: PostRecruitmentItemKeyMapper.postName,
@@ -42,16 +47,7 @@ const columns: TableProps['columns'] = [
     width: 100,
     dataIndex: 'postId',
     align: 'center',
-    render: (value) => (
-      <>
-        <CopyToClipboard text={value}>
-          <>
-            {value}
-            <CopyOutlined />
-          </>
-        </CopyToClipboard>
-      </>
-    ),
+    render: (value) => <CopyComponent value={value} />,
   },
   {
     title: PostRecruitmentItemKeyMapper.recruitmentNumber,
@@ -239,7 +235,7 @@ const TableForm: React.FC<{
 const Index: React.FC = () => {
   const [postShowList, setPostShowList] = useSafeState(postList);
   const onFinish = useMemoizedFn((values: FormSubmit) => {
-    console.log(values);
+    console.log(values)
     setPostShowList(
       postList
         .filter((item) => {
@@ -257,14 +253,14 @@ const Index: React.FC = () => {
           }
         })
         .filter((item) => {
-          if (!item.postId) {
+          if (!values.postId) {
             return true;
           } else {
             return String(item.postId).includes(values.postId);
           }
         })
         .filter((item) => {
-          if (!item.majorType) {
+          if (!values.majorType) {
             return true;
           } else {
             return item.majorType.includes(values.majorType);

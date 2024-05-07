@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useMemoizedFn, useSafeState, useMount, useCreation } from 'ahooks';
 import cls from 'classnames';
+import { Scatter } from '@ant-design/plots';
 import ConditionComponent from '@/components/condition-component';
 import { ScoreFullItem, ScoreObjItemCell } from '@/interface';
 import './index.scss';
@@ -527,6 +528,48 @@ const App: React.FC = () => {
     <div className="analysis-container">
       <div>
         <div className="title">进面分数</div>
+        <Scatter
+          {...{
+            yField: 'type',
+            xField: 'score',
+            // seriesField: 'type',
+            data: [
+              ...list
+                // .sort((a, b) => a.score - b.score)
+                .map((item) => ({
+                  no: item.id,
+                  score: item.score,
+                  type: '总分',
+                })),
+              ...list
+                // .sort((a, b) => a.xingce - b.xingce)
+                .map((item) => ({
+                  no: item.id,
+                  score: item.xingce,
+                  type: '行测',
+                })),
+              ...list
+                // .sort((a, b) => a.shenlun - b.shenlun)
+                .map((item) => ({
+                  no: item.id,
+                  score: item.shenlun,
+                  type: '申论',
+                })),
+            ],
+            axis: {
+              x: {
+                lineStroke: '#fff',
+                tickStroke: '#fff',
+                labelFill: '#fff',
+              },
+              y: {
+                lineStroke: '#fff',
+                tickStroke: '#fff',
+                labelFill: '#fff',
+              },
+            },
+          }}
+        />
         <div className="group">
           最高分：
           <ScoreSection score={filterData.score.max?.score} />
@@ -592,9 +635,7 @@ const App: React.FC = () => {
           />
           )
         </div>
-        <ConditionComponent
-          condition={!onlyTotal}
-        >
+        <ConditionComponent condition={!onlyTotal}>
           <div className="group">
             行测波动最大岗位：
             <span className="post-name">
@@ -616,9 +657,7 @@ const App: React.FC = () => {
             )
           </div>
         </ConditionComponent>
-        <ConditionComponent
-          condition={!onlyTotal}
-        >
+        <ConditionComponent condition={!onlyTotal}>
           <div className="group">
             申论波动最大岗位：
             <span className="post-name">
@@ -656,9 +695,7 @@ const App: React.FC = () => {
           />
           )
         </div>
-        <ConditionComponent
-          condition={!onlyTotal}
-        >
+        <ConditionComponent condition={!onlyTotal}>
           <div className="group">
             行测波动最小岗位：
             <span className="post-name">
@@ -680,9 +717,7 @@ const App: React.FC = () => {
             )
           </div>
         </ConditionComponent>
-        <ConditionComponent
-          condition={!onlyTotal}
-        >
+        <ConditionComponent condition={!onlyTotal}>
           <div className="group">
             申论波动最小岗位：
             <span className="post-name">
