@@ -205,6 +205,7 @@ const TableForm: React.FC<{
   onFinish: (values: FormSubmit) => void;
   suffix: React.ReactElement;
 }> = ({ onFinish, suffix }) => {
+  const [form] = Form.useForm();
   return (
     <Form
       onFinish={onFinish}
@@ -214,6 +215,7 @@ const TableForm: React.FC<{
         postId: '',
       }}
       layout="inline"
+      form={form}
     >
       <Form.Item name="majorType">
         <SubjectPicker />
@@ -225,7 +227,21 @@ const TableForm: React.FC<{
         <Input placeholder="请输入职位代码" allowClear />
       </Form.Item>
       <Form.Item>
-        <Button htmlType="submit">查询</Button>
+        <Button.Group>
+          <Button htmlType="submit">查询</Button>
+          <Button
+            htmlType="reset"
+            onClick={() =>
+              onFinish({
+                recruitmentInstitution: '',
+                majorType: '',
+                postId: '',
+              })
+            }
+          >
+            重置
+          </Button>
+        </Button.Group>
         {suffix}
       </Form.Item>
     </Form>
@@ -235,7 +251,7 @@ const TableForm: React.FC<{
 const Index: React.FC = () => {
   const [postShowList, setPostShowList] = useSafeState(postList);
   const onFinish = useMemoizedFn((values: FormSubmit) => {
-    console.log(values)
+    console.log(values);
     setPostShowList(
       postList
         .filter((item) => {

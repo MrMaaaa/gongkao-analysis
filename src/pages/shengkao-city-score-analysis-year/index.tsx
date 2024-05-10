@@ -526,50 +526,99 @@ const App: React.FC = () => {
 
   return (
     <div className="analysis-container">
+      <Scatter
+        {...{
+          // yField: 'type',
+          // xField: 'score',
+          // // seriesField: 'type',
+          // data: [
+          //   ...list
+          //     // .sort((a, b) => a.score - b.score)
+          //     .map((item) => ({
+          //       no: item.id,
+          //       score: item.score,
+          //       type: '总分',
+          //     })),
+          //   ...list
+          //     // .sort((a, b) => a.xingce - b.xingce)
+          //     .map((item) => ({
+          //       no: item.id,
+          //       score: item.xingce,
+          //       type: '行测',
+          //     })),
+          //   ...list
+          //     // .sort((a, b) => a.shenlun - b.shenlun)
+          //     .map((item) => ({
+          //       no: item.id,
+          //       score: item.shenlun,
+          //       type: '申论',
+          //     })),
+          // ],
+          yField: 'shenlun',
+          xField: 'xingce',
+          // seriesField: 'type',
+          // title: {
+          //   title: '洛阳2024进面分数分布气泡图',
+          //   titleFill: '#fff',
+          //   titleFontSize: 40,
+          // },
+          // height: 400,
+          // sizeField: 'score',
+          // scale: {
+          //   size: {
+          //     rangeMax: 30,
+          //   },
+          // },
+          data: [
+            ...list
+              // .sort((a, b) => a.xingce - b.xingce)
+              .map((item) => ({
+                no: item.id,
+                xingce: item.xingce,
+                shenlun: item.shenlun,
+                // score: 30
+              })),
+          ],
+          axis: {
+            x: {
+              lineStroke: '#fff',
+              tickStroke: '#fff',
+              tickStrokeOpacity: 1,
+              labelFill: '#fff',
+              // labelFontSize: 30,
+              labelFillOpacity: 1,
+              title: '行测分数',
+              titleFill: '#fff',
+              // titleFontSize: 30,
+            },
+            y: {
+              lineStroke: '#fff',
+              tickStroke: '#fff',
+              tickStrokeOpacity: 1,
+              // labelFontSize: 30,
+              labelFillOpacity: 1,
+              labelFill: '#fff',
+              title: '申论分数',
+              titleFill: '#fff',
+              // titleFontSize: 30,
+            },
+          },
+          annotations: [
+            {
+              type: 'lineX',
+              xField: 59.97,
+              style: { stroke: '#F4664A', strokeOpacity: 1, lineWidth: 1 },
+            },
+            {
+              type: 'lineY',
+              yField: 68.07,
+              style: { stroke: '#F4664A', strokeOpacity: 1, lineWidth: 1 },
+            },
+          ],
+        }}
+      />
       <div>
         <div className="title">进面分数</div>
-        <Scatter
-          {...{
-            yField: 'type',
-            xField: 'score',
-            // seriesField: 'type',
-            data: [
-              ...list
-                // .sort((a, b) => a.score - b.score)
-                .map((item) => ({
-                  no: item.id,
-                  score: item.score,
-                  type: '总分',
-                })),
-              ...list
-                // .sort((a, b) => a.xingce - b.xingce)
-                .map((item) => ({
-                  no: item.id,
-                  score: item.xingce,
-                  type: '行测',
-                })),
-              ...list
-                // .sort((a, b) => a.shenlun - b.shenlun)
-                .map((item) => ({
-                  no: item.id,
-                  score: item.shenlun,
-                  type: '申论',
-                })),
-            ],
-            axis: {
-              x: {
-                lineStroke: '#fff',
-                tickStroke: '#fff',
-                labelFill: '#fff',
-              },
-              y: {
-                lineStroke: '#fff',
-                tickStroke: '#fff',
-                labelFill: '#fff',
-              },
-            },
-          }}
-        />
         <div className="group">
           最高分：
           <ScoreSection score={filterData.score.max?.score} />

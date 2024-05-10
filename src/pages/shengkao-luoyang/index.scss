@@ -13,6 +13,7 @@ $width: 1200px;
       @include text(#fff, 18px, left);
       width: 200px;
       margin-left: 15px;
+      border-bottom: 1px solid #fff;
     }
     .list-sort-toggle {
       @include text(rgb(117, 117, 117), 14px);
