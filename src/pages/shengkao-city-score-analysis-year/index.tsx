@@ -509,9 +509,10 @@ const App: React.FC = () => {
     const selectedPostRank = (Object.values(filterData.posts) as PostsItem[])
       .sort((a, b) => b.score.ave - a.score.ave)
       .findIndex((item) => item.postId === selectedPostId);
+
     setPostRankInfo({
       ...selectedPostInfo,
-      postRankAmount: getRankAmount(selectedPostRank, postCount),
+      postRankAmount: getRankAmount(selectedPostRank + 1, postCount),
       postRank: selectedPostRank + 1 + '',
     });
   });

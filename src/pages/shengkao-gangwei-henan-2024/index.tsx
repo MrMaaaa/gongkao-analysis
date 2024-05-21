@@ -165,17 +165,29 @@ const columns: TableProps['columns'] = [
     dataIndex: 'majorType',
   },
   {
+    title: PostRecruitmentItemKeyMapper.workExperience,
+    width: 100,
+    dataIndex: 'workExperience',
+    filters: [
+      {
+        text: '两年以上基层工作经历',
+        value: '两年以上基层工作经历',
+      },
+    ],
+    onFilter: (value, record) => record.workExperience === value,
+  },
+  {
     title: PostRecruitmentItemKeyMapper.otherRequirement,
     width: 100,
     dataIndex: 'otherRequirement',
     align: 'center',
   },
-  {
-    title: PostRecruitmentItemKeyMapper.physicalExaminationStandard,
-    width: 100,
-    dataIndex: 'physicalExaminationStandard',
-    align: 'center',
-  },
+  // {
+  //   title: PostRecruitmentItemKeyMapper.physicalExaminationStandard,
+  //   width: 100,
+  //   dataIndex: 'physicalExaminationStandard',
+  //   align: 'center',
+  // },
   {
     title: PostRecruitmentItemKeyMapper.isPhysicalFitnessTest,
     width: 100,
