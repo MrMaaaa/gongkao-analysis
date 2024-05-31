@@ -1,10 +1,11 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from '@/pages/home';
-import Skhngw2024 from '@/pages/shengkao-gangwei-henan-2024';
+import ShengkaoPostSelect from '@/pages/shengkao-city-post-select';
 import Skly from '@/pages/shengkao-luoyang';
 import SHCityScoreAnalysisYear from '@/pages/shengkao-city-score-analysis-year';
+import SHPostDetail from '@/pages/shengkao-post-detail';
 import TestPage from '@/pages/test';
-import NotFound from './pages/home/404';
+import NotFound from '@/pages/404';
 
 const Router = () => {
   return (
@@ -17,9 +18,10 @@ const Router = () => {
           element={<SHCityScoreAnalysisYear />}
         />
         <Route
-          path="/shengkao-gangwei-henan-2024"
-          element={<Skhngw2024 />}
+          path="/sk/post/select/:province/:year"
+          element={<ShengkaoPostSelect />}
         ></Route>
+        <Route path="/sk/post/detail/:province/:year" element={<SHPostDetail />}></Route>
         <Route path="/test" element={<TestPage />}></Route>
         <Route path="/*" element={<NotFound />}></Route>
       </Routes>

@@ -5,6 +5,7 @@ import cls from 'classnames';
 import { Scatter } from '@ant-design/plots';
 import ConditionComponent from '@/components/condition-component';
 import { ScoreFullItem, ScoreObjItemCell } from '@/interface';
+import { readJSON } from '@/utils';
 import './index.scss';
 
 interface ScoreObjItem {
@@ -479,14 +480,11 @@ const App: React.FC = () => {
   });
 
   useMount(() => {
-    try {
-      const list = require(`@/files/score-shengkao-${routerParams.city}-${routerParams.year}.json`);
-      setList(list);
-      transOriginList(list);
-    } catch (e: any) {
-      if (e.message.startsWith('Cannot find module')) {
-      }
-    }
+    const list = readJSON(
+      () => require(`@/files/score-shengkao-${routerParams.city}-${routerParams.year}.json`),
+    );
+    setList(list);
+    transOriginList(list);
   });
 
   useEffect(() => {
@@ -527,97 +525,6 @@ const App: React.FC = () => {
 
   return (
     <div className="analysis-container">
-      <Scatter
-        {...{
-          // yField: 'type',
-          // xField: 'score',
-          // // seriesField: 'type',
-          // data: [
-          //   ...list
-          //     // .sort((a, b) => a.score - b.score)
-          //     .map((item) => ({
-          //       no: item.id,
-          //       score: item.score,
-          //       type: '总分',
-          //     })),
-          //   ...list
-          //     // .sort((a, b) => a.xingce - b.xingce)
-          //     .map((item) => ({
-          //       no: item.id,
-          //       score: item.xingce,
-          //       type: '行测',
-          //     })),
-          //   ...list
-          //     // .sort((a, b) => a.shenlun - b.shenlun)
-          //     .map((item) => ({
-          //       no: item.id,
-          //       score: item.shenlun,
-          //       type: '申论',
-          //     })),
-          // ],
-          yField: 'shenlun',
-          xField: 'xingce',
-          // seriesField: 'type',
-          // title: {
-          //   title: '洛阳2024进面分数分布气泡图',
-          //   titleFill: '#fff',
-          //   titleFontSize: 40,
-          // },
-          // height: 400,
-          // sizeField: 'score',
-          // scale: {
-          //   size: {
-          //     rangeMax: 30,
-          //   },
-          // },
-          data: [
-            ...list
-              // .sort((a, b) => a.xingce - b.xingce)
-              .map((item) => ({
-                no: item.id,
-                xingce: item.xingce,
-                shenlun: item.shenlun,
-                // score: 30
-              })),
-          ],
-          axis: {
-            x: {
-              lineStroke: '#fff',
-              tickStroke: '#fff',
-              tickStrokeOpacity: 1,
-              labelFill: '#fff',
-              // labelFontSize: 30,
-              labelFillOpacity: 1,
-              title: '行测分数',
-              titleFill: '#fff',
-              // titleFontSize: 30,
-            },
-            y: {
-              lineStroke: '#fff',
-              tickStroke: '#fff',
-              tickStrokeOpacity: 1,
-              // labelFontSize: 30,
-              labelFillOpacity: 1,
-              labelFill: '#fff',
-              title: '申论分数',
-              titleFill: '#fff',
-              // titleFontSize: 30,
-            },
-          },
-          annotations: [
-            {
-              type: 'lineX',
-              xField: 59.97,
-              style: { stroke: '#F4664A', strokeOpacity: 1, lineWidth: 1 },
-            },
-            {
-              type: 'lineY',
-              yField: 68.07,
-              style: { stroke: '#F4664A', strokeOpacity: 1, lineWidth: 1 },
-            },
-          ],
-        }}
-      />
       <div>
         <div className="title">进面分数</div>
         <div className="group">
@@ -670,11 +577,7 @@ const App: React.FC = () => {
         </div>
         <div className="title">岗位情况</div>
         <div className="group">
-          总分波动最大岗位：
-          <span className="post-name">
-            {filterData.postData.diff.score.max?.post}
-          </span>
-          ，相差
+          总分波动最大相差
           <ScoreSection
             score={filterData.postData.diff.score.max?.score.diff}
           />
@@ -683,15 +586,14 @@ const App: React.FC = () => {
             scorePrev={filterData.postData.diff.score.max?.score.max?.score}
             scoreAfter={filterData.postData.diff.score.max?.score.min?.score}
           />
-          )
+          ) ，岗位：
+          <span className="post-name">
+            {filterData.postData.diff.score.max?.post}
+          </span>
         </div>
         <ConditionComponent condition={!onlyTotal}>
           <div className="group">
-            行测波动最大岗位：
-            <span className="post-name">
-              {filterData.postData.diff.xingce.max?.post}
-            </span>
-            ，相差
+            行测波动最大相差
             <ScoreSection
               score={filterData.postData.diff.xingce.max?.xingce.diff}
             />
@@ -704,16 +606,15 @@ const App: React.FC = () => {
                 filterData.postData.diff.xingce.max?.xingce.min?.xingce
               }
             />
-            )
+            ) ，岗位：
+            <span className="post-name">
+              {filterData.postData.diff.xingce.max?.post}
+            </span>
           </div>
         </ConditionComponent>
         <ConditionComponent condition={!onlyTotal}>
           <div className="group">
-            申论波动最大岗位：
-            <span className="post-name">
-              {filterData.postData.diff.shenlun.max?.post}
-            </span>
-            ，相差
+            申论波动最大相差
             <ScoreSection
               score={filterData.postData.diff.shenlun.max?.shenlun.diff}
             />
@@ -726,15 +627,14 @@ const App: React.FC = () => {
                 filterData.postData.diff.shenlun.max?.shenlun.min?.shenlun
               }
             />
-            )
+            ) ，岗位：
+            <span className="post-name">
+              {filterData.postData.diff.shenlun.max?.post}
+            </span>
           </div>
         </ConditionComponent>
         <div className="group">
-          总分波动最小岗位：
-          <span className="post-name">
-            {filterData.postData.diff.score.min?.post}
-          </span>
-          ，相差
+          总分波动最小相差
           <ScoreSection
             score={filterData.postData.diff.score.min?.score.diff}
           />
@@ -743,15 +643,14 @@ const App: React.FC = () => {
             scorePrev={filterData.postData.diff.score.min?.score.max?.score}
             scoreAfter={filterData.postData.diff.score.min?.score.min?.score}
           />
-          )
+          ) ，岗位：
+          <span className="post-name">
+            {filterData.postData.diff.score.min?.post}
+          </span>
         </div>
         <ConditionComponent condition={!onlyTotal}>
           <div className="group">
-            行测波动最小岗位：
-            <span className="post-name">
-              {filterData.postData.diff.xingce.min?.post}
-            </span>
-            ，相差
+            行测波动最小相差
             <ScoreSection
               score={filterData.postData.diff.xingce.min?.xingce.diff}
             />
@@ -764,16 +663,15 @@ const App: React.FC = () => {
                 filterData.postData.diff.xingce.min?.xingce.min?.xingce
               }
             />
-            )
+            ) ，岗位：
+            <span className="post-name">
+              {filterData.postData.diff.xingce.min?.post}
+            </span>
           </div>
         </ConditionComponent>
         <ConditionComponent condition={!onlyTotal}>
           <div className="group">
-            申论波动最小岗位：
-            <span className="post-name">
-              {filterData.postData.diff.shenlun.min?.post}
-            </span>
-            ，相差
+            申论波动最小相差
             <ScoreSection
               score={filterData.postData.diff.shenlun.min?.shenlun.diff}
             />
@@ -786,15 +684,14 @@ const App: React.FC = () => {
                 filterData.postData.diff.shenlun.min?.shenlun.min?.shenlun
               }
             />
-            )
+            ) ，岗位：
+            <span className="post-name">
+              {filterData.postData.diff.shenlun.min?.post}
+            </span>
           </div>
         </ConditionComponent>
         <div className="group">
-          竞争最激烈的岗位：
-          <span className="post-name">
-            {filterData.postData.ave.score.max?.post}
-          </span>
-          ，平均分：
+          竞争最激烈平均分
           <ScoreSection score={filterData.postData.ave.score.max?.score.ave} />
           {/* ，行测最高分
               <ScoreSection
@@ -820,13 +717,13 @@ const App: React.FC = () => {
               <ScoreSection
                 score={filterData.postData.ave.score.max?.xingce.ave}
               /> */}
+          ，岗位：
+          <span className="post-name">
+            {filterData.postData.ave.score.max?.post}
+          </span>
         </div>
         <div className="group">
-          竞争最温和的岗位：
-          <span className="post-name">
-            {filterData.postData.ave.score.min?.post}
-          </span>
-          ，平均分：
+          竞争最温和平均分
           <ScoreSection score={filterData.postData.ave.score.min?.score.ave} />
           {/* ， 行测最高分
               <ScoreSection
@@ -852,6 +749,10 @@ const App: React.FC = () => {
               <ScoreSection
                 score={filterData.postData.ave.score.min?.xingce.ave}
               /> */}
+          ，岗位：
+          <span className="post-name">
+            {filterData.postData.ave.score.min?.post}
+          </span>
         </div>
         <div className="title">我的成绩</div>
         <div className="group">
@@ -950,6 +851,67 @@ const App: React.FC = () => {
           <ScoreSection score={postRankInfo.postRankAmount} suffix={'%'} />
         </div>
       </div>
+      <Scatter
+        {...{
+          yField: 'shenlun',
+          xField: 'xingce',
+          data: [
+            ...list.map((item) => ({
+              no: item.id,
+              xingce: item.xingce,
+              shenlun: item.shenlun,
+            })),
+          ],
+          tooltip: {
+            items: [
+              { field: 'xingce', channel: 'xingce', name: '行测' },
+              { field: 'shenlun', channel: 'shenlun', name: '申论' },
+            ],
+          },
+          title: {
+            title: '成绩分布散点气泡图',
+            style: {
+              titleFill: '#fff',
+            },
+          },
+          axis: {
+            x: {
+              lineStroke: '#fff',
+              tickStroke: '#fff',
+              tickStrokeOpacity: 1,
+              labelFill: '#fff',
+              // labelFontSize: 30,
+              labelFillOpacity: 1,
+              title: '行测分数',
+              titleFill: '#fff',
+              // titleFontSize: 30,
+            },
+            y: {
+              lineStroke: '#fff',
+              tickStroke: '#fff',
+              tickStrokeOpacity: 1,
+              // labelFontSize: 30,
+              labelFillOpacity: 1,
+              labelFill: '#fff',
+              title: '申论分数',
+              titleFill: '#fff',
+              // titleFontSize: 30,
+            },
+          },
+          annotations: [
+            {
+              type: 'lineX',
+              xField: 59.97,
+              style: { stroke: '#F4664A', strokeOpacity: 1, lineWidth: 1 },
+            },
+            {
+              type: 'lineY',
+              yField: 68.07,
+              style: { stroke: '#F4664A', strokeOpacity: 1, lineWidth: 1 },
+            },
+          ],
+        }}
+      />
     </div>
   );
 };

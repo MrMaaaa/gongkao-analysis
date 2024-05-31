@@ -1,11 +1,12 @@
-import { useMemoizedFn, useSafeState } from 'ahooks';
+import { useMount, useMemoizedFn, useSafeState } from 'ahooks';
 import { Table, Form, Input, Button, message } from 'antd';
+import { useParams } from 'react-router-dom';
 import { TableProps } from 'antd/lib/table';
 import { CopyOutlined } from '@ant-design/icons';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import SubjectPicker from '@/components/major-picker';
-import { PostRecruitmentItemKeyMapper } from '@/interface';
-import postList from '@/files/shengkao-gangwei-henan-2024.json';
+import { PostRecruitmentItemKeyMapper, PostRecruitmentItem } from '@/interface';
+import { readJSON } from '@/utils';
 import './index.scss';
 
 interface FormSubmit {
@@ -261,11 +262,14 @@ const TableForm: React.FC<{
 };
 
 const Index: React.FC = () => {
-  const [postShowList, setPostShowList] = useSafeState(postList);
+  const [list, setList] = useSafeState<PostRecruitmentItem[]>([]);
+  const routerParams = useParams();
+  const [postShowList, setPostShowList] = useSafeState<PostRecruitmentItem[]>(
+    [],
+  );
   const onFinish = useMemoizedFn((values: FormSubmit) => {
-    console.log(values);
     setPostShowList(
-      postList
+      list
         .filter((item) => {
           if (!values.recruitmentInstitution) {
             return true;
@@ -297,8 +301,16 @@ const Index: React.FC = () => {
     );
   });
 
+  useMount(() => {
+    const list = readJSON(
+      () => require(`@/files/post-shengkao-${routerParams.province}-${routerParams.year}.json`),
+    );
+    setList(list);
+    setPostShowList(list);
+  });
+
   return (
-    <div className="shengkao-gangwei-henan-2024">
+    <div className="shengkao-city-post-select">
       <div className="form">
         <TableForm
           onFinish={onFinish}
