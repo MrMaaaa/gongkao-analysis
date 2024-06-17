@@ -53,3 +53,9 @@
   bottom: $bottom;
   z-index: $zIndex;
 }
+
+@mixin center-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

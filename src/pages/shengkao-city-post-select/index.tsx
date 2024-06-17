@@ -1,11 +1,15 @@
 import { useMount, useMemoizedFn, useSafeState } from 'ahooks';
-import { Table, Form, Input, Button, message } from 'antd';
+import { Table, Form, Input, Button, message, Checkbox } from 'antd';
 import { useParams } from 'react-router-dom';
 import { TableProps } from 'antd/lib/table';
 import { CopyOutlined } from '@ant-design/icons';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import SubjectPicker from '@/components/major-picker';
-import { PostRecruitmentItemKeyMapper, PostRecruitmentItem } from '@/interface';
+import {
+  PostRecruitmentItemKeyMapper,
+  PostRecruitmentItem,
+  ScoreItem,
+} from '@/interface';
 import { readJSON } from '@/utils';
 import './index.scss';
 
@@ -13,6 +17,14 @@ interface FormSubmit {
   recruitmentInstitution: string;
   majorType: string;
   postId: string;
+  mustHavePastScore: boolean;
+}
+
+interface PostScoreRecruitmentItem extends PostRecruitmentItem {
+  score?: {
+    score: string;
+    year: string | 'ave';
+  }[];
 }
 
 const CopyComponent: React.FC<{ value: string }> = ({ value }) => {
@@ -36,6 +48,18 @@ const columns: TableProps['columns'] = [
     dataIndex: 'recruitmentInstitution',
     fixed: 'left',
     render: (value) => <CopyComponent value={value} />,
+  },
+  {
+    title: '历年进面成绩',
+    width: 200,
+    dataIndex: 'score',
+    defaultSortOrder: 'descend',
+    sorter: (a, b) => a.score?.[0]?.score - b.score?.[0]?.score,
+    render: (value) => (
+      <div>
+        {value.length === 0 ? '暂无数据' : `过去三年平均分：${value[0].score}`}
+      </div>
+    ),
   },
   {
     title: PostRecruitmentItemKeyMapper.postName,
@@ -226,6 +250,7 @@ const TableForm: React.FC<{
         recruitmentInstitution: '',
         majorType: '',
         postId: '',
+        mustHavePastScore: false,
       }}
       layout="inline"
       form={form}
@@ -239,6 +264,9 @@ const TableForm: React.FC<{
       <Form.Item name="postId">
         <Input placeholder="请输入职位代码" allowClear />
       </Form.Item>
+      <Form.Item name="mustHavePastScore" valuePropName="checked">
+        <Checkbox>只显示存在历年进面成绩岗位</Checkbox>
+      </Form.Item>
       <Form.Item>
         <Button.Group>
           <Button htmlType="submit">查询</Button>
@@ -249,6 +277,7 @@ const TableForm: React.FC<{
                 recruitmentInstitution: '',
                 majorType: '',
                 postId: '',
+                mustHavePastScore: false,
               })
             }
           >
@@ -262,51 +291,131 @@ const TableForm: React.FC<{
 };
 
 const Index: React.FC = () => {
-  const [list, setList] = useSafeState<PostRecruitmentItem[]>([]);
+  const [list, setList] = useSafeState<PostScoreRecruitmentItem[]>([]);
   const routerParams = useParams();
-  const [postShowList, setPostShowList] = useSafeState<PostRecruitmentItem[]>(
-    [],
-  );
+  const [postShowList, setPostShowList] = useSafeState<
+    PostScoreRecruitmentItem[]
+  >([]);
+  const [postShowListLength, setPostShowListLength] = useSafeState(0); // postShowList.length 只能获取到通过查询修改的列表长度，对于使用table filter功能进行的过滤，只能在table onChange中感知到，因此需要单独设置变量记录
   const onFinish = useMemoizedFn((values: FormSubmit) => {
-    setPostShowList(
-      list
-        .filter((item) => {
-          if (!values.recruitmentInstitution) {
-            return true;
-          } else if (!values.recruitmentInstitution.includes(' ')) {
-            return item.recruitmentInstitution.includes(
-              values.recruitmentInstitution,
-            );
-          } else {
-            const conditions = values.recruitmentInstitution.split(' ');
-            return conditions.reduce((p, c) => {
-              return p && item.recruitmentInstitution.includes(c);
-            }, true);
-          }
-        })
-        .filter((item) => {
-          if (!values.postId) {
-            return true;
-          } else {
-            return String(item.postId).includes(values.postId);
-          }
-        })
-        .filter((item) => {
-          if (!values.majorType) {
-            return true;
-          } else {
-            return item.majorType.includes(values.majorType);
-          }
-        }),
-    );
+    console.log(values);
+    const newList = list
+      .filter((item) => {
+        if (values.mustHavePastScore) {
+          if (!item.score) return false;
+          return item.score.length > 0;
+        }
+
+        return true;
+      })
+      .filter((item) => {
+        if (!values.recruitmentInstitution) {
+          return true;
+        } else if (!values.recruitmentInstitution.includes(' ')) {
+          return item.recruitmentInstitution.includes(
+            values.recruitmentInstitution,
+          );
+        } else {
+          const conditions = values.recruitmentInstitution.split(' ');
+          return conditions.reduce((p, c) => {
+            return p && item.recruitmentInstitution.includes(c);
+          }, true);
+        }
+      })
+      .filter((item) => {
+        if (!values.postId) {
+          return true;
+        } else {
+          return String(item.postId).includes(values.postId);
+        }
+      })
+      .filter((item) => {
+        if (!values.majorType) {
+          return true;
+        } else {
+          return item.majorType.includes(values.majorType);
+        }
+      });
+
+    setPostShowList(newList);
+    setPostShowListLength(newList.length);
   });
 
   useMount(() => {
-    const list = readJSON(
-      () => require(`@/files/post-shengkao-${routerParams.province}-${routerParams.year}.json`),
+    const list = readJSON<PostScoreRecruitmentItem[]>(() =>
+      require(`@/files/post-shengkao-${routerParams.province}-${routerParams.year}.json`),
     );
-    setList(list);
-    setPostShowList(list);
+    const listWithScore = postAddScore(list);
+    setList(listWithScore);
+    setPostShowList(listWithScore);
+    setPostShowListLength(listWithScore.length);
+  });
+
+  const postAddScore = useMemoizedFn((list: PostScoreRecruitmentItem[]) => {
+    const testScore1 = readJSON<ScoreItem[]>(() =>
+      require(`@/files/score-shengkao-luoyang-${Number(
+        routerParams.year,
+      )}.json`),
+    );
+    const testScore2 = readJSON<ScoreItem[]>(() =>
+      require(`@/files/score-shengkao-luoyang-${
+        Number(routerParams.year) - 1
+      }.json`),
+    );
+    const testScore3 = readJSON<ScoreItem[]>(() =>
+      require(`@/files/score-shengkao-luoyang-${
+        Number(routerParams.year) - 2
+      }.json`),
+    );
+    return list.map((item) => {
+      item.score = [];
+      const score = {
+        score: 0,
+        num: 0,
+      };
+      const scoreItem1 = testScore1.find((i) =>
+        i.post.includes(item.recruitmentInstitution),
+      );
+      if (!!scoreItem1) {
+        // item.score.push({
+        //   score: scoreItem1.score,
+        //   year: 2024,
+        // });
+        score.score += scoreItem1.score;
+        score.num++;
+      }
+      const scoreItem2 = testScore2.find((i) =>
+        i.post.includes(item.recruitmentInstitution),
+      );
+      if (!!scoreItem2) {
+        // item.score.push({
+        //   score: scoreItem2.score,
+        //   year: 2023,
+        // });
+        score.score += scoreItem2.score;
+        score.num++;
+      }
+      const scoreItem3 = testScore3.find((i) =>
+        i.post.includes(item.recruitmentInstitution),
+      );
+      if (!!scoreItem3) {
+        // item.score.push({
+        //   score: scoreItem3.score,
+        //   year: 2022,
+        // });
+        score.score += scoreItem3.score;
+        score.num++;
+      }
+
+      if (score.score > 0) {
+        item.score.push({
+          score: (score.score / score.num).toFixed(2),
+          year: 'ave',
+        });
+      }
+
+      return item;
+    });
   });
 
   return (
@@ -317,7 +426,7 @@ const Index: React.FC = () => {
           suffix={
             <span className="post-count">
               共查询到
-              <span className="post-count-num">{postShowList.length}</span>
+              <span className="post-count-num">{postShowListLength}</span>
               个岗位
             </span>
           }
@@ -330,6 +439,9 @@ const Index: React.FC = () => {
         scroll={{ x: 800, y: 600 }}
         bordered
         size={'middle'}
+        onChange={(pagination, filters, sorter, extra) => {
+          setPostShowListLength(extra.currentDataSource.length);
+        }}
       />
     </div>
   );

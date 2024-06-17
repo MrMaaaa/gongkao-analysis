@@ -1,7 +1,7 @@
 import { message } from 'antd';
 import ErrorUtils from '@/utils/error';
 
-export const readJSON = (fetchFunction: () => any) => {
+export const readJSON = <T>(fetchFunction: () => T) => {
   try {
     const list = fetchFunction();
     return list;
