@@ -11,10 +11,12 @@ const webpackConfig = {
       RUN_ENV: JSON.stringify(process.env.RUN_ENV || 'dev'),
     }),
   ],
-  output: {
-    path: path.resolve(__dirname, 'docs'),
-    publicPath: '/',
-  }
+  configure: {
+    output: {
+      publicPath: './',
+      path: path.resolve(__dirname, 'docs'), // 修改输出文件目录
+    },
+  },
 };
 
 module.exports = {
