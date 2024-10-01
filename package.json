@@ -55,6 +55,5 @@
   },
   "devDependencies": {
     "@craco/craco": "^7.1.0"
-  },
-  "homepage": "/gongkao-analysis/"
+  }
 }

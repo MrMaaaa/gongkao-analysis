@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { HashRouter, Routes, Route } from 'react-router-dom';
 import Home from '@/pages/home';
 import ShengkaoPostSelect from '@/pages/shengkao-city-post-select';
 import Skly from '@/pages/shengkao-luoyang';
@@ -9,7 +9,7 @@ import NotFound from '@/pages/404';
 
 const Router = () => {
   return (
-    <BrowserRouter basename="/gongkao-analysis">
+    <HashRouter>
       <Routes>
         <Route path="/" element={<Home />}></Route>
         <Route path="/shengkao-luoyang" element={<Skly />}></Route>
@@ -28,7 +28,7 @@ const Router = () => {
         <Route path="/test" element={<TestPage />}></Route>
         <Route path="/*" element={<NotFound />}></Route>
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 };
 
