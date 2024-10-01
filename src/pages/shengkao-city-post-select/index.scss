@@ -1,4 +1,9 @@
 .shengkao-city-post-select {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  height: 100vh;
+  overflow: auto;
   .copy-wrapper {
     cursor: pointer;
     .copy-icon {
@@ -6,7 +11,7 @@
     }
   }
   .form {
-    margin: 20px;
+    padding: 16px;
     .post-count {
       margin-left: 16px;
       &-num {
@@ -16,6 +21,41 @@
     }
   }
   .table {
-    margin: 20px;
+    padding: 0 16px 16px;
+    overflow: auto;
+    .ant-spin-nested-loading {
+      height: 100%;
+      .ant-spin-container {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        height: 100%;
+        .ant-table {
+          overflow: auto;
+        }
+      }
+    }
+  }
+}
+
+.ant-table-wrapper .ant-table-pagination.ant-pagination {
+  margin-top: 0;
+}
+
+@media (max-width: $mobile-min-width) {
+  .shengkao-city-post-select {
+    .form {
+      &-item {
+        &__major-type,
+        &__recruitment-institution,
+        &__post-id {
+          width: 100%;
+          margin-inline-end: 0;
+        }
+        &__operation {
+          margin-top: 10px;
+        }
+      }
+    }
   }
 }

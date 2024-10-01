@@ -7,7 +7,6 @@ const MajorPicker: React.FC<{
 }> = ({ onChange }) => {
   return (
     <Select
-      style={{ width: 240 }}
       showSearch
       filterOption={(input: string, option?: MajorItem) =>
         (option?.majorName ?? '').toLowerCase().includes(input.toLowerCase())

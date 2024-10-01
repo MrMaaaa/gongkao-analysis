@@ -12,7 +12,6 @@ const TextOverflow: React.FC<{
   const [toggleHiddenStyle, setToggleHiddenStyle] = useSafeState(false);
   useEffect(() => {
     if (!!text && textRef.current) {
-      console.log(textRef.current?.getBoundingClientRect().height);
       if (textRef.current.getBoundingClientRect().height > 60) {
         setWithHiddenStyle(true);
         setToggleHiddenStyle(true);

@@ -1,3 +1,6 @@
+$mobile-min-width: 1200px;
+$body-bg: #282c34;
+
 @mixin flex($jc: center, $ai: center) {
   display: flex;
   justify-content: $jc;
@@ -72,5 +75,5 @@
 }
 
 @mixin common-box-shadow-bottom {
-  box-shadow: 0px -6px 6px 0px #161616;
+  box-shadow: 0px 6px 6px 0px #161616;
 }

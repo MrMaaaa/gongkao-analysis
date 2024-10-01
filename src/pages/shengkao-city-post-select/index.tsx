@@ -45,14 +45,14 @@ const CopyComponent: React.FC<{ value: string }> = ({ value }) => {
 const columns: TableProps['columns'] = [
   {
     title: PostRecruitmentItemKeyMapper.recruitmentInstitution,
-    width: 200,
+    width: 150,
     dataIndex: 'recruitmentInstitution',
     fixed: 'left',
     render: (value) => <CopyComponent value={value} />,
   },
   {
     title: '历年进面成绩',
-    width: 200,
+    width: 150,
     dataIndex: 'score',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.score?.[0]?.score - b.score?.[0]?.score,
@@ -190,7 +190,7 @@ const columns: TableProps['columns'] = [
   },
   {
     title: PostRecruitmentItemKeyMapper.majorType,
-    width: 200,
+    width: 150,
     dataIndex: 'majorType',
     render: (text) => {
       return <TextOverflow text={text} />;
@@ -268,21 +268,26 @@ const TableForm: React.FC<{
       layout="inline"
       form={form}
     >
-      <Form.Item name="majorType">
+      <Form.Item name="majorType" className="form-item__major-type">
         <SubjectPicker />
       </Form.Item>
-      <Form.Item name="recruitmentInstitution">
+      <Form.Item
+        name="recruitmentInstitution"
+        className="form-item__recruitment-institution"
+      >
         <Input placeholder="请输入招录单位" allowClear />
       </Form.Item>
-      <Form.Item name="postId">
+      <Form.Item name="postId" className="form-item__post-id">
         <Input placeholder="请输入职位代码" allowClear />
       </Form.Item>
       <Form.Item name="mustHavePastScore" valuePropName="checked">
         <Checkbox>只显示存在历年进面成绩岗位</Checkbox>
       </Form.Item>
-      <Form.Item>
+      <Form.Item className="form-item__operation">
         <Button.Group>
-          <Button type="primary" htmlType="submit">查询</Button>
+          <Button type="primary" htmlType="submit">
+            查询
+          </Button>
           <Button
             htmlType="reset"
             onClick={() =>
@@ -448,10 +453,14 @@ const Index: React.FC = () => {
       <Table
         className="table"
         dataSource={postShowList}
+        rowKey="postId"
         columns={columns}
-        scroll={{ x: 800, y: 600 }}
+        scroll={{ x: 800 }}
         bordered
-        size={'middle'}
+        size={'small'}
+        pagination={{
+          position: ['topRight'],
+        }}
         onChange={(pagination, filters, sorter, extra) => {
           setPostShowListLength(extra.currentDataSource.length);
         }}

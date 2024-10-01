@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import cls from 'classnames';
 import { useParams } from 'react-router-dom';
-import { Select, InputNumber } from 'antd';
+import { Select, InputNumber, Table } from 'antd';
 import { useMemoizedFn, useSafeState, useMount, useCreation } from 'ahooks';
 import { Scatter } from '@ant-design/plots';
 import IfElseComponent from '@/components/if-else-component';
 import ConditionComponent from '@/components/condition-component';
 import { ScoreFullItem, ScoreObjItemCell } from '@/interface';
-import { readJSON } from '@/utils';
+import { readJSON, getCityNameBySpelling } from '@/utils';
 import './index.scss';
 
 interface ScoreObjItem {
@@ -76,17 +76,27 @@ interface ScoreRankInPosts {
 
 const ScoreSection: React.FC<{
   score: string | number | undefined;
+  prefix?: string;
   suffix?: string;
   defaultValue?: string;
   noWidth?: boolean;
-}> = ({ score = '', suffix = '分', defaultValue = '', noWidth = false }) => {
+  formated?: boolean;
+}> = ({
+  score = '',
+  prefix,
+  suffix = '分',
+  defaultValue = '',
+  noWidth = false,
+  formated,
+}) => {
   if (score === undefined && !defaultValue && !suffix) return null;
-  if (suffix === '分') {
+  if (formated) {
     score = Number(score || '0').toFixed(2);
   }
 
   return (
     <span className="score-section">
+      {!!prefix && <span className="score-section__prefix">{prefix}</span>}
       <span
         className={cls({
           'score-section__score': true,
@@ -369,6 +379,7 @@ const App: React.FC = () => {
     setFilterData(obj);
   });
 
+  const [title, setTitle] = useSafeState('');
   const [xingce, setXingce] = useSafeState(61.6);
   const [shenlun, setShenlun] = useSafeState(57.5);
   const [selectedPostId, setSelectedPostId] = useSafeState('');
@@ -498,6 +509,11 @@ const App: React.FC = () => {
     const list = readJSON(() =>
       require(`@/files/score-shengkao-${routerParams.city}-${routerParams.year}.json`),
     );
+    setTitle(
+      `${routerParams.year}年省考${
+        getCityNameBySpelling(routerParams.city)
+      }进面成绩分析`,
+    );
     setList(list);
     transOriginList(list);
   });
@@ -540,57 +556,68 @@ const App: React.FC = () => {
 
   return (
     <div className="analysis-container">
+      <div className="page-title">{title}</div>
       <div className="section">
         <div className="title">
           <div className="title-text">进面分数</div>
         </div>
-        <div className="group">
-          最高分：
-          <ScoreSection score={filterData.score.max?.score} />
-          <ConditionComponent condition={!onlyTotal}>
-            <>
-              ，行测最高
-              <ScoreSection score={filterData.score.max?.xingce} />
-            </>
-          </ConditionComponent>
-          <ConditionComponent condition={!onlyTotal}>
-            <>
-              ，申论最高
-              <ScoreSection score={filterData.score.max?.shenlun} />
-            </>
-          </ConditionComponent>
-        </div>
-        <div className="group">
-          最低分：
-          <ScoreSection score={filterData.score.min?.score} />
-          <ConditionComponent condition={!onlyTotal}>
-            <>
-              ，行测最低
-              <ScoreSection score={filterData.score.min?.xingce} />
-            </>
-          </ConditionComponent>
-          <ConditionComponent condition={!onlyTotal}>
-            <>
-              ，申论最低
-              <ScoreSection score={filterData.score.min?.shenlun} />
-            </>
-          </ConditionComponent>
-        </div>
-        <div className="group">
-          平均分：
-          <ScoreSection score={filterData.score.ave} />
-          <ConditionComponent condition={!onlyTotal}>
-            <>
-              ，行测平均
-              <ScoreSection score={filterData.xingce.ave} />
-            </>
-          </ConditionComponent>
-          <ConditionComponent condition={!onlyTotal}>
-            <>
-              ，申论平均
-              <ScoreSection score={filterData.shenlun.ave} />
-            </>
-          </ConditionComponent>
+        <div className="group group-fix-sticky">
+          <Table
+            pagination={false}
+            size={'small'}
+            columns={[
+              {
+                dataIndex: 'name',
+                align: 'center',
+                title: '',
+              },
+              {
+                dataIndex: 'total',
+                align: 'center',
+                title: '总分',
+                render: (value) => (
+                  <ScoreSection score={value} formated />
+                ),
+              },
+              {
+                dataIndex: 'xingce',
+                align: 'center',
+                title: '行测',
+                render: (value) => (
+                  <ScoreSection score={value} formated />
+                ),
+              },
+              {
+                dataIndex: 'shenlun',
+                align: 'center',
+                title: '申论',
+                render: (value) => (
+                  <ScoreSection score={value} formated />
+                ),
+              },
+            ]}
+            dataSource={[
+              {
+                xingce: filterData.xingce.ave,
+                shenlun: filterData.shenlun.ave,
+                total: filterData.score.ave,
+                name: '平均',
+              },
+
+              {
+                xingce: filterData.score.max?.xingce,
+                shenlun: filterData.score.max?.shenlun,
+                total: filterData.score.max?.score,
+                name: '最高',
+              },
+              {
+                xingce: filterData.score.min?.xingce,
+                shenlun: filterData.score.min?.shenlun,
+                total: filterData.score.min?.score,
+                name: '最低',
+              },
+            ]}
+          />
         </div>
       </div>
       <div className="section">

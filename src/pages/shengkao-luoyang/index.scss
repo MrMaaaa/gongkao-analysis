@@ -18,8 +18,7 @@
 }
 
 .top-bar {
-  @include pos(sticky, 0, 0, 0, 0);
-  padding: 15px 15px 0;
+  @include pos(fixed, 12px, initial, initial, 12px, 10);
   font-size: 24px;
 }
 
@@ -32,18 +31,20 @@
   padding: 30px;
   &__item {
     @include center-column-box;
+    align-items: stretch;
     box-sizing: border-box;
     width: 400px;
-    padding: 15px;
+    padding: 16px;
     @include common-box-shadow-top;
     &-title {
-      margin-bottom: 15px;
+      margin-bottom: 16px;
+      text-align: center;
     }
     &-cell {
       @include center-column-box;
       box-sizing: border-box;
       gap: 3px;
-      width: 80px;
+      width: 90px;
       &-ave {
         font-size: 1.3em;
         font-weight: bolder;
@@ -52,7 +53,7 @@
     &-content {
       @include center-box;
       align-items: stretch;
-      gap: 15px;
+      gap: 16px;
       &__year {
         display: block;
         font-size: 9px;
@@ -153,5 +154,24 @@ $width: 1200px;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $mobile-min-width) {
+  body {
+    width: 100%;
+  }
+  .history-score-list {
+    padding: 0;
+    &__item {
+      @include pos(sticky, 0, 0, initial, 0, 1);
+      width: 100%;
+      padding: 16px 0 0;
+      background-color: $body-bg;
+      &:last-of-type {
+        justify-content: start;
+        min-height: 100vh;
+      }
+      &-content {
+        gap: 1px;
+      }
+    }
+  }
 }
