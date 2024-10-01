@@ -9,7 +9,7 @@ import NotFound from '@/pages/404';
 
 const Router = () => {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/gongkao-analysis">
       <Routes>
         <Route path="/" element={<Home />}></Route>
         <Route path="/shengkao-luoyang" element={<Skly />}></Route>
@@ -21,7 +21,10 @@ const Router = () => {
           path="/sk/post/select/:province/:year"
           element={<ShengkaoPostSelect />}
         ></Route>
-        <Route path="/sk/post/detail/:province/:year" element={<SHPostDetail />}></Route>
+        <Route
+          path="/sk/post/detail/:province/:year"
+          element={<SHPostDetail />}
+        ></Route>
         <Route path="/test" element={<TestPage />}></Route>
         <Route path="/*" element={<NotFound />}></Route>
       </Routes>
