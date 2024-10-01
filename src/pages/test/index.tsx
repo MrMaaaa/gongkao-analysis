@@ -1,8 +1,10 @@
 // 对xls或者pdf文件格式进行转换
 import { Input } from 'antd';
-import { useMount } from 'ahooks';
+import { useMount, useSafeState } from 'ahooks';
+import { useRef, useCallback } from 'react';
 import { ScoreItem } from '@/interface'; // 进面名单文件需要转换成的json格式类型
 import xlsx from 'xlsx';
+import './index.scss';
 
 const Test: React.FC = () => {
   // 获取省考岗位数据
@@ -73,6 +75,46 @@ const Test: React.FC = () => {
   useMount(() => {
     getScoreJSONFromXlsx();
   });
+  const [milestone] = useSafeState([
+    {
+      stage: '一审',
+      filingDate: '2008-08-28',
+    },
+    {
+      nodeName: '一审立案',
+      initDate: '2008-08-28',
+      taskStatus: 1,
+      taskType: 1,
+    },
+    {
+      nodeName: '一审立案',
+      initDate: '2008-08-28',
+      taskStatus: 0,
+      taskType: 1,
+    },
+    {
+      nodeName: '一审立案',
+      initDate: '2008-08-28',
+      taskStatus: 1,
+      taskType: 2,
+    },
+    {
+      nodeName: '一审立案',
+      initDate: '2008-08-28',
+      taskStatus: 0,
+      taskType: 2,
+    },
+  ]);
+  const milestoneRef = useRef<any>(null);
+  const scrollTo = useCallback((direct: 'left' | 'right') => {
+    const scrollLeft = milestoneRef?.current?.scrollLeft;
+    const scrollDistance = 200;
+    if (direct === 'left') {
+      milestoneRef.current.scrollLeft = scrollLeft - scrollDistance;
+    } else {
+      milestoneRef.current.scrollLeft = scrollLeft + scrollDistance;
+    }
+  }, []);
   return (
     <div>
       <Input
@@ -82,6 +124,54 @@ const Test: React.FC = () => {
           console.log(e);
         }}
       />
+      <div className="milestone">
+        <div
+          className="scroll-icon"
+          onClick={() => {
+            scrollTo('left');
+          }}
+        >
+          <div className="scroll-icon-left"></div>
+        </div>
+
+        <div className="milestone-container" ref={milestoneRef}>
+          {milestone.map((item, index) => {
+            return (
+              <div className="milestone-item" key={index}>
+                <div className="milestone-circle">
+                  <div
+                    className={`${
+                      !!item.stage
+                        ? 'milestone-circle-stage'
+                        : `milestone-circle-task-${item.taskType}-${
+                            item.taskStatus === 0 ? 'unfinish' : 'finished'
+                          }`
+                    }`}
+                  ></div>
+                </div>
+                <div
+                  className={`milestone-status ${
+                    !!item.stage ? 'milestone-status-bolder' : ''
+                  }`}
+                >
+                  {item.stage || item.nodeName || '-'}
+                </div>
+                <div className="milestone-date">
+                  {item.filingDate || item.initDate || '-'}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <div
+          className="scroll-icon"
+          onClick={() => {
+            scrollTo('right');
+          }}
+        >
+          <div className="scroll-icon-right"></div>
+        </div>
+      </div>
     </div>
   );
 };

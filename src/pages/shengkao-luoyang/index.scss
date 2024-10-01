@@ -1,7 +1,10 @@
 .sk-ly-post {
-  @include center-box;
-  flex-direction: column;
-  height: 100vh;
+  transform: translateY(-50%);
+  &-wrapper {
+    @include center-box;
+    flex-direction: column;
+    height: 100vh;
+  }
   &__title {
     font-size: 32px;
     &-aside {
@@ -10,52 +13,69 @@
   }
   &__input {
     margin-top: 30px;
-    width: 30%;
+    width: 100%;
   }
 }
 
-.btn-return {
-  margin: 20px 30px 0;
+.top-bar {
+  @include pos(sticky, 0, 0, 0, 0);
+  padding: 15px 15px 0;
+  font-size: 24px;
 }
 
 .history-score-list {
-  display: flex;
-  width: 100%;
+  @include center-box;
   flex-wrap: wrap;
+  gap: 30px;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 30px;
   &__item {
-    display: flex;
+    @include center-column-box;
     box-sizing: border-box;
-    width: 25%;
+    width: 400px;
     padding: 15px;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+    @include common-box-shadow-top;
     &-title {
       margin-bottom: 15px;
     }
     &-cell {
-      display: flex;
+      @include center-column-box;
       box-sizing: border-box;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      gap: 2px;
+      gap: 3px;
+      width: 80px;
       &-ave {
         font-size: 1.3em;
         font-weight: bolder;
       }
     }
     &-content {
-      display: flex;
-      box-sizing: border-box;
-      justify-content: center;
-      align-items: center;
+      @include center-box;
+      align-items: stretch;
       gap: 15px;
       &__year {
         display: block;
         font-size: 9px;
       }
+      &__score {
+        &-group {
+          flex-grow: 2;
+          @include center-box;
+          flex-direction: column;
+        }
+      }
     }
+  }
+}
+
+.no-data {
+  @include center-box;
+  flex-direction: column;
+  height: 100vh;
+  font-size: 50px;
+  &__text {
+    margin-top: 30px;
+    font-size: 20px;
   }
 }
 
@@ -122,7 +142,16 @@ $width: 1200px;
           display: block;
           font-size: 9px;
         }
+        &__score {
+          &-group {
+            @include center-box;
+            flex-direction: column;
+          }
+        }
       }
     }
   }
+}
+
+@media (max-width: 768px) {
 }

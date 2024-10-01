@@ -5,6 +5,7 @@ import { TableProps } from 'antd/lib/table';
 import { CopyOutlined } from '@ant-design/icons';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import SubjectPicker from '@/components/major-picker';
+import TextOverflow from '@/components/text-overflow';
 import {
   PostRecruitmentItemKeyMapper,
   PostRecruitmentItem,
@@ -85,6 +86,9 @@ const columns: TableProps['columns'] = [
     width: 100,
     dataIndex: 'ageRequirement',
     align: 'center',
+    render: (text) => {
+      return <TextOverflow text={text} />;
+    },
     filters: [
       {
         text: '18周岁以上、25周岁以下',
@@ -188,6 +192,9 @@ const columns: TableProps['columns'] = [
     title: PostRecruitmentItemKeyMapper.majorType,
     width: 200,
     dataIndex: 'majorType',
+    render: (text) => {
+      return <TextOverflow text={text} />;
+    },
   },
   {
     title: PostRecruitmentItemKeyMapper.workExperience,
@@ -206,6 +213,9 @@ const columns: TableProps['columns'] = [
     width: 100,
     dataIndex: 'otherRequirement',
     align: 'center',
+    render: (text) => {
+      return <TextOverflow text={text} />;
+    },
   },
   // {
   //   title: PostRecruitmentItemKeyMapper.physicalExaminationStandard,
@@ -235,6 +245,9 @@ const columns: TableProps['columns'] = [
     width: 100,
     dataIndex: 'remark',
     align: 'center',
+    render: (text) => {
+      return <TextOverflow text={text} />;
+    },
   },
 ];
 
@@ -269,7 +282,7 @@ const TableForm: React.FC<{
       </Form.Item>
       <Form.Item>
         <Button.Group>
-          <Button htmlType="submit">查询</Button>
+          <Button type="primary" htmlType="submit">查询</Button>
           <Button
             htmlType="reset"
             onClick={() =>

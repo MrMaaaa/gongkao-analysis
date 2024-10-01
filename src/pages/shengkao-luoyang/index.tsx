@@ -1,12 +1,14 @@
 import { useCreation, useMemoizedFn, useMount, useSafeState } from 'ahooks';
 import { Line } from '@ant-design/plots';
-import { Input, Button } from 'antd';
+import { Input } from 'antd';
+import { RollbackOutlined, CoffeeOutlined } from '@ant-design/icons';
+import ConditionComponent from '@/components/condition-component';
+import IfElseComponent from '@/components/if-else-component';
 import { ScoreItem, ScoreObjItemCell } from '@/interface';
 import score2022 from '@/files/score-shengkao-luoyang-2022.json';
 import score2023 from '@/files/score-shengkao-luoyang-2023.json';
 import score2024 from '@/files/score-shengkao-luoyang-2024.json';
 import './index.scss';
-import ConditionComponent from '@/components/condition-component';
 
 const score = {
   '2022': score2022,
@@ -33,10 +35,37 @@ interface SamePostListItem {
   ave: number;
 }
 
+const ScoreShowItem: React.FC<{
+  score: PostItem;
+  year: string;
+}> = ({ score, year }) => {
+  return (
+    <div className="history-score-list__item-cell">
+      <span className="history-score-list__item-content__year">{year}</span>
+      <IfElseComponent
+        condition={score.list.length > 0}
+        if={
+          <div className="history-score-list__item-content__score-group">
+            <span className="history-score-list__item-content__score score">
+              {score?.ave}
+            </span>
+            <span className="history-score-list__item-content__score score">
+              {score.min}-{score.max}
+            </span>
+          </div>
+        }
+        else={
+          <div className="history-score-list__item-content__score-group">-</div>
+        }
+      />
+    </div>
+  );
+};
+
 const Index = () => {
   const [samePostList, setSamePostList] = useSafeState<SamePostListItem[]>([]);
   const [postInput, setPostInput] = useSafeState('');
-  const [listSort, setListSort] = useSafeState<'asc' | 'desc'>('desc');
+  const [listSort, setListSort] = useSafeState<'asc' | 'desc'>('asc');
   const toggleListSort = useMemoizedFn(() => {
     setListSort((v) => (v === 'asc' ? 'desc' : 'asc'));
   });
@@ -130,92 +159,71 @@ const Index = () => {
   return (
     <div>
       <ConditionComponent condition={!showList}>
-        <div className="sk-ly-post">
-          <div className="sk-ly-post__title">
-            报考岗位建议
-            <span className="sk-ly-post__title-aside">（洛阳市2022-2024）</span>
+        <div className="sk-ly-post-wrapper">
+          <div className="sk-ly-post">
+            <div className="sk-ly-post__title">
+              报考岗位建议
+              <span className="sk-ly-post__title-aside">
+                （洛阳市2022-2024）
+              </span>
+            </div>
+            <Input.Search
+              className="sk-ly-post__input"
+              placeholder="请输入你心仪的岗位"
+              enterButton="搜索"
+              onSearch={(value) => {
+                setShowList(true);
+                setPostInput(value);
+              }}
+              size="large"
+            />
           </div>
-          <Input.Search
-            className="sk-ly-post__input"
-            placeholder="请输入你心仪的岗位"
-            enterButton="搜索"
-            onSearch={(value) => {
-              setShowList(true);
-              setPostInput(value);
-            }}
-            size="large"
-          />
         </div>
       </ConditionComponent>
 
       <ConditionComponent condition={showList}>
         <>
-          <Button className="btn-return" onClick={() => {
-            setShowList(false);
-            setPostInput('');
-          }}>
-            返回重新输入
-          </Button>
-          <div className="history-score-list">
-            {samePostFilterList.map((item, idx) => {
-              return (
-                <div className="history-score-list__item" key={idx}>
-                  <div className="history-score-list__item-title">
-                    {item.post}
-                  </div>
-                  <div className="history-score-list__item-content">
-                    <div className="history-score-list__item-cell history-score-list__item-cell-ave">
-                      <span className="history-score-list__item-content__year">
-                        平均分
-                      </span>
-                      <span className="history-score-list__item-content__score">
-                        {item.ave}
-                      </span>
-                    </div>
-                    {item['2022'].list.length > 0 && (
-                      <div className="history-score-list__item-cell">
-                        <span className="history-score-list__item-content__year">
-                          2022
-                        </span>
-                        <span className="history-score-list__item-content__score">
-                          {item['2022'].ave}
-                        </span>
-                        <span className="history-score-list__item-content__score">
-                          {item['2022'].min}-{item['2022'].max}
-                        </span>
-                      </div>
-                    )}
-                    {item['2023'].list.length > 0 && (
-                      <div className="history-score-list__item-cell">
-                        <span className="history-score-list__item-content__year">
-                          2023
-                        </span>
-                        <span className="history-score-list__item-content__score">
-                          {item['2023'].ave}
-                        </span>
-                        <span className="history-score-list__item-content__score">
-                          {item['2023'].min}-{item['2023'].max}
-                        </span>
-                      </div>
-                    )}
-                    {item['2024'].list.length > 0 && (
-                      <div className="history-score-list__item-cell">
-                        <span className="history-score-list__item-content__year">
-                          2024
-                        </span>
-                        <span className="history-score-list__item-content__score">
-                          {item['2024'].ave}
-                        </span>
-                        <span className="history-score-list__item-content__score">
-                          {item['2024'].min}-{item['2024'].max}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
+          <div className="top-bar">
+            <RollbackOutlined
+              onClick={() => {
+                setShowList(false);
+                setPostInput('');
+              }}
+            />
           </div>
+          <IfElseComponent
+            condition={samePostFilterList.length > 0}
+            if={
+              <div className="history-score-list">
+                {samePostFilterList.map((item, idx) => {
+                  return (
+                    <div className="history-score-list__item" key={idx}>
+                      <div className="history-score-list__item-title">
+                        {item.post}
+                      </div>
+                      <div className="history-score-list__item-content">
+                        <div className="history-score-list__item-cell history-score-list__item-cell-ave">
+                          <span className="history-score-list__item-content__year">
+                            平均分
+                          </span>
+                          <span className="history-score-list__item-content__score score">
+                            {item.ave}
+                          </span>
+                        </div>
+                        <ScoreShowItem year="2022" score={item['2022']} />
+                        <ScoreShowItem year="2023" score={item['2023']} />
+                        <ScoreShowItem year="2024" score={item['2024']} />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            }
+            else={<div className="no-data">
+              <CoffeeOutlined />
+              <span className="no-data__text">暂无数据</span>
+            </div>}
+          />
         </>
       </ConditionComponent>
     </div>

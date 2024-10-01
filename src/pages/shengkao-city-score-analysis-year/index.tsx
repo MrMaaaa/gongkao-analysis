@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { useMemoizedFn, useSafeState, useMount, useCreation } from 'ahooks';
 import cls from 'classnames';
+import { useParams } from 'react-router-dom';
+import { Select, InputNumber } from 'antd';
+import { useMemoizedFn, useSafeState, useMount, useCreation } from 'ahooks';
 import { Scatter } from '@ant-design/plots';
+import IfElseComponent from '@/components/if-else-component';
 import ConditionComponent from '@/components/condition-component';
 import { ScoreFullItem, ScoreObjItemCell } from '@/interface';
 import { readJSON } from '@/utils';
@@ -75,8 +77,10 @@ interface ScoreRankInPosts {
 const ScoreSection: React.FC<{
   score: string | number | undefined;
   suffix?: string;
-}> = ({ score = '', suffix = '分' }) => {
-  if (score === undefined) return null;
+  defaultValue?: string;
+  noWidth?: boolean;
+}> = ({ score = '', suffix = '分', defaultValue = '', noWidth = false }) => {
+  if (score === undefined && !defaultValue && !suffix) return null;
   if (suffix === '分') {
     score = Number(score || '0').toFixed(2);
   }
@@ -86,10 +90,14 @@ const ScoreSection: React.FC<{
       <span
         className={cls({
           'score-section__score': true,
-          'score-section__score-no-width': suffix === '个' || suffix === '名',
+          'score-section__score-no-width': noWidth,
         })}
       >
-        {score}
+        <IfElseComponent
+          condition={score === null || score === undefined}
+          if={defaultValue}
+          else={score}
+        />
       </span>
       {!!suffix && <span className="score-section__suffix">{suffix}</span>}
     </span>
@@ -361,9 +369,9 @@ const App: React.FC = () => {
     setFilterData(obj);
   });
 
-  const [xingce, setXingce] = useSafeState('61.6');
-  const [shenlun, setShenlun] = useSafeState('57.5');
-  const [selectedPostId, setSelectedPostId] = useSafeState('13147022');
+  const [xingce, setXingce] = useSafeState(61.6);
+  const [shenlun, setShenlun] = useSafeState(57.5);
+  const [selectedPostId, setSelectedPostId] = useSafeState('');
   const [userResult, setUserResult] = useSafeState<{
     userScore: number;
     scoreRankAmount: string;
@@ -395,6 +403,13 @@ const App: React.FC = () => {
     return Object.keys(filterData.posts).length;
   }, [filterData]);
 
+  const postList = useCreation(() => {
+    return Object.values(filterData.posts).map((item) => ({
+      post: item.post,
+      postId: item.postId,
+    }));
+  }, [filterData]);
+
   const examineeCount = useCreation(() => {
     return list.length;
   }, [list]);
@@ -406,8 +421,8 @@ const App: React.FC = () => {
   });
 
   const generateUserResult = useMemoizedFn(() => {
-    const xingce_n = Number(xingce);
-    const shenlun_n = Number(shenlun);
+    const xingce_n = xingce;
+    const shenlun_n = shenlun;
     const userScore = Number(((xingce_n + shenlun_n) / 2).toFixed(2));
     let scoreOverSum = 0,
       xingceOverSum = 0,
@@ -480,8 +495,8 @@ const App: React.FC = () => {
   });
 
   useMount(() => {
-    const list = readJSON(
-      () => require(`@/files/score-shengkao-${routerParams.city}-${routerParams.year}.json`),
+    const list = readJSON(() =>
+      require(`@/files/score-shengkao-${routerParams.city}-${routerParams.year}.json`),
     );
     setList(list);
     transOriginList(list);
@@ -525,8 +540,10 @@ const App: React.FC = () => {
 
   return (
     <div className="analysis-container">
-      <div>
-        <div className="title">进面分数</div>
+      <div className="section">
+        <div className="title">
+          <div className="title-text">进面分数</div>
+        </div>
         <div className="group">
           最高分：
           <ScoreSection score={filterData.score.max?.score} />
@@ -575,7 +592,11 @@ const App: React.FC = () => {
             </>
           </ConditionComponent>
         </div>
-        <div className="title">岗位情况</div>
+      </div>
+      <div className="section">
+        <div className="title">
+          <div className="title-text">岗位情况</div>
+        </div>
         <div className="group">
           总分波动最大相差
           <ScoreSection
@@ -754,24 +775,77 @@ const App: React.FC = () => {
             {filterData.postData.ave.score.min?.post}
           </span>
         </div>
-        <div className="title">我的成绩</div>
+        <div className="group">
+          <Select
+            style={{ width: 300 }}
+            showSearch
+            options={postList}
+            fieldNames={{ label: 'post', value: 'postId' }}
+            onChange={setSelectedPostId}
+            allowClear
+            filterOption={(input, option) =>
+              (option?.post ?? '').toLowerCase().includes(input.toLowerCase())
+            }
+            placeholder="请输入岗位名称"
+          />
+          <div className="group">
+            平均分
+            <ScoreSection
+              score={postRankInfo.score?.ave}
+              suffix=""
+              defaultValue="-"
+              noWidth
+            />
+            ，最高分
+            <ScoreSection
+              score={postRankInfo.score?.max?.score}
+              suffix=""
+              defaultValue="-"
+              noWidth
+            />
+            ，最低分
+            <ScoreSection
+              score={postRankInfo.score?.min?.score}
+              suffix=""
+              defaultValue="-"
+              noWidth
+            />
+            ，平均分在全部
+            <ScoreSection score={postCount} suffix={'个'} noWidth />
+            岗位中排名
+            <ScoreSection score={postRankInfo.postRank} suffix={'名'} noWidth />
+            ，位列前
+            <ScoreSection
+              score={postRankInfo.postRankAmount}
+              suffix={'%'}
+              noWidth
+            />
+          </div>
+        </div>
+      </div>
+      <div className="section">
+        <div className="title">
+          <div className="title-text">我的成绩</div>
+        </div>
         <div className="group">
           行测：
-          <input
+          <InputNumber
             className="input score-section__input"
-            type="text"
+            controls={false}
             value={xingce}
-            onChange={(e) => setXingce(e.target.value)}
+            onChange={(e) => setXingce(e || 0)}
+            changeOnWheel
           />
           申论：
-          <input
+          <InputNumber
             className="input score-section__input"
-            type="text"
+            controls={false}
             value={shenlun}
-            onChange={(e) => setShenlun(e.target.value)}
+            onChange={(e) => setShenlun(e || 0)}
+            changeOnWheel
           />
           总成绩：
-          <input
+          <InputNumber
             className="input score-section__input"
             type="text"
             value={userResult.userScore}
@@ -781,7 +855,7 @@ const App: React.FC = () => {
         </div>
         <div className="group">
           在进入面试的
-          <ScoreSection score={examineeCount} suffix={'名'} />
+          <ScoreSection score={examineeCount} suffix={'名'} noWidth />
           考生中
         </div>
         <div className="group">
@@ -808,50 +882,32 @@ const App: React.FC = () => {
         </ConditionComponent>
         <div className="group">
           可以在
-          <ScoreSection score={userResult.passPostNames.length} suffix={'个'} />
+          <ScoreSection
+            score={userResult.passPostNames.length}
+            suffix={'个'}
+            noWidth
+          />
           岗位进入面试，无缘
           <ScoreSection
             score={userResult.noPassPostNames.length}
             suffix={'个'}
+            noWidth
           />
           岗位，在
           <ScoreSection
             score={userResult.scoreRankInPosts.postInfo.length}
             suffix={'个'}
+            noWidth
           />
           岗位名次最高，位列
           <ScoreSection
             score={userResult.scoreRankInPosts.topRank}
             suffix={'名'}
+            noWidth
           />
-        </div>
-        <div className="group">
-          岗位代码：
-          <input
-            className="input score-section__input score-section__input-post"
-            type="text"
-            value={selectedPostId}
-            onChange={(e) => setSelectedPostId(e.target.value)}
-          />
-          ， 你选择的岗位是：
-          <span className="post-name">{postRankInfo.post}</span>
-        </div>
-        <div className="group">
-          平均分
-          <ScoreSection score={postRankInfo.score?.ave} suffix={''} />
-          ，最高分
-          <ScoreSection score={postRankInfo.score?.max?.score} suffix={''} />
-          ，最低分
-          <ScoreSection score={postRankInfo.score?.min?.score} suffix={''} />
-          ，平均分在全部
-          <ScoreSection score={postCount} suffix={'个'} />
-          岗位中排名
-          <ScoreSection score={postRankInfo.postRank} suffix={'名'} />
-          ，位列前
-          <ScoreSection score={postRankInfo.postRankAmount} suffix={'%'} />
         </div>
       </div>
-      <Scatter
+      {/* <Scatter
         {...{
           yField: 'shenlun',
           xField: 'xingce',
@@ -911,7 +967,7 @@ const App: React.FC = () => {
             },
           ],
         }}
-      />
+      /> */}
     </div>
   );
 };

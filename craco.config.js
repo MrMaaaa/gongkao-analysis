@@ -11,6 +11,10 @@ const webpackConfig = {
       RUN_ENV: JSON.stringify(process.env.RUN_ENV || 'dev'),
     }),
   ],
+  output: {
+    path: path.resolve(__dirname, 'doc'),
+    publicPath: '/',
+  }
 };
 
 module.exports = {

@@ -1,6 +1,6 @@
+$mobile-min-width: 1200px;
+
 .analysis-container {
-  width: 1200px;
-  margin: 0 auto;
   .table-row {
     display: flex;
     justify-content: center;
@@ -13,10 +13,16 @@
   }
 
   .input {
-    width: 50px;
-    border-bottom: 1px solid #fff;
-    color: #fff;
-    text-align: center;
+    .ant-input-number-input-wrap,
+    .ant-input-number-input {
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      color: #fff;
+      text-align: center;
+      border-bottom: 1px solid #fff;
+      font-family: fantasy;
+    }
   }
 
   .post-name {
@@ -28,11 +34,12 @@
   .score-section__score,
   .score-section__input {
     display: inline-block;
-    width: 50px;
+    width: 70px;
     padding: 0 8px;
-    outline: none;
+    border: 0;
+    background: transparent;
     font-family: fantasy;
-    font-size: 22px;
+    font-size: 20px;
     text-align: right;
   }
 
@@ -60,13 +67,38 @@
   }
 
   .title {
-    margin: 4px 0;
-    padding: 4px 12px;
-    border-left: 6px solid lightseagreen;
+    @include common-box-shadow-top;
+    padding: 1px 15px 0;
+    // border-left: 6px solid lightseagreen;
     font-size: 20px;
+    &-text {
+      width: $mobile-min-width;
+      margin: 15px auto;
+    }
   }
 
   .group {
-    margin: 6px 0;
+    width: $mobile-min-width;
+    margin: 15px auto;
+  }
+
+  .section {
+    margin-bottom: 30px;
+  }
+}
+
+@media (max-width: $mobile-min-width) {
+  .analysis-container {
+    .title {
+      &-text {
+        width: 100%;
+      }
+    }
+
+    .group {
+      box-sizing: border-box;
+      width: 100%;
+      padding: 0 15px;
+    }
   }
 }
