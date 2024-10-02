@@ -160,6 +160,7 @@ $width: 1200px;
   }
   .history-score-list {
     padding: 0;
+    background-color: $body-bg;
     &__item {
       @include pos(sticky, 0, 0, initial, 0, 1);
       width: 100%;

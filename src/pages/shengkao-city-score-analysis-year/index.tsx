@@ -82,14 +82,17 @@ const ScoreSection: React.FC<{
   noWidth?: boolean;
   formated?: boolean;
 }> = ({
-  score = '',
+  score,
   prefix,
   suffix = '分',
   defaultValue = '',
   noWidth = false,
   formated,
 }) => {
-  if (score === undefined && !defaultValue && !suffix) return null;
+  if (score === undefined && !defaultValue && !suffix) {
+    return null;
+  }
+
   if (formated) {
     score = Number(score || '0').toFixed(2);
   }
@@ -510,9 +513,9 @@ const App: React.FC = () => {
       require(`@/files/score-shengkao-${routerParams.city}-${routerParams.year}.json`),
     );
     setTitle(
-      `${routerParams.year}年省考${
-        getCityNameBySpelling(routerParams.city)
-      }进面成绩分析`,
+      `${routerParams.year}年省考${getCityNameBySpelling(
+        routerParams.city,
+      )}进面成绩分析`,
     );
     setList(list);
     transOriginList(list);
@@ -535,14 +538,20 @@ const App: React.FC = () => {
   });
   const getPostRankInPosts = useMemoizedFn(() => {
     const selectedPostInfo = filterData.posts[selectedPostId];
-    const selectedPostRank = (Object.values(filterData.posts) as PostsItem[])
+    let selectedPostRank = (Object.values(filterData.posts) as PostsItem[])
       .sort((a, b) => b.score.ave - a.score.ave)
       .findIndex((item) => item.postId === selectedPostId);
+    if (selectedPostRank > 0) {
+      selectedPostRank += 1;
+    }
 
     setPostRankInfo({
       ...selectedPostInfo,
-      postRankAmount: getRankAmount(selectedPostRank + 1, postCount),
-      postRank: selectedPostRank + 1 + '',
+      postRank: selectedPostRank > 0 ? String(selectedPostRank) : '-',
+      postRankAmount:
+        selectedPostRank > 0
+          ? getRankAmount(selectedPostRank + 1, postCount)
+          : '-',
     });
   });
 
@@ -576,7 +585,11 @@ const App: React.FC = () => {
                 align: 'center',
                 title: '总分',
                 render: (value) => (
-                  <ScoreSection score={value} formated />
+                  <IfElseComponent
+                    condition={!!value}
+                    if={<ScoreSection score={value} formated />}
+                    else={'-'}
+                  />
                 ),
               },
               {
@@ -584,7 +597,11 @@ const App: React.FC = () => {
                 align: 'center',
                 title: '行测',
                 render: (value) => (
-                  <ScoreSection score={value} formated />
+                  <IfElseComponent
+                    condition={!!value}
+                    if={<ScoreSection score={value} formated />}
+                    else={'无数据'}
+                  />
                 ),
               },
               {
@@ -592,7 +609,11 @@ const App: React.FC = () => {
                 align: 'center',
                 title: '申论',
                 render: (value) => (
-                  <ScoreSection score={value} formated />
+                  <IfElseComponent
+                    condition={!!value}
+                    if={<ScoreSection score={value} formated />}
+                    else={'无数据'}
+                  />
                 ),
               },
             ]}
@@ -625,21 +646,28 @@ const App: React.FC = () => {
           <div className="title-text">岗位情况</div>
         </div>
         <div className="group">
-          总分波动最大相差
-          <ScoreSection
-            score={filterData.postData.diff.score.max?.score.diff}
-          />
-          (
-          <ScoreRange
-            scorePrev={filterData.postData.diff.score.max?.score.max?.score}
-            scoreAfter={filterData.postData.diff.score.max?.score.min?.score}
-          />
-          ) ，岗位：
-          <span className="post-name">
-            {filterData.postData.diff.score.max?.post}
+          <span className="group-line">
+            总分波动最大相差
+            <ScoreSection
+              score={filterData.postData.diff.score.max?.score.diff}
+            />
+          </span>
+          <span className="group-line">
+            (
+            <ScoreRange
+              scorePrev={filterData.postData.diff.score.max?.score.min?.score}
+              scoreAfter={filterData.postData.diff.score.max?.score.max?.score}
+            />
+            ) ，
+          </span>
+          <span className="group-line">
+            岗位：
+            <span className="post-name">
+              {filterData.postData.diff.score.max?.post}
+            </span>
           </span>
         </div>
-        <ConditionComponent condition={!onlyTotal}>
+        {/* <ConditionComponent condition={!onlyTotal}>
           <div className="group">
             行测波动最大相差
             <ScoreSection
@@ -680,23 +708,30 @@ const App: React.FC = () => {
               {filterData.postData.diff.shenlun.max?.post}
             </span>
           </div>
-        </ConditionComponent>
+        </ConditionComponent> */}
         <div className="group">
-          总分波动最小相差
-          <ScoreSection
-            score={filterData.postData.diff.score.min?.score.diff}
-          />
-          (
-          <ScoreRange
-            scorePrev={filterData.postData.diff.score.min?.score.max?.score}
-            scoreAfter={filterData.postData.diff.score.min?.score.min?.score}
-          />
-          ) ，岗位：
-          <span className="post-name">
-            {filterData.postData.diff.score.min?.post}
+          <span className="group-line">
+            总分波动最小相差
+            <ScoreSection
+              score={filterData.postData.diff.score.min?.score.diff}
+            />
+          </span>
+          <span className="group-line">
+            (
+            <ScoreRange
+              scorePrev={filterData.postData.diff.score.min?.score.min?.score}
+              scoreAfter={filterData.postData.diff.score.min?.score.max?.score}
+            />
+            ) ，
+          </span>
+          <span className="group-line">
+            岗位：
+            <span className="post-name">
+              {filterData.postData.diff.score.min?.post}
+            </span>
           </span>
         </div>
-        <ConditionComponent condition={!onlyTotal}>
+        {/* <ConditionComponent condition={!onlyTotal}>
           <div className="group">
             行测波动最小相差
             <ScoreSection
@@ -737,10 +772,15 @@ const App: React.FC = () => {
               {filterData.postData.diff.shenlun.min?.post}
             </span>
           </div>
-        </ConditionComponent>
+        </ConditionComponent> */}
         <div className="group">
-          竞争最激烈平均分
-          <ScoreSection score={filterData.postData.ave.score.max?.score.ave} />
+          <span className="group-line">
+            竞争最激烈平均分
+            <ScoreSection
+              score={filterData.postData.ave.score.max?.score.ave}
+            />
+            ，
+          </span>
           {/* ，行测最高分
               <ScoreSection
                 score={filterData.postData.ave.score.max?.xingce.max?.xingce}
@@ -765,14 +805,21 @@ const App: React.FC = () => {
               <ScoreSection
                 score={filterData.postData.ave.score.max?.xingce.ave}
               /> */}
-          ，岗位：
-          <span className="post-name">
-            {filterData.postData.ave.score.max?.post}
+          <span className="group-line">
+            岗位：
+            <span className="post-name">
+              {filterData.postData.ave.score.max?.post}
+            </span>
           </span>
         </div>
         <div className="group">
-          竞争最温和平均分
-          <ScoreSection score={filterData.postData.ave.score.min?.score.ave} />
+          <span className="group-line">
+            竞争最温和平均分
+            <ScoreSection
+              score={filterData.postData.ave.score.min?.score.ave}
+            />
+            ，
+          </span>
           {/* ， 行测最高分
               <ScoreSection
                 score={filterData.postData.ave.score.min?.xingce.max?.xingce}
@@ -797,33 +844,28 @@ const App: React.FC = () => {
               <ScoreSection
                 score={filterData.postData.ave.score.min?.xingce.ave}
               /> */}
-          ，岗位：
-          <span className="post-name">
-            {filterData.postData.ave.score.min?.post}
+          <span className="group-line">
+            岗位：
+            <span className="post-name">
+              {filterData.postData.ave.score.min?.post}
+            </span>
           </span>
         </div>
         <div className="group">
-          <Select
-            style={{ width: 300 }}
-            showSearch
-            options={postList}
-            fieldNames={{ label: 'post', value: 'postId' }}
-            onChange={setSelectedPostId}
-            allowClear
-            filterOption={(input, option) =>
-              (option?.post ?? '').toLowerCase().includes(input.toLowerCase())
-            }
-            placeholder="请输入岗位名称"
-          />
-          <div className="group">
-            平均分
-            <ScoreSection
-              score={postRankInfo.score?.ave}
-              suffix=""
-              defaultValue="-"
-              noWidth
+          <div className="card">
+            <Select
+              className="group-select"
+              showSearch
+              options={postList}
+              fieldNames={{ label: 'post', value: 'postId' }}
+              onChange={setSelectedPostId}
+              allowClear
+              filterOption={(input, option) =>
+                (option?.post ?? '').toLowerCase().includes(input.toLowerCase())
+              }
+              placeholder="输入岗位名称查询在全部岗位中的排名"
             />
-            ，最高分
+            最高分
             <ScoreSection
               score={postRankInfo.score?.max?.score}
               suffix=""
@@ -837,7 +879,14 @@ const App: React.FC = () => {
               defaultValue="-"
               noWidth
             />
-            ，平均分在全部
+            ，平均分
+            <ScoreSection
+              score={postRankInfo.score?.ave}
+              suffix=""
+              defaultValue="-"
+              noWidth
+            />
+            ，在全部
             <ScoreSection score={postCount} suffix={'个'} noWidth />
             岗位中排名
             <ScoreSection score={postRankInfo.postRank} suffix={'名'} noWidth />

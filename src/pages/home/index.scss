@@ -1,9 +1,58 @@
 .home {
-  margin: 0 auto;
-  padding: 50px 0;
+  @include pos(absolute, 50%, initial, initial, 0);
+  transform: translateY(-50%);
+  @include center-column-box;
+  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  margin: 10px auto;
+  // padding: 50px 0;
   .link {
     display: block;
-    margin: 30px;
+    // margin: 30px;
+    padding: 10px;
     color: #fff;
+    text-decoration: none;
+    background-color: #202020;
+    border: 1px solid #000;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    text-align: right;
+    transform: translateX(-100%);
+    &:hover {
+      &::before {
+        content: '>';
+        margin-right: 5px;
+      }
+    }
+    @for $i from 1 through 6 {
+      &:nth-of-type(#{$i}) {
+        width: 80% - $i * 8%;
+        animation: shiftRight 0.3s;
+        animation-delay: #{0.15 * $i}s;
+        animation-fill-mode: forwards;
+      }
+    }
+  }
+}
+
+@keyframes shiftRight {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@media (max-width: $mobile-min-width) {
+  .home {
+    .link {
+      @for $i from 1 through 6 {
+        &:nth-of-type(#{$i}) {
+          width: 100% - $i * 8%;
+        }
+      }
+    }
   }
 }

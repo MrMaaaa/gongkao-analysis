@@ -34,9 +34,8 @@
   }
 
   .post-name {
-    display: inline-block;
     color: #fff;
-    font-size: 1.2em;
+    font-weight: bolder;
   }
 
   .score-section__score,
@@ -97,6 +96,15 @@
   .group {
     width: $mobile-min-width;
     margin: 16px auto;
+    &-select {
+      width: 300px;
+      margin: 0 16px 0 0;
+    }
+    .card {
+      border-radius: 6px;
+      padding: 16px;
+      border: 1px solid #121212;
+    }
   }
 }
 
@@ -110,7 +118,14 @@
     .group {
       box-sizing: border-box;
       width: 100%;
-      padding: 0 15px;
+      padding: 0 16px;
+      &-line {
+        display: block;
+      }
+      &-select {
+        width: 100%;
+        margin: 0 0 16px;
+      }
     }
   }
 }
