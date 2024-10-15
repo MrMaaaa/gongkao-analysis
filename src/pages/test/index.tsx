@@ -8,7 +8,7 @@ import './index.scss';
 
 const Test: React.FC = () => {
   // 获取省考岗位数据
-  const getPostJSONFromXlsx = async (filepath = './post.xls') => {
+  const getPostJSONFromXlsx = async (filepath = './guokao-2025.xls') => {
     // 注意，这里的相对路径是相对于/public目录
     const f = await fetch(filepath);
     const ab = await f.arrayBuffer();
@@ -34,12 +34,65 @@ const Test: React.FC = () => {
         wb.Sheets[name],
       );
       titles = ws[1];
-      console.log(titles);
       return ws.slice(2).map((item) => {
         return Object.entries(item)
           .map(([key, value]) => {
             return {
               [name2key[titles[key]]]: value,
+            };
+          })
+          .reduce((p, c) => ({ ...p, ...c }), {});
+      });
+    }).reduce((p, c) => [...p, ...c], []);
+    console.log(JSON.stringify(data));
+  };
+
+  // 获取省考岗位数据
+  const getGuokaoPostJSONFromXlsx = async (filepath = './guokao-2025.xls') => {
+    // 注意，这里的相对路径是相对于/public目录
+    const f = await fetch(filepath);
+    const ab = await f.arrayBuffer();
+    const wb = xlsx.read(ab);
+    let titles: Record<string, string | number> = {};
+    const name2key: Record<string, string> = {
+      部门代码: 'departmentCode',
+      部门名称: 'departmentName',
+      用人司局: 'bureauName',
+      机构性质: 'institutionNature',
+      招考职位: 'postName',
+      职位属性: 'postType',
+      职位分布: 'postDistribution',
+      职位简介: 'postIntro',
+      职位代码: 'postCode',
+      机构层级: 'institutionLevel',
+      考试类别: 'examType',
+      招考人数: 'recruitmentNumber',
+      专业: 'majorType',
+      学历: 'education',
+      学位: 'degree',
+      政治面貌: 'politicalStatus',
+      基层工作最低年限: 'grassrootsWorkMinExperience',
+      服务基层项目工作经历: 'grassrootsWorkProjectExperience',
+      是否在面试阶段组织专业能力测试: 'isProfessionalAbilityTestAtInterview',
+      面试人员比例: 'ratioOfInterviewees',
+      工作地点: 'workPosition',
+      落户地点: 'residencePosition',
+      备注: 'remark',
+      部门网站: 'departmentWebsite',
+      咨询电话1: 'contactWay1',
+      咨询电话2: 'contactWay2',
+      咨询电话3: 'contactWay3',
+    };
+    const data = wb.SheetNames.map((name) => {
+      const ws: Record<string, string | number>[] = xlsx.utils.sheet_to_json(
+        wb.Sheets[name],
+      );
+      titles = ws[0];
+      return ws.slice(2).map((item) => {
+        return Object.entries(item)
+          .map(([key, value]) => {
+            return {
+              [name2key[titles[key]]]: value || '',
             };
           })
           .reduce((p, c) => ({ ...p, ...c }), {});
@@ -73,7 +126,8 @@ const Test: React.FC = () => {
     console.log(JSON.stringify(result));
   };
   useMount(() => {
-    getScoreJSONFromXlsx();
+    // getScoreJSONFromXlsx();
+    // getGuokaoPostJSONFromXlsx();
   });
   const [milestone] = useSafeState([
     {

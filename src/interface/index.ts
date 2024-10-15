@@ -76,17 +76,77 @@ export enum PostRecruitmentItemKeyMapper {
   'remark' = '备注',
 }
 
-export const name2key: Record<string, string> = {
-  '专业（学科）类别': 'majorType',
-  体检标准: 'physicalExaminationStandard',
-  其他要求: 'otherRequirement',
-  学位要求: 'degreeRequirement',
-  学历要求: 'educationRequirement',
-  工作经历: 'workExperience',
-  年龄要求: 'ageRequirement',
-  招录人数: 'recruitmentNumber',
-  招录单位: 'recruitmentInstitution',
-  是否进行体能测评: 'isPhysicalFitnessTest',
-  职位代码: 'postId',
-  职位名称: 'postName',
-};
+export interface GuoKaoRecruitmentItem {
+  departmentCode: string;
+  departmentName: string;
+  bureauName: string;
+  institutionNature: string;
+  postName: string;
+  postType: string;
+  postDistribution: string;
+  postIntro: string;
+  postCode: string;
+  institutionLevel: string;
+  examType: string;
+  recruitmentNumber: string;
+  majorType: string;
+  education: string;
+  degree: string;
+  politicalStatus: string;
+  grassrootsWorkMinExperience: string;
+  grassrootsWorkProjectExperience: string;
+  isProfessionalAbilityTestAtInterview: string;
+  ratioOfInterviewees: string;
+  workPosition: string;
+  residencePosition: string;
+  remark: string;
+  departmentWebsite: string;
+  contactWay1: string;
+  contactWay2: string;
+  contactWay3: string;
+}
+
+export enum GuokaoPostRecruitmentItemKeyMapper {
+  departmentCode = '部门代码',
+  departmentName = '部门名称',
+  bureauName = '用人司局',
+  institutionNature = '机构性质',
+  postName = '招考职位',
+  postType = '职位属性',
+  postDistribution = '职位分布',
+  postIntro = '职位简介',
+  postCode = '职位代码',
+  institutionLevel = '机构层级',
+  examType = '考试类别',
+  recruitmentNumber = '招考人数',
+  majorType = '专业',
+  education = '学历',
+  degree = '学位',
+  politicalStatus = '政治面貌',
+  grassrootsWorkMinExperience = '基层工作最低年限',
+  grassrootsWorkProjectExperience = '服务基层项目工作经历',
+  isProfessionalAbilityTestAtInterview = '是否在面试阶段组织专业能力测试',
+  ratioOfInterviewees = '面试人员比例',
+  workPosition = '工作地点',
+  residencePosition = '落户地点',
+  remark = '备注',
+  departmentWebsite = '部门网站',
+  contactWay1 = '咨询电话1',
+  contactWay2 = '咨询电话2',
+  contactWay3 = '咨询电话3',
+}
+
+// export const name2key: Record<string, string> = {
+//   '专业（学科）类别': 'majorType',
+//   体检标准: 'physicalExaminationStandard',
+//   其他要求: 'otherRequirement',
+//   学位要求: 'degreeRequirement',
+//   学历要求: 'educationRequirement',
+//   工作经历: 'workExperience',
+//   年龄要求: 'ageRequirement',
+//   招录人数: 'recruitmentNumber',
+//   招录单位: 'recruitmentInstitution',
+//   是否进行体能测评: 'isPhysicalFitnessTest',
+//   职位代码: 'postId',
+//   职位名称: 'postName',
+// };

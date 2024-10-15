@@ -13,7 +13,7 @@ const MajorPicker: React.FC<{
       }
       allowClear
       defaultValue={null}
-      placeholder={'请选择普通高等学校本科专业'}
+      placeholder={'请选择本科专业(本科！！！)'}
       options={majorList}
       notFoundContent={<span>未查到该专业</span>}
       fieldNames={{

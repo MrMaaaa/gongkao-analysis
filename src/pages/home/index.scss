@@ -1,3 +1,5 @@
+$pageIndexNum: 7;
+
 .home {
   @include pos(absolute, 50%, initial, initial, 0);
   transform: translateY(-50%);
@@ -25,15 +27,24 @@
         margin-right: 5px;
       }
     }
-    @for $i from 1 through 6 {
+    @for $i from 1 through $pageIndexNum {
       &:nth-of-type(#{$i}) {
-        width: 80% - $i * 8%;
+        width: 80% - $i * 5%;
         animation: shiftRight 0.3s;
         animation-delay: #{0.15 * $i}s;
         animation-fill-mode: forwards;
       }
     }
   }
+}
+
+.contact-me {
+  position: fixed;
+  bottom: 15px;
+  width: 100%;
+  text-align: center;
+  color: #999;
+  font-size: 12px;
 }
 
 @keyframes shiftRight {
@@ -48,9 +59,9 @@
 @media (max-width: $mobile-min-width) {
   .home {
     .link {
-      @for $i from 1 through 6 {
+      @for $i from 1 through $pageIndexNum {
         &:nth-of-type(#{$i}) {
-          width: 100% - $i * 8%;
+          width: 100% - $i * 7%;
         }
       }
     }

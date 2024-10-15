@@ -316,7 +316,6 @@ const Index: React.FC = () => {
   >([]);
   const [postShowListLength, setPostShowListLength] = useSafeState(0); // postShowList.length 只能获取到通过查询修改的列表长度，对于使用table filter功能进行的过滤，只能在table onChange中感知到，因此需要单独设置变量记录
   const onFinish = useMemoizedFn((values: FormSubmit) => {
-    console.log(values);
     const newList = list
       .filter((item) => {
         if (values.mustHavePastScore) {
