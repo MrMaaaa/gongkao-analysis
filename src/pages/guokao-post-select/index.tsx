@@ -18,6 +18,8 @@ interface FormSubmit {
   majorType: string;
   postCode: string;
   departmentCode: string;
+  isRegularDegreeAndNoExp: boolean;
+  isNotPartyMember: boolean;
 }
 
 const CopyComponent: React.FC<{ value: string }> = ({ value }) => {
@@ -363,10 +365,12 @@ const TableForm: React.FC<{
     <Form
       onFinish={onFinish}
       initialValues={{
-        bureauName: '',
+        workPosition: '',
         majorType: '',
         postCode: '',
         departmentCode: '',
+        isRegularDegreeAndNoExp: false,
+        isNotPartyMember: false,
       }}
       layout="inline"
       form={form}
@@ -395,6 +399,12 @@ const TableForm: React.FC<{
       <Form.Item name="postCode" className="form-item__post-id">
         <Input placeholder="请输入职位代码" allowClear />
       </Form.Item>
+      <Form.Item name="isRegularDegreeAndNoExp" valuePropName="checked">
+        <Checkbox>本科学历且无基层经验</Checkbox>
+      </Form.Item>
+      <Form.Item name="isNotPartyMember" valuePropName="checked">
+        <Checkbox>非中共党员（群众）</Checkbox>
+      </Form.Item>
       <Form.Item className="form-item__operation">
         <Button.Group>
           <Button type="primary" htmlType="submit">
@@ -408,6 +418,8 @@ const TableForm: React.FC<{
                 majorType: '',
                 postCode: '',
                 departmentCode: '',
+                isRegularDegreeAndNoExp: false,
+                isNotPartyMember: false,
               })
             }
           >
@@ -429,6 +441,24 @@ const Index: React.FC = () => {
   const [postShowListLength, setPostShowListLength] = useSafeState(0); // postShowList.length 只能获取到通过查询修改的列表长度，对于使用table filter功能进行的过滤，只能在table onChange中感知到，因此需要单独设置变量记录
   const onFinish = useMemoizedFn((values: FormSubmit) => {
     const newList = list
+      .filter((item) => {
+        if (!values.isRegularDegreeAndNoExp) {
+          return true;
+        } else {
+          return (
+            item.education.includes('本科') &&
+            item.grassrootsWorkMinExperience.includes('无限制') &&
+            item.grassrootsWorkProjectExperience.includes('无限制')
+          );
+        }
+      })
+      .filter((item) => {
+        if (!values.isNotPartyMember) {
+          return true;
+        } else {
+          return item.politicalStatus.includes('不限');
+        }
+      })
       .filter((item) => {
         if (!values.workPosition) {
           return true;
@@ -461,8 +491,6 @@ const Index: React.FC = () => {
             .some((el) => item.majorType.includes(el));
         }
       });
-
-      console.log(newList);
     setPostShowList(newList);
     setPostShowListLength(newList.length);
   });
@@ -492,7 +520,7 @@ const Index: React.FC = () => {
       </div>
       <div style={{ padding: '0 16px 16px' }}>
         <Alert
-          message="筛选查询功能可能出现遗漏、错误的岗位，此页面仅供参考"
+          message="筛选查询功能可能出现遗漏岗位，结果仅供参考"
           type="warning"
           showIcon
         />
