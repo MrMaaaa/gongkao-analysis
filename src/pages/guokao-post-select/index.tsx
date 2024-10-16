@@ -14,7 +14,7 @@ import { readJSON } from '@/utils';
 import './index.scss';
 
 interface FormSubmit {
-  bureauName: string;
+  workPosition: string;
   majorType: string;
   postCode: string;
   departmentCode: string;
@@ -307,7 +307,8 @@ const columns: TableProps['columns'] = [
         value: '无限制',
       },
     ],
-    onFilter: (value, record) => record.grassrootsWorkProjectExperience === value,
+    onFilter: (value, record) =>
+      record.grassrootsWorkProjectExperience === value,
   },
   {
     title: GuokaoPostRecruitmentItemKeyMapper.remark,
@@ -374,13 +375,19 @@ const TableForm: React.FC<{
         <SubjectPicker />
       </Form.Item> */}
       <Form.Item name="majorType" className="form-item__major-type">
-        <Input placeholder="请输入专业名称或代码" allowClear />
+        <Input placeholder="专业名称或代码，多个用+连接" allowClear />
       </Form.Item>
-      <Form.Item
+      {/* <Form.Item
         name="bureauName"
         className="form-item__recruitment-institution"
       >
         <Input placeholder="请输入招录单位" allowClear />
+      </Form.Item> */}
+      <Form.Item
+        name="workPosition"
+        className="form-item__recruitment-institution"
+      >
+        <Input placeholder="请输入城市" allowClear />
       </Form.Item>
       <Form.Item name="departmentCode" className="form-item__post-id">
         <Input placeholder="请输入部门代码" allowClear />
@@ -397,7 +404,7 @@ const TableForm: React.FC<{
             htmlType="reset"
             onClick={() =>
               onFinish({
-                bureauName: '',
+                workPosition: '',
                 majorType: '',
                 postCode: '',
                 departmentCode: '',
@@ -423,10 +430,10 @@ const Index: React.FC = () => {
   const onFinish = useMemoizedFn((values: FormSubmit) => {
     const newList = list
       .filter((item) => {
-        if (!values.bureauName) {
+        if (!values.workPosition) {
           return true;
         } else {
-          return item.bureauName.includes(values.bureauName);
+          return item.workPosition.includes(values.workPosition);
         }
       })
       .filter((item) => {
@@ -446,11 +453,16 @@ const Index: React.FC = () => {
       .filter((item) => {
         if (!values.majorType) {
           return true;
-        } else {
+        } else if (!values.majorType.includes('+')) {
           return item.majorType.includes(values.majorType);
+        } else {
+          return values.majorType
+            .split('+')
+            .some((el) => item.majorType.includes(el));
         }
       });
 
+      console.log(newList);
     setPostShowList(newList);
     setPostShowListLength(newList.length);
   });
@@ -488,7 +500,6 @@ const Index: React.FC = () => {
       <Table
         className="table"
         dataSource={postShowList}
-        rowKey="postId"
         columns={columns}
         scroll={{ x: 800 }}
         bordered
