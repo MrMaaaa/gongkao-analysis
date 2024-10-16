@@ -17,6 +17,7 @@ interface FormSubmit {
   bureauName: string;
   majorType: string;
   postCode: string;
+  departmentCode: string;
 }
 
 const CopyComponent: React.FC<{ value: string }> = ({ value }) => {
@@ -246,7 +247,7 @@ const columns: TableProps['columns'] = [
         value: '不限',
       },
     ],
-    onFilter: (value, record) => record.degree === value,
+    onFilter: (value, record) => record.politicalStatus === value,
   },
   {
     title: GuokaoPostRecruitmentItemKeyMapper.grassrootsWorkMinExperience,
@@ -263,7 +264,7 @@ const columns: TableProps['columns'] = [
         value: '无限制',
       },
     ],
-    onFilter: (value, record) => record.degree === value,
+    onFilter: (value, record) => record.grassrootsWorkMinExperience === value,
   },
   {
     title: GuokaoPostRecruitmentItemKeyMapper.grassrootsWorkProjectExperience,
@@ -306,7 +307,7 @@ const columns: TableProps['columns'] = [
         value: '无限制',
       },
     ],
-    onFilter: (value, record) => record.degree === value,
+    onFilter: (value, record) => record.grassrootsWorkProjectExperience === value,
   },
   {
     title: GuokaoPostRecruitmentItemKeyMapper.remark,
@@ -364,20 +365,27 @@ const TableForm: React.FC<{
         bureauName: '',
         majorType: '',
         postCode: '',
+        departmentCode: '',
       }}
       layout="inline"
       form={form}
     >
-      <Form.Item name="majorType" className="form-item__major-type">
+      {/* <Form.Item name="majorType" className="form-item__major-type">
         <SubjectPicker />
+      </Form.Item> */}
+      <Form.Item name="majorType" className="form-item__major-type">
+        <Input placeholder="请输入专业名称或代码" allowClear />
       </Form.Item>
       <Form.Item
-        name="recruitmentInstitution"
+        name="bureauName"
         className="form-item__recruitment-institution"
       >
         <Input placeholder="请输入招录单位" allowClear />
       </Form.Item>
-      <Form.Item name="postId" className="form-item__post-id">
+      <Form.Item name="departmentCode" className="form-item__post-id">
+        <Input placeholder="请输入部门代码" allowClear />
+      </Form.Item>
+      <Form.Item name="postCode" className="form-item__post-id">
         <Input placeholder="请输入职位代码" allowClear />
       </Form.Item>
       <Form.Item className="form-item__operation">
@@ -392,6 +400,7 @@ const TableForm: React.FC<{
                 bureauName: '',
                 majorType: '',
                 postCode: '',
+                departmentCode: '',
               })
             }
           >
@@ -425,6 +434,13 @@ const Index: React.FC = () => {
           return true;
         } else {
           return String(item.postCode).includes(values.postCode);
+        }
+      })
+      .filter((item) => {
+        if (!values.departmentCode) {
+          return true;
+        } else {
+          return String(item.departmentCode).includes(values.departmentCode);
         }
       })
       .filter((item) => {

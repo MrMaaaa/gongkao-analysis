@@ -35,6 +35,7 @@
   &-container {
     display: flex;
     align-items: center;
+    width: 100%;
     overflow-x: scroll;
     scroll-behavior: smooth;
     &::-webkit-scrollbar {
@@ -44,6 +45,7 @@
   &-item {
     flex-shrink: 0;
     position: relative;
+    z-index: 2;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -54,7 +56,7 @@
       position: absolute;
       top: 8px;
       left: 0;
-      z-index: -1;
+      z-index: 1;
       width: 50%;
       height: 1px;
       background-color: #797979;
@@ -64,7 +66,7 @@
       position: absolute;
       top: 8px;
       right: 0;
-      z-index: -1;
+      z-index: 1;
       width: 50%;
       height: 1px;
       background-color: #797979;
