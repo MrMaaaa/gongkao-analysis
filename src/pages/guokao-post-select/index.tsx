@@ -6,6 +6,7 @@ import { CopyOutlined } from '@ant-design/icons';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import SubjectPicker from '@/components/major-picker';
 import TextOverflow from '@/components/text-overflow';
+import ContentOverflow from '@/components/content-overflow';
 import {
   GuoKaoRecruitmentItem,
   GuokaoPostRecruitmentItemKeyMapper,
@@ -326,7 +327,7 @@ const columns: TableProps['columns'] = [
     dataIndex: 'departmentWebsite',
     render: (text, record) => {
       return (
-        <div>
+        <ContentOverflow>
           <div>
             {text.includes('.') ? (
               <a href={text} target="_blank" rel="noreferrer">
@@ -350,7 +351,7 @@ const columns: TableProps['columns'] = [
             {GuokaoPostRecruitmentItemKeyMapper.contactWay3}：
             {record.contactWay3}
           </div>
-        </div>
+        </ContentOverflow>
       );
     },
   },
