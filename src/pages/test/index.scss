@@ -1,3 +1,24 @@
+.match-percent {
+  height: 20px;
+  border-radius: 20px;
+  background: #e0e3ea;
+  &-line {
+    position: relative;
+    box-sizing: border-box;
+    height: 20px;
+    border-radius: 20px;
+    text-align: right;
+  }
+  &-text {
+    padding: 0 10px;
+    word-break: keep-all;
+  }
+  &-text-fixed {
+    position: absolute;
+    left: 100%;
+  }
+}
+
 .milestone {
   display: flex;
   justify-content: center;

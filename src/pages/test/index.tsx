@@ -1,7 +1,7 @@
 // 对xls或者pdf文件格式进行转换
 import { Input } from 'antd';
 import { useMount, useSafeState } from 'ahooks';
-import { useRef, useCallback } from 'react';
+import { useRef, useState, useMemo, useCallback } from 'react';
 import { ScoreItem } from '@/interface'; // 进面名单文件需要转换成的json格式类型
 import xlsx from 'xlsx';
 import './index.scss';
@@ -169,6 +169,20 @@ const Test: React.FC = () => {
       milestoneRef.current.scrollLeft = scrollLeft + scrollDistance;
     }
   }, []);
+  const [percent, setPercent] = useState('5');
+  const percentColor = useMemo(() => {
+    const percentNumber = Number(percent);
+    if (isNaN(percentNumber)) {
+      return '';
+    } else if (percentNumber < 60) {
+      return '#bd3124';
+    } else if (percentNumber < 100) {
+      return '#e29836';
+    } else {
+      return '#81b337';
+    }
+  }, [percent]);
+
   return (
     <div>
       <Input
@@ -178,6 +192,23 @@ const Test: React.FC = () => {
           console.log(e);
         }}
       />
+      <div className="match-percent">
+        <div
+          className="match-percent-line"
+          style={{ width: percent + '%', backgroundColor: percentColor }}
+        >
+          <span
+            className={
+              percentColor === '#bd3124'
+                ? 'match-percent-text match-percent-text-fixed'
+                : 'match-percent-text'
+            }
+            style={{ color: Number(percent) < 40 ? '#bd3124' : '#fff' }}
+          >
+            {percent}%
+          </span>
+        </div>
+      </div>
       <div className="milestone">
         <div
           className="scroll-icon"
