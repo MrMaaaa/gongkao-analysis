@@ -60,7 +60,7 @@ const columns: TableProps['columns'] = [
     align: 'center',
     render: (value, record) => (
       <div>
-        {value}
+        <TextOverflow text={value} />
         <div className="col-tips">
           {GuokaoPostRecruitmentItemKeyMapper.postDistribution}：
           {record.postDistribution}
@@ -395,10 +395,10 @@ const TableForm: React.FC<{
         <Input placeholder="请输入城市" allowClear />
       </Form.Item>
       <Form.Item name="departmentCode" className="form-item__post-id">
-        <Input placeholder="请输入部门代码" allowClear />
+        <Input placeholder="请输入部门代码/部门名称" allowClear />
       </Form.Item>
       <Form.Item name="postCode" className="form-item__post-id">
-        <Input placeholder="请输入职位代码" allowClear />
+        <Input placeholder="请输入职位代码/职位名称" allowClear />
       </Form.Item>
       <Form.Item name="isRegularDegreeAndNoExp" valuePropName="checked">
         <Checkbox>本科学历且无基层经验</Checkbox>
@@ -471,14 +471,14 @@ const Index: React.FC = () => {
         if (!values.postCode) {
           return true;
         } else {
-          return String(item.postCode).includes(values.postCode);
+          return String(item.postCode).includes(values.postCode) || item.postName.includes(values.postCode);
         }
       })
       .filter((item) => {
         if (!values.departmentCode) {
           return true;
         } else {
-          return String(item.departmentCode).includes(values.departmentCode);
+          return String(item.departmentCode).includes(values.departmentCode) || item.departmentName.includes(values.departmentCode);
         }
       })
       .filter((item) => {

@@ -1,7 +1,7 @@
 // 对xls或者pdf文件格式进行转换
 import { Input } from 'antd';
 import { useMount, useSafeState } from 'ahooks';
-import { useRef, useState, useMemo, useCallback } from 'react';
+import { useRef, useState, useMemo, useCallback, useEffect } from 'react';
 import { ScoreItem } from '@/interface'; // 进面名单文件需要转换成的json格式类型
 import xlsx from 'xlsx';
 import './index.scss';
@@ -159,14 +159,16 @@ const Test: React.FC = () => {
       taskType: 2,
     },
   ]);
-  const milestoneRef = useRef<any>(null);
+  const milestoneRef = useRef<HTMLDivElement>(null);
   const scrollTo = useCallback((direct: 'left' | 'right') => {
-    const scrollLeft = milestoneRef?.current?.scrollLeft;
-    const scrollDistance = 200;
-    if (direct === 'left') {
-      milestoneRef.current.scrollLeft = scrollLeft - scrollDistance;
-    } else {
-      milestoneRef.current.scrollLeft = scrollLeft + scrollDistance;
+    if (!!milestoneRef.current) {
+      const scrollLeft = milestoneRef.current.scrollLeft;
+      const scrollDistance = 200;
+      if (direct === 'left') {
+        milestoneRef.current.scrollLeft = scrollLeft - scrollDistance;
+      } else {
+        milestoneRef.current.scrollLeft = scrollLeft + scrollDistance;
+      }
     }
   }, []);
   const [percent, setPercent] = useState('5');
@@ -182,6 +184,26 @@ const Test: React.FC = () => {
       return '#81b337';
     }
   }, [percent]);
+
+  const onResize = useCallback(() => {
+    if (milestoneRef.current) {
+      const width = milestoneRef.current.clientWidth;
+      const scrollWidth = milestoneRef.current.scrollWidth;
+      if (width >= scrollWidth) {
+        milestoneRef.current.classList.add('hide-arrow');
+      } else {
+        milestoneRef.current.classList.remove('hide-arrow');
+      }
+    }
+  }, [milestoneRef]);
+
+  useEffect(() => {
+    onResize();
+    window.addEventListener('resize', onResize, false);
+    return () => {
+      window.removeEventListener('resize', onResize, false);
+    };
+  }, [onResize]);
 
   return (
     <div>
@@ -210,15 +232,6 @@ const Test: React.FC = () => {
         </div>
       </div>
       <div className="milestone">
-        <div
-          className="scroll-icon"
-          onClick={() => {
-            scrollTo('left');
-          }}
-        >
-          <div className="scroll-icon-left"></div>
-        </div>
-
         <div className="milestone-container" ref={milestoneRef}>
           {milestone.map((item, index) => {
             return (
@@ -249,12 +262,27 @@ const Test: React.FC = () => {
           })}
         </div>
         <div
+          className="scroll-icon scroll-icon-head"
+          onClick={() => {
+            scrollTo('left');
+          }}
+        >
+          <div className="scroll-icon-left"></div>
+        </div>
+        <div
           className="scroll-icon"
           onClick={() => {
             scrollTo('right');
           }}
         >
           <div className="scroll-icon-right"></div>
+        </div>
+      </div>
+      <div className="corner-mark-wrapper">
+        <div className="corner-mark">
+          主审案号
+          <div className="corner-mark-icon corner-mark-icon-icr">ICR</div>
+          <div className="corner-mark-icon corner-mark-icon-fy">法研</div>
         </div>
       </div>
     </div>

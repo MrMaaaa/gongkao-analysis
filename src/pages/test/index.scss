@@ -24,6 +24,7 @@
   justify-content: center;
   align-items: center;
   .scroll-icon {
+    order: 1;
     cursor: pointer;
     flex-shrink: 0;
     display: flex;
@@ -34,6 +35,9 @@
     margin: 0 20px;
     border-radius: 8px;
     background-color: #f6e4cc;
+    &-head {
+      order: 0;
+    }
     &-left {
       display: inline-block;
       width: 10px;
@@ -54,6 +58,7 @@
     }
   }
   &-container {
+    order: 1;
     display: flex;
     align-items: center;
     width: 100%;
@@ -61,6 +66,11 @@
     scroll-behavior: smooth;
     &::-webkit-scrollbar {
       display: none;
+    }
+    &.hide-arrow {
+      & ~ .scroll-icon {
+        display: none;
+      }
     }
   }
   &-item {
@@ -106,6 +116,8 @@
     }
   }
   &-circle {
+    position: relative;
+    z-index: 10;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -157,5 +169,40 @@
   &-date {
     margin-top: 10px;
     font-size: 12px;
+  }
+}
+
+.corner-mark-wrapper {
+  margin: 15px;
+  border: 1px solid #fff;
+  padding: 15px;
+  .corner-mark {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+
+
+    height: 40px;
+    background-color: lightblue;
+    &-icon {
+      position: absolute;
+      top: 4px;
+      right: -14px;
+      width: 50px;
+      height: 14px;
+      line-height: 14px;
+      color: #fff;
+      text-align: center;
+      font-size: 10px;
+      transform: rotate(45deg);
+      &-icr {
+        background-color: #ff5c24;
+      }
+      &-fy {
+        background-color: #81b337;;
+      }
+    }
   }
 }
