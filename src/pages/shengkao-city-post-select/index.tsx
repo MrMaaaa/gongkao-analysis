@@ -56,7 +56,7 @@ const CopyComponent: React.FC<{ value: string }> = ({ value }) => {
 const columns: TableProps['columns'] = [
   {
     title: PostRecruitmentItemKeyMapper.recruitmentInstitution,
-    width: 150,
+    width: 140,
     dataIndex: 'recruitmentInstitution',
     fixed: 'left',
     render: (value) => (
@@ -311,7 +311,7 @@ const TableForm: React.FC<{
         <Input placeholder="请输入职位代码" allowClear />
       </Form.Item> */}
       <Form.Item name="mustHavePastScore" valuePropName="checked">
-        <Checkbox>只显示存在历年进面成绩岗位</Checkbox>
+        <Checkbox>过滤无历年成绩岗位</Checkbox>
       </Form.Item>
       <Form.Item className="form-item__operation">
         <Button.Group>
@@ -487,7 +487,7 @@ const Index: React.FC = () => {
                 rel="noreferrer"
                 className="link"
               >
-                查看专业目录（本科）
+                本科专业目录
               </a>
             </span>
           }
