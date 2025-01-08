@@ -7,14 +7,14 @@ function Home() {
       <div className="home">
         <Link
           className="link"
-          to={'/gk/post/select/2025'}
+          to={'/sk/post/select/henan/2025'}
           style={{ backgroundColor: '#ff4d4d' }}
         >
+          省考-河南-2025-报考岗位选择
+        </Link>
+        {/* <Link className="link" to={'/gk/post/select/2025'}>
           国考-2025-报考岗位选择
-        </Link>
-        <Link className="link" to={'/sk/post/select/henan/2024'}>
-          省考-河南-2024-报考岗位选择
-        </Link>
+        </Link> */}
         <Link className="link" to={'/shengkao-luoyang'}>
           省考-洛阳-历年数据分析
         </Link>

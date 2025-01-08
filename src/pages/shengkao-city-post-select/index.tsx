@@ -2,7 +2,7 @@ import { useMount, useMemoizedFn, useSafeState } from 'ahooks';
 import { Table, Form, Input, Button, message, Checkbox } from 'antd';
 import { useParams } from 'react-router-dom';
 import { TableProps } from 'antd/lib/table';
-import { CopyOutlined } from '@ant-design/icons';
+import { CopyOutlined, EnvironmentOutlined } from '@ant-design/icons';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import SubjectPicker from '@/components/major-picker';
 import TextOverflow from '@/components/text-overflow';
@@ -19,7 +19,18 @@ interface FormSubmit {
   majorType: string;
   postId: string;
   mustHavePastScore: boolean;
+  isUndergraduate: boolean;
+  isPostgraduate: boolean;
 }
+
+const initialValues = {
+  recruitmentInstitution: '',
+  majorType: '管理学+管理科学与工程+信息管理与信息系统',
+  postId: '',
+  mustHavePastScore: false,
+  isUndergraduate: true,
+  isPostgraduate: false,
+};
 
 interface PostScoreRecruitmentItem extends PostRecruitmentItem {
   score?: {
@@ -48,7 +59,19 @@ const columns: TableProps['columns'] = [
     width: 150,
     dataIndex: 'recruitmentInstitution',
     fixed: 'left',
-    render: (value) => <CopyComponent value={value} />,
+    render: (value) => (
+      <>
+        <CopyComponent value={value} />
+        <a
+          className="icon-pos"
+          href={`https://ditu.amap.com/search?query=${value}`}
+          target="_blank"
+          rel="noreferrer"
+        >
+          <EnvironmentOutlined />
+        </a>
+      </>
+    ),
   },
   {
     title: '历年进面成绩',
@@ -259,19 +282,26 @@ const TableForm: React.FC<{
   return (
     <Form
       onFinish={onFinish}
-      initialValues={{
-        recruitmentInstitution: '',
-        majorType: '',
-        postId: '',
-        mustHavePastScore: false,
-      }}
+      initialValues={initialValues}
       layout="inline"
       form={form}
     >
-      <Form.Item name="majorType" className="form-item__major-type">
+      {/* <Form.Item name="majorType" className="form-item__major-type">
         <SubjectPicker />
+      </Form.Item> */}
+      <Form.Item name="majorType" className="form-item__major-type">
+        <Input
+          placeholder="专业名称或代码，多个用+连接，如 管理学+管理科学与工程"
+          allowClear
+        />
       </Form.Item>
-      <Form.Item
+      <Form.Item name="isUndergraduate" valuePropName="checked">
+        <Checkbox>本科</Checkbox>
+      </Form.Item>
+      <Form.Item name="isPostgraduate" valuePropName="checked">
+        <Checkbox>研究生</Checkbox>
+      </Form.Item>
+      {/* <Form.Item
         name="recruitmentInstitution"
         className="form-item__recruitment-institution"
       >
@@ -279,7 +309,7 @@ const TableForm: React.FC<{
       </Form.Item>
       <Form.Item name="postId" className="form-item__post-id">
         <Input placeholder="请输入职位代码" allowClear />
-      </Form.Item>
+      </Form.Item> */}
       <Form.Item name="mustHavePastScore" valuePropName="checked">
         <Checkbox>只显示存在历年进面成绩岗位</Checkbox>
       </Form.Item>
@@ -288,17 +318,7 @@ const TableForm: React.FC<{
           <Button type="primary" htmlType="submit">
             查询
           </Button>
-          <Button
-            htmlType="reset"
-            onClick={() =>
-              onFinish({
-                recruitmentInstitution: '',
-                majorType: '',
-                postId: '',
-                mustHavePastScore: false,
-              })
-            }
-          >
+          <Button htmlType="reset" onClick={() => onFinish(initialValues)}>
             重置
           </Button>
         </Button.Group>
@@ -350,7 +370,27 @@ const Index: React.FC = () => {
         if (!values.majorType) {
           return true;
         } else {
-          return item.majorType.includes(values.majorType);
+          return values.majorType.split('+').some((el) => {
+            let content = item.majorType;
+            if (values.isUndergraduate && !values.isPostgraduate) {
+              content = content.match(/本科[^研究生]+/)?.[0] || content;
+            } else if (!values.isUndergraduate && values.isPostgraduate) {
+              content = content.match(/研究生.+/)?.[0] || content;
+            }
+            console.log(
+              '-------------------',
+              el,
+              content,
+              new RegExp(`[^\u4e00-\u9fa5]${el}[^\u4e00-\u9fa5]`),
+            );
+            if (/^[\u4e00-\u9fa5]+$/.test(el)) {
+              return !!content.match(
+                new RegExp(`[^\u4e00-\u9fa5]${el}[^\u4e00-\u9fa5]`),
+              );
+            } else {
+              return content.includes(el);
+            }
+          });
         }
       });
 
@@ -369,20 +409,16 @@ const Index: React.FC = () => {
   });
 
   const postAddScore = useMemoizedFn((list: PostScoreRecruitmentItem[]) => {
+    // const year = routerParams.year; // 固定2024，否则找不到文件报错
+    const year = '2024';
     const testScore1 = readJSON<ScoreItem[]>(() =>
-      require(`@/files/score-shengkao-luoyang-${Number(
-        routerParams.year,
-      )}.json`),
+      require(`@/files/score-shengkao-luoyang-${Number(year)}.json`),
     );
     const testScore2 = readJSON<ScoreItem[]>(() =>
-      require(`@/files/score-shengkao-luoyang-${
-        Number(routerParams.year) - 1
-      }.json`),
+      require(`@/files/score-shengkao-luoyang-${Number(year) - 1}.json`),
     );
     const testScore3 = readJSON<ScoreItem[]>(() =>
-      require(`@/files/score-shengkao-luoyang-${
-        Number(routerParams.year) - 2
-      }.json`),
+      require(`@/files/score-shengkao-luoyang-${Number(year) - 2}.json`),
     );
     return list.map((item) => {
       item.score = [];
@@ -445,6 +481,14 @@ const Index: React.FC = () => {
               共查询到
               <span className="post-count-num">{postShowListLength}</span>
               个岗位
+              <a
+                href="http://www.hnrsks.com/sitesources/hnsrskszx/upload/202501/20250104093021921.pdf"
+                target="_blank"
+                rel="noreferrer"
+                className="link"
+              >
+                查看专业目录（本科）
+              </a>
             </span>
           }
         />

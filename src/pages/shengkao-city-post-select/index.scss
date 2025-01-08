@@ -5,18 +5,31 @@
   height: 100vh;
   overflow: auto;
   .copy-wrapper {
+    display: inline;
     cursor: pointer;
     .copy-icon {
       margin-left: 4px;
     }
   }
+  .icon-pos {
+    display: inline;
+    margin-left: 8px;
+  }
   .form {
     padding: 16px;
+    &-item {
+      &__major-type {
+        width: 600px;
+      }
+    }
     .post-count {
       margin-left: 16px;
       &-num {
         padding: 0 4px;
         font-family: fantasy;
+      }
+      .link {
+        margin-left: 16px;
       }
     }
   }

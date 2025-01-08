@@ -7,15 +7,16 @@ import xlsx from 'xlsx';
 import './index.scss';
 
 const Test: React.FC = () => {
+  // filepath 目录在/public下
   // 获取省考岗位数据
-  const getPostJSONFromXlsx = async (filepath = './guokao-2025.xls') => {
+  const getShengkaoPostJSONFromXlsx = async (filepath = './shengkao-2025.xls') => {
     // 注意，这里的相对路径是相对于/public目录
     const f = await fetch(filepath);
     const ab = await f.arrayBuffer();
     const wb = xlsx.read(ab);
     let titles: Record<string, string | number> = {};
     const name2key: Record<string, string> = {
-      '专业（学科）类别': 'majorType',
+      '专业': 'majorType',
       体检标准: 'physicalExaminationStandard',
       其他要求: 'otherRequirement',
       学位要求: 'degreeRequirement',
@@ -23,7 +24,7 @@ const Test: React.FC = () => {
       工作经历: 'workExperience',
       年龄要求: 'ageRequirement',
       招录人数: 'recruitmentNumber',
-      招录单位: 'recruitmentInstitution',
+      '招录机关（单位）': 'recruitmentInstitution',
       是否进行体能测评: 'isPhysicalFitnessTest',
       职位代码: 'postId',
       职位名称: 'postName',
@@ -47,7 +48,7 @@ const Test: React.FC = () => {
     console.log(JSON.stringify(data));
   };
 
-  // 获取省考岗位数据
+  // 获取国考岗位数据
   const getGuokaoPostJSONFromXlsx = async (filepath = './guokao-2025.xls') => {
     // 注意，这里的相对路径是相对于/public目录
     const f = await fetch(filepath);
@@ -126,7 +127,7 @@ const Test: React.FC = () => {
     console.log(JSON.stringify(result));
   };
   useMount(() => {
-    // getScoreJSONFromXlsx();
+    // getShengkaoPostJSONFromXlsx();
     // getGuokaoPostJSONFromXlsx();
   });
   const [milestone] = useSafeState([
