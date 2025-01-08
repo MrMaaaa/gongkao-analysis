@@ -75,7 +75,7 @@ const columns: TableProps['columns'] = [
   },
   {
     title: '历年进面成绩',
-    width: 150,
+    width: 120,
     dataIndex: 'score',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.score?.[0]?.score - b.score?.[0]?.score,
@@ -84,6 +84,14 @@ const columns: TableProps['columns'] = [
         {value.length === 0 ? '暂无数据' : `过去三年平均分：${value[0].score}`}
       </div>
     ),
+  },
+  {
+    title: PostRecruitmentItemKeyMapper.majorType,
+    width: 150,
+    dataIndex: 'majorType',
+    render: (text) => {
+      return <TextOverflow text={text} />;
+    },
   },
   {
     title: PostRecruitmentItemKeyMapper.postName,
@@ -210,14 +218,6 @@ const columns: TableProps['columns'] = [
       },
     ],
     onFilter: (value, record) => record.degreeRequirement === value,
-  },
-  {
-    title: PostRecruitmentItemKeyMapper.majorType,
-    width: 150,
-    dataIndex: 'majorType',
-    render: (text) => {
-      return <TextOverflow text={text} />;
-    },
   },
   {
     title: PostRecruitmentItemKeyMapper.workExperience,

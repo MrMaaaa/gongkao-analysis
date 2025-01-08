@@ -49,6 +49,17 @@
       }
     }
   }
+  .ant-table {
+    overflow-y: scroll;
+    .ant-table-content {
+      display: initial;
+    }
+    .ant-table-thead {
+      position: sticky;
+      top: 0;
+      z-index: 3;
+    }
+  }
 }
 
 .ant-table-wrapper .ant-table-pagination.ant-pagination {
