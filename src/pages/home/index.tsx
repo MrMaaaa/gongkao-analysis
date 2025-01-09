@@ -3,12 +3,11 @@ import './index.scss';
 
 function Home() {
   return (
-    <>
+    <div className="home-wrapper">
       <div className="home">
         <Link
-          className="link"
+          className="link link-actived"
           to={'/sk/post/select/henan/2025'}
-          style={{ backgroundColor: '#ff4d4d' }}
         >
           省考-河南-2025-报考岗位选择
         </Link>
@@ -35,7 +34,7 @@ function Home() {
         &copy; develop by 马腾飞(秋筠)
         {/* <a href="mailto:tenfyma@foxmail.com">有问题要反馈？点此给我发邮件</a> */}
       </div>
-    </>
+    </div>
   );
 }
 

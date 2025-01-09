@@ -3,11 +3,9 @@
   padding-top: 50px;
   .page-title {
     @include pos(fixed, 0, 0, initial, 0, 10);
-    @include text(#fff, 20px, center);
-    @include common-box-shadow-bottom;
+    text-align: center;
     height: 50px;
     line-height: 50px;
-    background-color: $body-bg;
     font-weight: bolder;
   }
   .table-row {
@@ -23,7 +21,7 @@
       padding: 0;
       border: 0;
       border-radius: 0;
-      color: #fff;
+      // color: #fff;
       text-align: center;
       border-bottom: 1px solid #fff;
       font-family: fantasy;
@@ -34,14 +32,13 @@
   }
 
   .post-name {
-    color: #fff;
+    // color: #fff;
     font-weight: bolder;
   }
 
   .score-section__score,
   .score-section__input {
     display: inline-block;
-    width: 50px;
     padding: 0 8px;
     border: 0;
     background: transparent;
@@ -75,7 +72,6 @@
 
   .section {
     @include pos(sticky, 50px, 0, initial, 0, 1);
-    background-color: $body-bg;
     &:last-of-type {
       box-sizing: border-box;
       min-height: calc(100vh - 50px);
@@ -84,9 +80,7 @@
 
   .title {
     // @include pos(sticky, 50px, 0, initial, 0, 1);
-    @include common-box-shadow-top;
     padding: 16px;
-    background-color: $body-bg;
     font-size: 20px;
     &-text {
       width: $mobile-min-width;
@@ -95,7 +89,7 @@
 
   .group {
     width: $mobile-min-width;
-    margin: 16px auto;
+    margin: 0 auto 16px;
     &-select {
       width: 300px;
       margin: 0 16px 0 0;
@@ -105,6 +99,30 @@
       padding: 16px;
       border: 1px solid #121212;
     }
+  }
+}
+
+.theme-normal {
+  .page-title {
+    @include common-box-shadow-bottom(#ddd);
+  }
+  .title {
+    @include common-box-shadow-top(#ddd);
+  }
+  .page-title, .section {
+    background-color: #fff;
+  }
+}
+
+.theme-dark {
+  .page-title {
+    @include common-box-shadow-bottom;
+  }
+  .title {
+    @include common-box-shadow-top;
+  }
+  .page-title, .section {
+    background-color: #282c34;
   }
 }
 

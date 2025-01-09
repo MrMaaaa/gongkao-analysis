@@ -4,6 +4,10 @@ $pageIndexNum: 7;
   @include pos(absolute, 50%, initial, initial, 0);
   transform: translateY(-50%);
   @include center-column-box;
+  &-wrapper {
+    position: relative;
+    height: 100vh;
+  }
   align-items: flex-start;
   gap: 10px;
   width: 100%;
@@ -11,16 +15,16 @@ $pageIndexNum: 7;
   // padding: 50px 0;
   .link {
     display: block;
-    // margin: 30px;
-    padding: 10px;
-    color: #fff;
+    padding: 12px;
     text-decoration: none;
-    background-color: #202020;
-    border: 1px solid #000;
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
     text-align: right;
     transform: translateX(-100%);
+    &.link-actived {
+      color: #fff;
+      background-color: #ff4d4d;
+    }
     &:hover {
       &::before {
         content: '>';
@@ -35,6 +39,20 @@ $pageIndexNum: 7;
         animation-fill-mode: forwards;
       }
     }
+  }
+}
+
+.theme-normal {
+  .link {
+    color: #202020;
+    background-color: #f5f5f5;
+  }
+}
+
+.theme-dark {
+  .link {
+    color: #fff;
+    background-color: #202020;
   }
 }
 

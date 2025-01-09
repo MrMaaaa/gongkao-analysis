@@ -506,7 +506,7 @@ const Index: React.FC = () => {
   });
 
   return (
-    <div className="shengkao-city-post-select">
+    <div className="guokao-city-post-select">
       <div className="form">
         <TableForm
           onFinish={onFinish}

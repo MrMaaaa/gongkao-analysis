@@ -35,7 +35,6 @@
     box-sizing: border-box;
     width: 400px;
     padding: 16px;
-    @include common-box-shadow-top;
     &-title {
       margin-bottom: 16px;
       text-align: center;
@@ -54,10 +53,6 @@
       @include center-box;
       align-items: stretch;
       gap: 16px;
-      &__year {
-        display: block;
-        font-size: 9px;
-      }
       &__score {
         &-group {
           flex-grow: 2;
@@ -77,6 +72,24 @@
   &__text {
     margin-top: 30px;
     font-size: 20px;
+  }
+}
+
+.theme-normal {
+  .history-score-list {
+    &__item {
+      @include common-box-shadow-top(#ddd);
+      background-color: #fff
+    }
+  }
+}
+
+.theme-dark {
+  .history-score-list {
+    &__item {
+      @include common-box-shadow-top;
+      background-color: #282c34;
+    }
   }
 }
 
@@ -160,12 +173,10 @@ $width: 1200px;
   }
   .history-score-list {
     padding: 0;
-    background-color: $body-bg;
     &__item {
       @include pos(sticky, 0, 0, initial, 0, 1);
       width: 100%;
       padding: 16px 0 0;
-      background-color: $body-bg;
       &:last-of-type {
         justify-content: start;
         min-height: 100vh;

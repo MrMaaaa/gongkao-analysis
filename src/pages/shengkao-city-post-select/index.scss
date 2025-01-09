@@ -21,15 +21,8 @@
       &__major-type {
         width: 600px;
       }
-    }
-    .post-count {
-      margin-left: 16px;
-      &-num {
-        padding: 0 4px;
-        font-family: fantasy;
-      }
-      .link {
-        margin-left: 16px;
+      &__recruitment-institution {
+        width: 300px;
       }
     }
   }
@@ -46,6 +39,16 @@
         .ant-table {
           overflow: auto;
         }
+      }
+    }
+    .post-count {
+      margin-left: 16px;
+      &-num {
+        padding: 0 4px;
+        font-family: fantasy;
+      }
+      .link {
+        margin-left: 16px;
       }
     }
   }
@@ -69,18 +72,30 @@
 @media (max-width: $mobile-min-width) {
   .shengkao-city-post-select {
     .form {
+      padding: 8px;
       &-item {
         &__major-type,
         &__recruitment-institution,
-        &__post-id {
+        &__post-id,
+        &__operation {
           width: 100%;
-          margin-top: 10px;
+          margin-top: 4px;
           margin-inline-end: 0;
         }
         &__operation {
-          margin-top: 10px;
+          .ant-btn-group,
+          .ant-btn {
+            width: 100%;
+          }
         }
       }
+    }
+    :where(.css-dev-only-do-not-override-kghr11).ant-table-wrapper
+      .ant-table-pagination.ant-pagination {
+      margin-bottom: 4px;
+    }
+    .table {
+      padding: 0;
     }
   }
 }

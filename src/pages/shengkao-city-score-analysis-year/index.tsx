@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import cls from 'classnames';
 import { useParams } from 'react-router-dom';
-import { Select, InputNumber, Table } from 'antd';
+import { Select, InputNumber, Table, Typography } from 'antd';
 import { useMemoizedFn, useSafeState, useMount, useCreation } from 'ahooks';
 import { Scatter } from '@ant-design/plots';
 import IfElseComponent from '@/components/if-else-component';
@@ -565,10 +565,14 @@ const App: React.FC = () => {
 
   return (
     <div className="analysis-container">
-      <div className="page-title">{title}</div>
+      <Typography.Title level={3} className="page-title">
+        {title}
+      </Typography.Title>
       <div className="section">
         <div className="title">
-          <div className="title-text">进面分数</div>
+          <Typography.Title level={4} className="title-text">
+            进面分数
+          </Typography.Title>
         </div>
         <div className="group group-fix-sticky">
           <Table
@@ -643,9 +647,11 @@ const App: React.FC = () => {
       </div>
       <div className="section">
         <div className="title">
-          <div className="title-text">岗位情况</div>
+          <Typography.Title level={4} className="title-text">
+            岗位情况
+          </Typography.Title>
         </div>
-        <div className="group">
+        <Typography.Paragraph className="group">
           <span className="group-line">
             总分波动最大相差
             <ScoreSection
@@ -666,7 +672,7 @@ const App: React.FC = () => {
               {filterData.postData.diff.score.max?.post}
             </span>
           </span>
-        </div>
+        </Typography.Paragraph>
         {/* <ConditionComponent condition={!onlyTotal}>
           <div className="group">
             行测波动最大相差
@@ -709,7 +715,7 @@ const App: React.FC = () => {
             </span>
           </div>
         </ConditionComponent> */}
-        <div className="group">
+        <Typography.Paragraph className="group">
           <span className="group-line">
             总分波动最小相差
             <ScoreSection
@@ -730,7 +736,7 @@ const App: React.FC = () => {
               {filterData.postData.diff.score.min?.post}
             </span>
           </span>
-        </div>
+        </Typography.Paragraph>
         {/* <ConditionComponent condition={!onlyTotal}>
           <div className="group">
             行测波动最小相差
@@ -773,7 +779,7 @@ const App: React.FC = () => {
             </span>
           </div>
         </ConditionComponent> */}
-        <div className="group">
+        <Typography.Paragraph className="group">
           <span className="group-line">
             竞争最激烈平均分
             <ScoreSection
@@ -811,8 +817,8 @@ const App: React.FC = () => {
               {filterData.postData.ave.score.max?.post}
             </span>
           </span>
-        </div>
-        <div className="group">
+        </Typography.Paragraph>
+        <Typography.Paragraph className="group">
           <span className="group-line">
             竞争最温和平均分
             <ScoreSection
@@ -850,8 +856,8 @@ const App: React.FC = () => {
               {filterData.postData.ave.score.min?.post}
             </span>
           </span>
-        </div>
-        <div className="group">
+        </Typography.Paragraph>
+        <Typography.Paragraph className="group">
           <div className="card">
             <Select
               className="group-select"
@@ -897,13 +903,15 @@ const App: React.FC = () => {
               noWidth
             />
           </div>
-        </div>
+        </Typography.Paragraph>
       </div>
       <div className="section">
         <div className="title">
-          <div className="title-text">我的成绩</div>
+          <Typography.Title level={4} className="title-text">
+            我的成绩
+          </Typography.Title>
         </div>
-        <div className="group">
+        <Typography.Paragraph className="group">
           行测：
           <InputNumber
             className="input score-section__input"
@@ -928,35 +936,35 @@ const App: React.FC = () => {
             disabled
           />
           {/* <ScoreSection score={userResult.userScore} /> */}
-        </div>
-        <div className="group">
+        </Typography.Paragraph>
+        <Typography.Paragraph className="group">
           在进入面试的
           <ScoreSection score={examineeCount} suffix={'名'} noWidth />
           考生中
-        </div>
-        <div className="group">
+        </Typography.Paragraph>
+        <Typography.Paragraph className="group">
           总分超过了
           <ScoreSection score={userResult.scoreAmountSum} suffix={'人'} />
           ，排名前
           <ScoreSection score={userResult.scoreRankAmount} suffix={'%'} />
-        </div>
+        </Typography.Paragraph>
         <ConditionComponent condition={!onlyTotal}>
-          <div className="group">
+          <Typography.Paragraph className="group">
             行测超过了
             <ScoreSection score={userResult.xingceAmountSum} suffix={'人'} />
             ，排名前
             <ScoreSection score={userResult.xingceRankAmount} suffix={'%'} />
-          </div>
+          </Typography.Paragraph>
         </ConditionComponent>
         <ConditionComponent condition={!onlyTotal}>
-          <div className="group">
+          <Typography.Paragraph className="group">
             申论超过了
             <ScoreSection score={userResult.shenlunAmountSum} suffix={'人'} />
             ，排名前
             <ScoreSection score={userResult.shenlunRankAmount} suffix={'%'} />
-          </div>
+          </Typography.Paragraph>
         </ConditionComponent>
-        <div className="group">
+        <Typography.Paragraph className="group">
           可以在
           <ScoreSection
             score={userResult.passPostNames.length}
@@ -981,7 +989,7 @@ const App: React.FC = () => {
             suffix={'名'}
             noWidth
           />
-        </div>
+        </Typography.Paragraph>
       </div>
       {/* <Scatter
         {...{

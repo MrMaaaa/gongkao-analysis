@@ -1,6 +1,6 @@
 import { useCreation, useMemoizedFn, useMount, useSafeState } from 'ahooks';
 import { Line } from '@ant-design/plots';
-import { Input } from 'antd';
+import { Input, Typography } from 'antd';
 import { RollbackOutlined, CoffeeOutlined } from '@ant-design/icons';
 import ConditionComponent from '@/components/condition-component';
 import IfElseComponent from '@/components/if-else-component';
@@ -41,21 +41,21 @@ const ScoreShowItem: React.FC<{
 }> = ({ score, year }) => {
   return (
     <div className="history-score-list__item-cell">
-      <span className="history-score-list__item-content__year">{year}</span>
+      <Typography.Text className="history-score-list__item-content__year">{year}</Typography.Text>
       <IfElseComponent
         condition={score.list.length > 0}
         if={
           <div className="history-score-list__item-content__score-group">
-            <span className="history-score-list__item-content__score score">
+            <Typography.Text className="history-score-list__item-content__score score">
               {score?.ave}
-            </span>
-            <span className="history-score-list__item-content__score score">
+            </Typography.Text>
+            <Typography.Text className="history-score-list__item-content__score score">
               {score.min}-{score.max}
-            </span>
+            </Typography.Text>
           </div>
         }
         else={
-          <div className="history-score-list__item-content__score-group">-</div>
+          <Typography.Text className="history-score-list__item-content__score-group">-</Typography.Text>
         }
       />
     </div>
@@ -161,12 +161,12 @@ const Index = () => {
       <ConditionComponent condition={!showList}>
         <div className="sk-ly-post-wrapper">
           <div className="sk-ly-post">
-            <div className="sk-ly-post__title">
+            <Typography.Title level={2} className="sk-ly-post__title">
               报考岗位建议
               <span className="sk-ly-post__title-aside">
                 （洛阳市2022-2024）
               </span>
-            </div>
+            </Typography.Title>
             <Input.Search
               className="sk-ly-post__input"
               placeholder="请输入你心仪的岗位"
@@ -183,14 +183,14 @@ const Index = () => {
 
       <ConditionComponent condition={showList}>
         <>
-          <div className="top-bar">
+          <Typography.Text className="top-bar">
             <RollbackOutlined
               onClick={() => {
                 setShowList(false);
                 setPostInput('');
               }}
             />
-          </div>
+          </Typography.Text>
           <IfElseComponent
             condition={samePostFilterList.length > 0}
             if={
@@ -198,17 +198,17 @@ const Index = () => {
                 {samePostFilterList.map((item, idx) => {
                   return (
                     <div className="history-score-list__item" key={idx}>
-                      <div className="history-score-list__item-title">
+                      <Typography.Title level={5} className="history-score-list__item-title">
                         {item.post}
-                      </div>
+                      </Typography.Title>
                       <div className="history-score-list__item-content">
                         <div className="history-score-list__item-cell history-score-list__item-cell-ave">
-                          <span className="history-score-list__item-content__year">
+                          <Typography.Text className="history-score-list__item-content__year">
                             平均分
-                          </span>
-                          <span className="history-score-list__item-content__score score">
+                          </Typography.Text>
+                          <Typography.Title level={3} className="history-score-list__item-content__score score">
                             {item.ave}
-                          </span>
+                          </Typography.Title>
                         </div>
                         <ScoreShowItem year="2022" score={item['2022']} />
                         <ScoreShowItem year="2023" score={item['2023']} />

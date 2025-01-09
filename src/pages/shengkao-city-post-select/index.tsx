@@ -59,7 +59,7 @@ const columns: TableProps['columns'] = [
     width: 140,
     dataIndex: 'recruitmentInstitution',
     fixed: 'left',
-    render: (value) => (
+    render: (value, record) => (
       <>
         <CopyComponent value={value} />
         <a
@@ -70,6 +70,10 @@ const columns: TableProps['columns'] = [
         >
           <EnvironmentOutlined />
         </a>
+        <div className="col-tips">
+          {record.postName}&nbsp;&nbsp;
+          <CopyComponent value={record.postId} />
+        </div>
       </>
     ),
   },
@@ -94,17 +98,18 @@ const columns: TableProps['columns'] = [
     },
   },
   {
-    title: PostRecruitmentItemKeyMapper.postName,
+    title: PostRecruitmentItemKeyMapper.otherRequirement,
     width: 100,
-    dataIndex: 'postName',
+    dataIndex: 'otherRequirement',
     align: 'center',
-  },
-  {
-    title: PostRecruitmentItemKeyMapper.postId,
-    width: 100,
-    dataIndex: 'postId',
-    align: 'center',
-    render: (value) => <CopyComponent value={value} />,
+    render: (text, record) => {
+      return (
+        <>
+          <TextOverflow text={text} />
+          <TextOverflow text={'工作经历要求：' + record.workExperience} />
+        </>
+      );
+    },
   },
   {
     title: PostRecruitmentItemKeyMapper.recruitmentNumber,
@@ -219,27 +224,6 @@ const columns: TableProps['columns'] = [
     ],
     onFilter: (value, record) => record.degreeRequirement === value,
   },
-  {
-    title: PostRecruitmentItemKeyMapper.workExperience,
-    width: 100,
-    dataIndex: 'workExperience',
-    filters: [
-      {
-        text: '两年以上基层工作经历',
-        value: '两年以上基层工作经历',
-      },
-    ],
-    onFilter: (value, record) => record.workExperience === value,
-  },
-  {
-    title: PostRecruitmentItemKeyMapper.otherRequirement,
-    width: 100,
-    dataIndex: 'otherRequirement',
-    align: 'center',
-    render: (text) => {
-      return <TextOverflow text={text} />;
-    },
-  },
   // {
   //   title: PostRecruitmentItemKeyMapper.physicalExaminationStandard,
   //   width: 100,
@@ -276,7 +260,7 @@ const columns: TableProps['columns'] = [
 
 const TableForm: React.FC<{
   onFinish: (values: FormSubmit) => void;
-  suffix: React.ReactElement;
+  suffix?: React.ReactElement;
 }> = ({ onFinish, suffix }) => {
   const [form] = Form.useForm();
   return (
@@ -293,7 +277,22 @@ const TableForm: React.FC<{
         <Input
           placeholder="专业名称或代码，多个用+连接，如 管理学+管理科学与工程"
           allowClear
+          addonAfter={
+            <a
+              href="http://www.hnrsks.com/sitesources/hnsrskszx/upload/202501/20250104093021921.pdf"
+              target="_blank"
+              rel="noreferrer"
+            >
+              本科专业目录
+            </a>
+          }
         />
+      </Form.Item>
+      <Form.Item
+        name="recruitmentInstitution"
+        className="form-item__recruitment-institution"
+      >
+        <Input placeholder="招录单位名称" allowClear />
       </Form.Item>
       <Form.Item name="isUndergraduate" valuePropName="checked">
         <Checkbox>本科</Checkbox>
@@ -301,15 +300,6 @@ const TableForm: React.FC<{
       <Form.Item name="isPostgraduate" valuePropName="checked">
         <Checkbox>研究生</Checkbox>
       </Form.Item>
-      {/* <Form.Item
-        name="recruitmentInstitution"
-        className="form-item__recruitment-institution"
-      >
-        <Input placeholder="请输入招录单位" allowClear />
-      </Form.Item>
-      <Form.Item name="postId" className="form-item__post-id">
-        <Input placeholder="请输入职位代码" allowClear />
-      </Form.Item> */}
       <Form.Item name="mustHavePastScore" valuePropName="checked">
         <Checkbox>过滤无历年成绩岗位</Checkbox>
       </Form.Item>
@@ -329,6 +319,7 @@ const TableForm: React.FC<{
 };
 
 const Index: React.FC = () => {
+  const [current, setCurrent] = useSafeState(1);
   const [list, setList] = useSafeState<PostScoreRecruitmentItem[]>([]);
   const routerParams = useParams();
   const [postShowList, setPostShowList] = useSafeState<
@@ -377,12 +368,6 @@ const Index: React.FC = () => {
             } else if (!values.isUndergraduate && values.isPostgraduate) {
               content = content.match(/研究生.+/)?.[0] || content;
             }
-            console.log(
-              '-------------------',
-              el,
-              content,
-              new RegExp(`[^\u4e00-\u9fa5]${el}[^\u4e00-\u9fa5]`),
-            );
             if (/^[\u4e00-\u9fa5]+$/.test(el)) {
               return !!content.match(
                 new RegExp(`[^\u4e00-\u9fa5]${el}[^\u4e00-\u9fa5]`),
@@ -395,6 +380,7 @@ const Index: React.FC = () => {
       });
 
     setPostShowList(newList);
+    setCurrent(1);
     setPostShowListLength(newList.length);
   });
 
@@ -474,24 +460,7 @@ const Index: React.FC = () => {
   return (
     <div className="shengkao-city-post-select">
       <div className="form">
-        <TableForm
-          onFinish={onFinish}
-          suffix={
-            <span className="post-count">
-              共查询到
-              <span className="post-count-num">{postShowListLength}</span>
-              个岗位
-              <a
-                href="http://www.hnrsks.com/sitesources/hnsrskszx/upload/202501/20250104093021921.pdf"
-                target="_blank"
-                rel="noreferrer"
-                className="link"
-              >
-                本科专业目录
-              </a>
-            </span>
-          }
-        />
+        <TableForm onFinish={onFinish} />
       </div>
       <Table
         className="table"
@@ -503,6 +472,14 @@ const Index: React.FC = () => {
         size={'small'}
         pagination={{
           position: ['topRight'],
+          current: current,
+          onChange: setCurrent,
+          showTotal: () => (
+            <span className="post-count">
+              共<span className="post-count-num">{postShowListLength}</span>
+              个岗位
+            </span>
+          ),
         }}
         onChange={(pagination, filters, sorter, extra) => {
           setPostShowListLength(extra.currentDataSource.length);

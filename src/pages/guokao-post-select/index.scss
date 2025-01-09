@@ -1,4 +1,4 @@
-.shengkao-city-post-select {
+.guokao-city-post-select {
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -53,7 +53,7 @@
 }
 
 @media (max-width: $mobile-min-width) {
-  .shengkao-city-post-select {
+  .guokao-city-post-select {
     .form {
       &-item {
         &__major-type,
