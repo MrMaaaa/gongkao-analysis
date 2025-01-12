@@ -72,7 +72,7 @@ export enum PostRecruitmentItemKeyMapper {
   'workExperience' = '工作经历',
   'otherRequirement' = '其他要求',
   'physicalExaminationStandard' = '体检标准',
-  'isPhysicalFitnessTest' = '是否进行体能测评',
+  'isPhysicalFitnessTest' = '体能测评',
   'remark' = '备注',
 }
 

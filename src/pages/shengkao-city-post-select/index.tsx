@@ -1,11 +1,11 @@
 import { useMount, useMemoizedFn, useSafeState } from 'ahooks';
-import { Table, Form, Input, Button, message, Checkbox } from 'antd';
+import { Table, Form, Input, Button, Checkbox } from 'antd';
 import { useParams } from 'react-router-dom';
 import { TableProps } from 'antd/lib/table';
-import { CopyOutlined, EnvironmentOutlined } from '@ant-design/icons';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { EnvironmentOutlined } from '@ant-design/icons';
 import SubjectPicker from '@/components/major-picker';
 import TextOverflow from '@/components/text-overflow';
+import CopyComponent from '@/components/copy-component';
 import {
   PostRecruitmentItemKeyMapper,
   PostRecruitmentItem,
@@ -39,24 +39,10 @@ interface PostScoreRecruitmentItem extends PostRecruitmentItem {
   }[];
 }
 
-const CopyComponent: React.FC<{ value: string }> = ({ value }) => {
-  const onCopySuccess = useMemoizedFn(() => {
-    message.success('复制成功');
-  });
-  return (
-    <CopyToClipboard text={value} onCopy={onCopySuccess}>
-      <div className="copy-wrapper">
-        {value}
-        <CopyOutlined className="copy-icon" />
-      </div>
-    </CopyToClipboard>
-  );
-};
-
 const columns: TableProps['columns'] = [
   {
     title: PostRecruitmentItemKeyMapper.recruitmentInstitution,
-    width: 140,
+    width: 120,
     dataIndex: 'recruitmentInstitution',
     fixed: 'left',
     render: (value, record) => (
@@ -91,7 +77,7 @@ const columns: TableProps['columns'] = [
   },
   {
     title: PostRecruitmentItemKeyMapper.majorType,
-    width: 150,
+    width: 160,
     dataIndex: 'majorType',
     render: (text) => {
       return <TextOverflow text={text} />;
@@ -113,7 +99,7 @@ const columns: TableProps['columns'] = [
   },
   {
     title: PostRecruitmentItemKeyMapper.recruitmentNumber,
-    width: 100,
+    width: 80,
     dataIndex: 'recruitmentNumber',
     align: 'center',
   },
@@ -273,7 +259,7 @@ const TableForm: React.FC<{
       {/* <Form.Item name="majorType" className="form-item__major-type">
         <SubjectPicker />
       </Form.Item> */}
-      <Form.Item name="majorType" className="form-item__major-type">
+      <Form.Item name="majorType" className="ant-form-item__major-type">
         <Input
           placeholder="专业名称或代码，多个用+连接，如 管理学+管理科学与工程"
           allowClear
@@ -290,7 +276,7 @@ const TableForm: React.FC<{
       </Form.Item>
       <Form.Item
         name="recruitmentInstitution"
-        className="form-item__recruitment-institution"
+        className="ant-form-item__recruitment-institution"
       >
         <Input placeholder="招录单位名称" allowClear />
       </Form.Item>
@@ -301,9 +287,9 @@ const TableForm: React.FC<{
         <Checkbox>研究生</Checkbox>
       </Form.Item>
       <Form.Item name="mustHavePastScore" valuePropName="checked">
-        <Checkbox>过滤无历年成绩岗位</Checkbox>
+        <Checkbox>过滤无历年进面成绩岗位</Checkbox>
       </Form.Item>
-      <Form.Item className="form-item__operation">
+      <Form.Item className="ant-form-item__operation">
         <Button.Group>
           <Button type="primary" htmlType="submit">
             查询

@@ -11,9 +11,9 @@ function Home() {
         >
           省考-河南-2025-报考岗位选择
         </Link>
-        {/* <Link className="link" to={'/gk/post/select/2025'}>
+        <Link className="link" to={'/gk/post/select/2025'}>
           国考-2025-报考岗位选择
-        </Link> */}
+        </Link>
         <Link className="link" to={'/shengkao-luoyang'}>
           省考-洛阳-历年数据分析
         </Link>

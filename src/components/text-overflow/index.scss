@@ -1,11 +1,29 @@
 .text-overflow {
+  &-wrapper {
+    display: flex;
+  }
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
   overflow: hidden;
   text-overflow: ellipsis;
+  word-break: break-all;
+  &.text-overflow-cancel {
+    -webkit-line-clamp: 99;
+  }
+  &::before {
+    content: '';
+    float: right;
+    width: 0;
+    height: calc(100% - 20px);
+  }
 }
 
 .toggle-hidden-btn {
+  float: right;
+  clear: both;
+  display: inline-block;
+  height: 18px;
+  line-height: 18px;
   padding: 0;
 }

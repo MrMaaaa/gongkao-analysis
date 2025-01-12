@@ -4,25 +4,21 @@
   align-items: stretch;
   height: 100vh;
   overflow: auto;
-  .copy-wrapper {
-    display: inline;
-    cursor: pointer;
-    .copy-icon {
-      margin-left: 4px;
-    }
-  }
   .icon-pos {
     display: inline;
     margin-left: 8px;
   }
   .form {
     padding: 16px;
-    &-item {
-      &__major-type {
-        width: 600px;
-      }
-      &__recruitment-institution {
-        width: 300px;
+    .ant-form {
+      gap: 16px 0;
+      &-item {
+        &__major-type {
+          width: 600px;
+        }
+        &__recruitment-institution {
+          width: 300px;
+        }
       }
     }
   }
@@ -42,7 +38,6 @@
       }
     }
     .post-count {
-      margin-left: 16px;
       &-num {
         padding: 0 4px;
         font-family: fantasy;
@@ -67,25 +62,31 @@
 
 .ant-table-wrapper .ant-table-pagination.ant-pagination {
   margin-top: 0;
+  margin-bottom: 16px;
 }
 
 @media (max-width: $mobile-min-width) {
+  .ant-table-wrapper .ant-table-pagination.ant-pagination {
+    margin-bottom: 4px;
+  }
   .shengkao-city-post-select {
     .form {
       padding: 8px;
-      &-item {
-        &__major-type,
-        &__recruitment-institution,
-        &__post-id,
-        &__operation {
-          width: 100%;
-          margin-top: 4px;
-          margin-inline-end: 0;
-        }
-        &__operation {
-          .ant-btn-group,
-          .ant-btn {
+      .ant-form {
+        gap: 4px 0;
+        &-item {
+          margin-inline-end: 0 !important;
+          &__major-type,
+          &__recruitment-institution,
+          &__post-id,
+          &__operation {
             width: 100%;
+          }
+          &__operation {
+            .ant-btn-group,
+            .ant-btn {
+              width: 100%;
+            }
           }
         }
       }

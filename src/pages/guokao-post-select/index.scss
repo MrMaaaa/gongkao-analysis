@@ -4,20 +4,13 @@
   align-items: stretch;
   height: 100vh;
   overflow: auto;
-  .copy-wrapper {
-    cursor: pointer;
-    .copy-icon {
-      margin-left: 4px;
-    }
-  }
   .form {
     padding: 16px;
-    .post-count {
-      margin-left: 16px;
-      &-num {
-        padding: 0 4px;
-        font-family: fantasy;
-      }
+  }
+  .post-count {
+    &-num {
+      padding: 0 4px;
+      font-family: fantasy;
     }
   }
   .table {
@@ -55,16 +48,20 @@
 @media (max-width: $mobile-min-width) {
   .guokao-city-post-select {
     .form {
-      &-item {
+      .ant-form-item {
+        margin-inline-end: 0;
         &__major-type,
         &__recruitment-institution,
-        &__post-id {
+        &__post-id,
+        &__operation {
           width: 100%;
-          margin-top: 10px;
-          margin-inline-end: 0;
+          margin-top: 4px;
         }
         &__operation {
-          margin-top: 10px;
+          .ant-btn-group,
+          .ant-btn {
+            width: 100%;
+          }
         }
       }
     }

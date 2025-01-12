@@ -59,6 +59,7 @@ const GlobalSettings: React.FC<{
     <FloatButton
       icon={activedTheme === 'dark' ? <SunOutlined /> : <MoonOutlined />}
       onClick={switchTheme}
+      tooltip={<span>切换为{activedTheme === 'dark' ? '日间' : '夜间'}模式</span>}
     ></FloatButton>
   );
 };

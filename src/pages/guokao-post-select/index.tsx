@@ -1,12 +1,10 @@
 import { useMount, useMemoizedFn, useSafeState } from 'ahooks';
-import { Table, Form, Input, Button, message, Checkbox, Alert } from 'antd';
+import { Table, Form, Input, Button, Checkbox } from 'antd';
 import { useParams } from 'react-router-dom';
 import { TableProps } from 'antd/lib/table';
-import { CopyOutlined } from '@ant-design/icons';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
 import SubjectPicker from '@/components/major-picker';
 import TextOverflow from '@/components/text-overflow';
-import ContentOverflow from '@/components/content-overflow';
+import CopyComponent from '@/components/copy-component';
 import {
   GuoKaoRecruitmentItem,
   GuokaoPostRecruitmentItemKeyMapper,
@@ -22,20 +20,6 @@ interface FormSubmit {
   isRegularDegreeAndNoExp: boolean;
   isNotPartyMember: boolean;
 }
-
-const CopyComponent: React.FC<{ value: string }> = ({ value }) => {
-  const onCopySuccess = useMemoizedFn(() => {
-    message.success('复制成功');
-  });
-  return (
-    <CopyToClipboard text={value} onCopy={onCopySuccess}>
-      <span className="copy-wrapper">
-        {value}
-        <CopyOutlined className="copy-icon" />
-      </span>
-    </CopyToClipboard>
-  );
-};
 
 const columns: TableProps['columns'] = [
   {
@@ -327,31 +311,35 @@ const columns: TableProps['columns'] = [
     dataIndex: 'departmentWebsite',
     render: (text, record) => {
       return (
-        <ContentOverflow>
-          <div>
-            {text.includes('.') ? (
-              <a href={text} target="_blank" rel="noreferrer">
-                <Button className="btn-link" type="link">
-                  {text}
-                </Button>
-              </a>
-            ) : (
-              <span>{text}</span>
-            )}
-          </div>
-          <div>
-            {GuokaoPostRecruitmentItemKeyMapper.contactWay1}：
-            {record.contactWay1}
-          </div>
-          <div>
-            {GuokaoPostRecruitmentItemKeyMapper.contactWay2}：
-            {record.contactWay2}
-          </div>
-          <div>
-            {GuokaoPostRecruitmentItemKeyMapper.contactWay3}：
-            {record.contactWay3}
-          </div>
-        </ContentOverflow>
+        <TextOverflow
+          text={
+            <>
+              <div>
+                {text.includes('.') ? (
+                  <a href={text} target="_blank" rel="noreferrer">
+                    <Button className="btn-link" type="link">
+                      {text}
+                    </Button>
+                  </a>
+                ) : (
+                  <span>{text}</span>
+                )}
+              </div>
+              <div>
+                {GuokaoPostRecruitmentItemKeyMapper.contactWay1}：
+                {record.contactWay1}
+              </div>
+              <div>
+                {GuokaoPostRecruitmentItemKeyMapper.contactWay2}：
+                {record.contactWay2}
+              </div>
+              <div>
+                {GuokaoPostRecruitmentItemKeyMapper.contactWay3}：
+                {record.contactWay3}
+              </div>
+            </>
+          }
+        />
       );
     },
   },
@@ -359,7 +347,7 @@ const columns: TableProps['columns'] = [
 
 const TableForm: React.FC<{
   onFinish: (values: FormSubmit) => void;
-  suffix: React.ReactElement;
+  suffix?: React.ReactElement;
 }> = ({ onFinish, suffix }) => {
   const [form] = Form.useForm();
   return (
@@ -379,7 +367,7 @@ const TableForm: React.FC<{
       {/* <Form.Item name="majorType" className="form-item__major-type">
         <SubjectPicker />
       </Form.Item> */}
-      <Form.Item name="majorType" className="form-item__major-type">
+      <Form.Item name="majorType" className="ant-form-item__major-type">
         <Input placeholder="专业名称或代码，多个用+连接" allowClear />
       </Form.Item>
       {/* <Form.Item
@@ -390,23 +378,23 @@ const TableForm: React.FC<{
       </Form.Item> */}
       <Form.Item
         name="workPosition"
-        className="form-item__recruitment-institution"
+        className="ant-form-item__recruitment-institution"
       >
         <Input placeholder="请输入城市" allowClear />
       </Form.Item>
-      <Form.Item name="departmentCode" className="form-item__post-id">
+      {/* <Form.Item name="departmentCode" className="ant-form-item__post-id">
         <Input placeholder="请输入部门代码/部门名称" allowClear />
       </Form.Item>
-      <Form.Item name="postCode" className="form-item__post-id">
+      <Form.Item name="postCode" className="ant-form-item__post-id">
         <Input placeholder="请输入职位代码/职位名称" allowClear />
-      </Form.Item>
+      </Form.Item> */}
       <Form.Item name="isRegularDegreeAndNoExp" valuePropName="checked">
         <Checkbox>本科学历且无基层经验</Checkbox>
       </Form.Item>
       <Form.Item name="isNotPartyMember" valuePropName="checked">
         <Checkbox>非中共党员（群众）</Checkbox>
       </Form.Item>
-      <Form.Item className="form-item__operation">
+      <Form.Item className="ant-form-item__operation">
         <Button.Group>
           <Button type="primary" htmlType="submit">
             查询
@@ -435,6 +423,7 @@ const TableForm: React.FC<{
 
 const Index: React.FC = () => {
   const routerParams = useParams();
+  const [current, setCurrent] = useSafeState(1);
   const [list, setList] = useSafeState<GuoKaoRecruitmentItem[]>([]);
   const [postShowList, setPostShowList] = useSafeState<GuoKaoRecruitmentItem[]>(
     [],
@@ -471,14 +460,20 @@ const Index: React.FC = () => {
         if (!values.postCode) {
           return true;
         } else {
-          return String(item.postCode).includes(values.postCode) || item.postName.includes(values.postCode);
+          return (
+            String(item.postCode).includes(values.postCode) ||
+            item.postName.includes(values.postCode)
+          );
         }
       })
       .filter((item) => {
         if (!values.departmentCode) {
           return true;
         } else {
-          return String(item.departmentCode).includes(values.departmentCode) || item.departmentName.includes(values.departmentCode);
+          return (
+            String(item.departmentCode).includes(values.departmentCode) ||
+            item.departmentName.includes(values.departmentCode)
+          );
         }
       })
       .filter((item) => {
@@ -493,6 +488,7 @@ const Index: React.FC = () => {
         }
       });
     setPostShowList(newList);
+    setCurrent(1);
     setPostShowListLength(newList.length);
   });
 
@@ -508,23 +504,7 @@ const Index: React.FC = () => {
   return (
     <div className="guokao-city-post-select">
       <div className="form">
-        <TableForm
-          onFinish={onFinish}
-          suffix={
-            <span className="post-count">
-              共查询到
-              <span className="post-count-num">{postShowListLength}</span>
-              个岗位
-            </span>
-          }
-        />
-      </div>
-      <div style={{ padding: '0 16px 16px' }}>
-        <Alert
-          message="筛选查询功能可能出现遗漏岗位，结果仅供参考"
-          type="warning"
-          showIcon
-        />
+        <TableForm onFinish={onFinish} />
       </div>
       <Table
         className="table"
@@ -535,6 +515,14 @@ const Index: React.FC = () => {
         size={'small'}
         pagination={{
           position: ['topRight'],
+          current: current,
+          onChange: setCurrent,
+          showTotal: () => (
+            <span className="post-count">
+              共<span className="post-count-num">{postShowListLength}</span>
+              个岗位
+            </span>
+          ),
         }}
         onChange={(pagination, filters, sorter, extra) => {
           setPostShowListLength(extra.currentDataSource.length);

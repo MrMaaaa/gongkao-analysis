@@ -5,39 +5,44 @@ import './index.scss';
 import { useSafeState } from 'ahooks';
 
 const TextOverflow: React.FC<{
-  text: string;
+  text: string | React.ReactNode;
 }> = ({ text }) => {
   const textRef = useRef<HTMLDivElement | null>(null);
   const [withHiddenStyle, setWithHiddenStyle] = useSafeState(false);
   const [toggleHiddenStyle, setToggleHiddenStyle] = useSafeState(false);
   useEffect(() => {
-    if (!!text && textRef.current) {
-      if (textRef.current.getBoundingClientRect().height > 60) {
+    if (!!text && typeof text === 'string') {
+      if (textRef.current && textRef.current.getBoundingClientRect().height > 60) {
         setWithHiddenStyle(true);
         setToggleHiddenStyle(true);
       }
+    } else {
+      setWithHiddenStyle(true);
+      setToggleHiddenStyle(true);
     }
   }, [text]);
   return (
-    <div ref={textRef}>
-      <span
+    <div className="text-overflow-wrapper">
+      <div
         className={cls({
-          'text-overflow': toggleHiddenStyle,
+          'text-overflow': true,
+          'text-overflow-cancel': !toggleHiddenStyle,
         })}
+        ref={textRef}
       >
+        {withHiddenStyle && (
+          <Button
+            className="toggle-hidden-btn"
+            onClick={() => {
+              setToggleHiddenStyle((v) => !v);
+            }}
+            type="link"
+          >
+            {toggleHiddenStyle ? '展开' : '收起'}
+          </Button>
+        )}
         {text}
-      </span>
-      {withHiddenStyle && (
-        <Button
-          className="toggle-hidden-btn"
-          onClick={() => {
-            setToggleHiddenStyle((v) => !v);
-          }}
-          type="link"
-        >
-          {toggleHiddenStyle ? '展开' : '收起'}
-        </Button>
-      )}
+      </div>
     </div>
   );
 };
