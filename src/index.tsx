@@ -7,13 +7,19 @@ import { ThemeConfig } from 'antd/lib';
 import reportWebVitals from './reportWebVitals';
 import Router from './router';
 import GlobalSettings from './components/global-settings';
+import { showInsetEffect } from '@/utils/antd.wave';
 import './index.scss';
 
 const App: React.FC = () => {
-  const [themeData, setTheme] = useSafeState({
-  } as ThemeConfig);
+  const [themeData, setTheme] = useSafeState({} as ThemeConfig);
   return (
-    <ConfigProvider locale={zhcn} theme={themeData}>
+    <ConfigProvider
+      locale={zhcn}
+      theme={themeData}
+      wave={{
+        showEffect: showInsetEffect,
+      }}
+    >
       <Layout>
         <Router />
         <GlobalSettings setTheme={setTheme} />
