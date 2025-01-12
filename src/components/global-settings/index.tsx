@@ -5,10 +5,21 @@ import { useMemoizedFn, useMount, useSafeState } from 'ahooks';
 
 type ThemeType = 'normal' | 'dark';
 
+const ColorMapper = {
+  bg: {
+    normal: '#fff',
+    dark: '#282c34',
+  },
+  boxShadowColor: {
+    normal: '#ddd',
+    dark: '#161616',
+  }
+};
+
 const ThemeConfigMapper = {
   normal: {
     token: {
-      colorBgLayout: '#fff',
+      colorBgLayout: ColorMapper.bg.normal,
     },
     components: {
       Typography: {
@@ -17,10 +28,15 @@ const ThemeConfigMapper = {
       },
     },
     algorithm: theme.defaultAlgorithm,
+    setCssVars: ($root: HTMLElement) => {
+      $root.style.setProperty('--bgColor', ColorMapper.bg.normal);
+      $root.style.setProperty('--boxShadowColor', ColorMapper.boxShadowColor.normal);
+      $root.setAttribute('class', `theme-normal`);
+    },
   },
   dark: {
     token: {
-      colorBgLayout: '#282c34',
+      colorBgLayout: ColorMapper.bg.dark,
     },
     components: {
       Typography: {
@@ -29,6 +45,11 @@ const ThemeConfigMapper = {
       },
     },
     algorithm: theme.darkAlgorithm,
+    setCssVars: ($root: HTMLElement) => {
+      $root.style.setProperty('--bgColor', ColorMapper.bg.dark);
+      $root.style.setProperty('--boxShadowColor', ColorMapper.boxShadowColor.dark);
+      $root.setAttribute('class', `theme-dark`);
+    },
   },
 };
 
@@ -39,27 +60,28 @@ const GlobalSettings: React.FC<{
 }> = ({ setTheme }) => {
   const [activedTheme, setActivedTheme] = useSafeState<ThemeType>(() => {
     setTheme(ThemeConfigMapper.normal);
-    rootElem?.setAttribute('class', `theme-normal`);
+    ThemeConfigMapper.normal.setCssVars(
+      document.querySelector(':root')!,
+    );
     return 'normal';
   });
   const switchTheme = useMemoizedFn(() => {
     setActivedTheme((v) => {
-      setTheme(
-        v === 'normal' ? ThemeConfigMapper.dark : ThemeConfigMapper.normal,
+      const currentThemeKey = v === 'normal' ? 'dark' : 'normal';
+      setTheme(ThemeConfigMapper[currentThemeKey]);
+      ThemeConfigMapper[currentThemeKey].setCssVars(
+        document.querySelector(':root')!,
       );
-
-      rootElem?.setAttribute(
-        'class',
-        `theme-${v === 'normal' ? 'dark' : 'normal'}`,
-      );
-      return v === 'normal' ? 'dark' : 'normal';
+      return currentThemeKey;
     });
   });
   return (
     <FloatButton
       icon={activedTheme === 'dark' ? <SunOutlined /> : <MoonOutlined />}
       onClick={switchTheme}
-      tooltip={<span>切换为{activedTheme === 'dark' ? '日间' : '夜间'}模式</span>}
+      tooltip={
+        <span>切换为{activedTheme === 'dark' ? '日间' : '夜间'}模式</span>
+      }
     ></FloatButton>
   );
 };

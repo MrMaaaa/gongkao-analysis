@@ -78,8 +78,8 @@
 .theme-normal {
   .history-score-list {
     &__item {
-      @include common-box-shadow-top(#ddd);
-      background-color: #fff
+      @include common-box-shadow-top;
+      background-color: var(--bgColor);
     }
   }
 }
@@ -88,7 +88,7 @@
   .history-score-list {
     &__item {
       @include common-box-shadow-top;
-      background-color: #282c34;
+      background-color: var(--bgColor);
     }
   }
 }

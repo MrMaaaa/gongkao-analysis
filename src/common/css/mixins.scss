@@ -69,10 +69,10 @@ $mobile-min-width: 1200px;
   flex-direction: column;
 }
 
-@mixin common-box-shadow-top($color: #161616) {
+@mixin common-box-shadow-top($color: var(--boxShadowColor)) {
   box-shadow: 0px -6px 6px 0px $color;
 }
 
-@mixin common-box-shadow-bottom($color: #161616) {
+@mixin common-box-shadow-bottom($color: var(--boxShadowColor)) {
   box-shadow: 0px 6px 6px 0px $color;
 }

@@ -3,10 +3,15 @@
   padding-top: 50px;
   .page-title {
     @include pos(fixed, 0, 0, initial, 0, 10);
+    @include common-box-shadow-bottom;
     text-align: center;
     height: 50px;
     line-height: 50px;
     font-weight: bolder;
+    background-color: var(--bgColor);
+  }
+  .section {
+    background-color: var(--bgColor);
   }
   .table-row {
     display: flex;
@@ -79,7 +84,7 @@
   }
 
   .title {
-    // @include pos(sticky, 50px, 0, initial, 0, 1);
+    @include common-box-shadow-top;
     padding: 16px;
     font-size: 20px;
     &-text {
@@ -97,32 +102,7 @@
     .card {
       border-radius: 6px;
       padding: 16px;
-      border: 1px solid #121212;
     }
-  }
-}
-
-.theme-normal {
-  .page-title {
-    @include common-box-shadow-bottom(#ddd);
-  }
-  .title {
-    @include common-box-shadow-top(#ddd);
-  }
-  .page-title, .section {
-    background-color: #fff;
-  }
-}
-
-.theme-dark {
-  .page-title {
-    @include common-box-shadow-bottom;
-  }
-  .title {
-    @include common-box-shadow-top;
-  }
-  .page-title, .section {
-    background-color: #282c34;
   }
 }
 
