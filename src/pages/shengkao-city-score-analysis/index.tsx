@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import cls from 'classnames';
 import { useParams } from 'react-router-dom';
-import { Select, InputNumber, Table, Typography } from 'antd';
+import { Select, InputNumber, Table, Typography, Modal } from 'antd';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 import { useMemoizedFn, useSafeState, useMount, useCreation } from 'ahooks';
 import { Scatter } from '@ant-design/plots';
 import IfElseComponent from '@/components/if-else-component';
@@ -73,6 +74,47 @@ interface ScoreRankInPosts {
   topRank: number;
   postInfo: ScoreFullItem[];
 }
+
+const ModalPostsInfo: React.FC<{
+  postsList: PostsItem[] | ScoreFullItem[];
+}> = ({ postsList }) => {
+  return (
+    <span
+      onClick={() => {
+        Modal.info({
+          keyboard: true,
+          maskClosable: true,
+          closable: true,
+          title: '岗位详情',
+          content: (
+            <div style={{ height: '50vh', overflow: 'scroll' }}>
+              {postsList.map((item) => (
+                <div style={{margin: '8px 0'}}>
+                  {item.post}
+                  {typeof item.score !== 'number' && (
+                    <span style={{ marginLeft: '4px', color: '#999' }}>
+                      ({item.score.min?.score}分&nbsp;-&nbsp;
+                      {item.score.max?.score}分)
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+          ),
+        });
+      }}
+    >
+      <QuestionCircleOutlined
+        style={{
+          padding: '0 2px',
+          transform: 'translateY(-6px)',
+          color: '#999',
+          cursor: 'pointer',
+        }}
+      />
+    </span>
+  );
+};
 
 const ScoreSection: React.FC<{
   score: string | number | undefined;
@@ -394,8 +436,8 @@ const App: React.FC = () => {
     xingceAmountSum: number;
     shenlunRankAmount: string;
     shenlunAmountSum: number;
-    passPostNames: string[];
-    noPassPostNames: string[];
+    passPosts: PostsItem[];
+    noPassPosts: PostsItem[];
     scoreRankInPosts: ScoreRankInPosts;
   }>({
     userScore: 0,
@@ -405,8 +447,8 @@ const App: React.FC = () => {
     xingceAmountSum: -1,
     shenlunRankAmount: '',
     shenlunAmountSum: -1,
-    passPostNames: [],
-    noPassPostNames: [],
+    passPosts: [],
+    noPassPosts: [],
     scoreRankInPosts: {
       topRank: Number.MAX_SAFE_INTEGER,
       postInfo: [],
@@ -442,8 +484,8 @@ const App: React.FC = () => {
       xingceOverSum = 0,
       shenlunOverSum = 0,
       totalPerson = list.length,
-      passPostNames: string[] = [],
-      noPassPostNames: string[] = [];
+      passPosts: PostsItem[] = [],
+      noPassPosts: PostsItem[] = [];
     list.forEach((item) => {
       if (userScore > item.score) {
         scoreOverSum += 1;
@@ -458,9 +500,9 @@ const App: React.FC = () => {
     Object.values(filterData.posts).forEach((item) => {
       if (!!item?.score?.min) {
         if (userScore > item.score.min.score) {
-          passPostNames.push(item.post);
+          passPosts.push(item);
         } else {
-          noPassPostNames.push(item.post);
+          noPassPosts.push(item);
         }
       }
     });
@@ -478,8 +520,8 @@ const App: React.FC = () => {
         totalPerson,
       ),
       shenlunAmountSum: shenlunOverSum,
-      passPostNames,
-      noPassPostNames,
+      passPosts,
+      noPassPosts,
       scoreRankInPosts,
     });
   });
@@ -894,7 +936,7 @@ const App: React.FC = () => {
             />
             ，在全部
             <ScoreSection score={postCount} suffix={'个'} noWidth />
-            岗位中排名
+            岗位中平均进面分数排名
             <ScoreSection score={postRankInfo.postRank} suffix={'名'} noWidth />
             ，位列前
             <ScoreSection
@@ -967,23 +1009,29 @@ const App: React.FC = () => {
         <Typography.Paragraph className="group">
           可以在
           <ScoreSection
-            score={userResult.passPostNames.length}
+            score={userResult.passPosts.length}
             suffix={'个'}
             noWidth
           />
-          岗位进入面试，无缘
+          岗位
+          <ModalPostsInfo postsList={userResult.passPosts} />
+          进入面试，无缘
           <ScoreSection
-            score={userResult.noPassPostNames.length}
+            score={userResult.noPassPosts.length}
             suffix={'个'}
             noWidth
           />
-          岗位，在
+          岗位
+          <ModalPostsInfo postsList={userResult.noPassPosts} />
+          ，在
           <ScoreSection
             score={userResult.scoreRankInPosts.postInfo.length}
             suffix={'个'}
             noWidth
           />
-          岗位名次最高，位列
+          岗位
+          <ModalPostsInfo postsList={userResult.scoreRankInPosts.postInfo} />
+          名次最高，位列
           <ScoreSection
             score={userResult.scoreRankInPosts.topRank}
             suffix={'名'}

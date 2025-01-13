@@ -6,28 +6,24 @@ import { useSafeState } from 'ahooks';
 
 const TextOverflow: React.FC<{
   text: string | React.ReactNode;
-}> = ({ text }) => {
+  lines?: number,
+}> = ({ text, lines = 2 }) => {
   const textRef = useRef<HTMLDivElement | null>(null);
   const [withHiddenStyle, setWithHiddenStyle] = useSafeState(false);
   const [toggleHiddenStyle, setToggleHiddenStyle] = useSafeState(false);
   useEffect(() => {
-    if (!!text && typeof text === 'string') {
-      if (textRef.current && textRef.current.getBoundingClientRect().height > 60) {
-        setWithHiddenStyle(true);
-        setToggleHiddenStyle(true);
-      }
-    } else {
+    if (!!text && textRef.current && textRef.current?.getBoundingClientRect().height > lines * 22) {
       setWithHiddenStyle(true);
       setToggleHiddenStyle(true);
     }
-  }, [text]);
+  }, [text, lines]);
   return (
     <div className="text-overflow-wrapper">
       <div
-        className={cls({
-          'text-overflow': true,
-          'text-overflow-cancel': !toggleHiddenStyle,
-        })}
+        className="text-overflow"
+        style={{
+          WebkitLineClamp: !toggleHiddenStyle ? 999 : lines,
+        }}
         ref={textRef}
       >
         {withHiddenStyle && (

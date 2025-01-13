@@ -53,7 +53,7 @@ const ThemeConfigMapper = {
   },
 };
 
-const rootElem = document.getElementById('root');
+const rootElem:HTMLElement | null = document.querySelector(':root');
 
 const GlobalSettings: React.FC<{
   setTheme: (data: ThemeConfig) => void;
@@ -70,7 +70,7 @@ const GlobalSettings: React.FC<{
       const currentThemeKey = v === 'normal' ? 'dark' : 'normal';
       setTheme(ThemeConfigMapper[currentThemeKey]);
       ThemeConfigMapper[currentThemeKey].setCssVars(
-        document.querySelector(':root')!,
+        rootElem!,
       );
       return currentThemeKey;
     });
@@ -79,9 +79,6 @@ const GlobalSettings: React.FC<{
     <FloatButton
       icon={activedTheme === 'dark' ? <SunOutlined /> : <MoonOutlined />}
       onClick={switchTheme}
-      tooltip={
-        <span>切换为{activedTheme === 'dark' ? '日间' : '夜间'}模式</span>
-      }
     ></FloatButton>
   );
 };

@@ -21,6 +21,15 @@ interface FormSubmit {
   isNotPartyMember: boolean;
 }
 
+const initialValues = {
+  workPosition: '',
+  majorType: '',
+  postCode: '',
+  departmentCode: '',
+  isRegularDegreeAndNoExp: true,
+  isNotPartyMember: false,
+};
+
 const columns: TableProps['columns'] = [
   {
     title: GuokaoPostRecruitmentItemKeyMapper.bureauName,
@@ -73,7 +82,7 @@ const columns: TableProps['columns'] = [
     align: 'center',
     render: (value, record) => (
       <div>
-        {value}
+        <TextOverflow text={value} />
         <div className="col-tips">
           {GuokaoPostRecruitmentItemKeyMapper.institutionLevel}：
           {record.institutionLevel}
@@ -314,29 +323,30 @@ const columns: TableProps['columns'] = [
         <TextOverflow
           text={
             <>
-              <div>
-                {text.includes('.') ? (
+              <span>
+                {text.includes('http') ? (
                   <a href={text} target="_blank" rel="noreferrer">
-                    <Button className="btn-link" type="link">
-                      {text}
-                    </Button>
+                    {text}
                   </a>
                 ) : (
                   <span>{text}</span>
                 )}
-              </div>
-              <div>
+              </span>
+              <br />
+              <span>
                 {GuokaoPostRecruitmentItemKeyMapper.contactWay1}：
                 {record.contactWay1}
-              </div>
-              <div>
+              </span>
+              <br />
+              <span>
                 {GuokaoPostRecruitmentItemKeyMapper.contactWay2}：
                 {record.contactWay2}
-              </div>
-              <div>
+              </span>
+              <br />
+              <span>
                 {GuokaoPostRecruitmentItemKeyMapper.contactWay3}：
                 {record.contactWay3}
-              </div>
+              </span>
             </>
           }
         />
@@ -353,14 +363,7 @@ const TableForm: React.FC<{
   return (
     <Form
       onFinish={onFinish}
-      initialValues={{
-        workPosition: '',
-        majorType: '',
-        postCode: '',
-        departmentCode: '',
-        isRegularDegreeAndNoExp: false,
-        isNotPartyMember: false,
-      }}
+      initialValues={initialValues}
       layout="inline"
       form={form}
     >
@@ -399,19 +402,7 @@ const TableForm: React.FC<{
           <Button type="primary" htmlType="submit">
             查询
           </Button>
-          <Button
-            htmlType="reset"
-            onClick={() =>
-              onFinish({
-                workPosition: '',
-                majorType: '',
-                postCode: '',
-                departmentCode: '',
-                isRegularDegreeAndNoExp: false,
-                isNotPartyMember: false,
-              })
-            }
-          >
+          <Button htmlType="reset" onClick={() => onFinish(initialValues)}>
             重置
           </Button>
         </Button.Group>
@@ -499,6 +490,9 @@ const Index: React.FC = () => {
     setList(list);
     setPostShowList(list);
     setPostShowListLength(list.length);
+    setTimeout(() => {
+      onFinish(initialValues);
+    }, 300);
   });
 
   return (

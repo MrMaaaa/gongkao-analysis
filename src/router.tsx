@@ -3,7 +3,7 @@ import Home from '@/pages/home';
 import ShengkaoPostSelect from '@/pages/shengkao-city-post-select';
 import GuokaoPostSelect from '@/pages/guokao-post-select';
 import Skly from '@/pages/shengkao-luoyang';
-import SHCityScoreAnalysisYear from '@/pages/shengkao-city-score-analysis-year';
+import SHCityScoreAnalysisYear from '@/pages/shengkao-city-score-analysis';
 import SHPostDetail from '@/pages/shengkao-post-detail';
 import TestPage from '@/pages/test';
 import NotFound from '@/pages/404';

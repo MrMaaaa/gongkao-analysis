@@ -42,12 +42,12 @@ interface PostScoreRecruitmentItem extends PostRecruitmentItem {
 const columns: TableProps['columns'] = [
   {
     title: PostRecruitmentItemKeyMapper.recruitmentInstitution,
-    width: 120,
+    width: 140,
     dataIndex: 'recruitmentInstitution',
     fixed: 'left',
     render: (value, record) => (
       <>
-        <CopyComponent value={value} />
+        <span>{value}</span>
         <a
           className="icon-pos"
           href={`https://ditu.amap.com/search?query=${value}`}
@@ -77,7 +77,7 @@ const columns: TableProps['columns'] = [
   },
   {
     title: PostRecruitmentItemKeyMapper.majorType,
-    width: 160,
+    width: 170,
     dataIndex: 'majorType',
     render: (text) => {
       return <TextOverflow text={text} />;
@@ -91,8 +91,15 @@ const columns: TableProps['columns'] = [
     render: (text, record) => {
       return (
         <>
-          <TextOverflow text={text} />
-          <TextOverflow text={'工作经历要求：' + record.workExperience} />
+          <TextOverflow
+            text={
+              <>
+                <div>{text}</div>
+                <div>{'工作经历要求：' + record.workExperience}</div>
+              </>
+            }
+            lines={3}
+          />
         </>
       );
     },
