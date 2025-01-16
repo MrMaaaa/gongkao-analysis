@@ -25,7 +25,7 @@ interface FormSubmit {
 
 const initialValues = {
   recruitmentInstitution: '',
-  majorType: '管理学+管理科学与工程+信息管理与信息系统',
+  majorType: '工学+管理学+管理科学与工程+信息管理与信息系统',
   postId: '',
   mustHavePastScore: false,
   isUndergraduate: true,
@@ -357,9 +357,9 @@ const Index: React.FC = () => {
           return values.majorType.split('+').some((el) => {
             let content = item.majorType;
             if (values.isUndergraduate && !values.isPostgraduate) {
-              content = content.match(/本科[^研究生]+/)?.[0] || content;
+              content = content.match(/本科[^研究生]+/)?.[0] || '';
             } else if (!values.isUndergraduate && values.isPostgraduate) {
-              content = content.match(/研究生.+/)?.[0] || content;
+              content = content.match(/研究生.+/)?.[0] || '';
             }
             if (/^[\u4e00-\u9fa5]+$/.test(el)) {
               return !!content.match(
