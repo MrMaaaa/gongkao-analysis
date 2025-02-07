@@ -37,6 +37,7 @@ $pageIndexNum: 7;
         animation: shiftRight 0.3s;
         animation-delay: #{0.15 * $i}s;
         animation-fill-mode: forwards;
+        animation-timing-function: ease-out;
       }
     }
   }
@@ -69,8 +70,11 @@ $pageIndexNum: 7;
   0% {
     transform: translateX(-100%);
   }
+  50% {
+    transform: translateY(-500%);
+  }
   100% {
-    transform: translateX(0);
+    transform: translate(0, 0);
   }
 }
 
