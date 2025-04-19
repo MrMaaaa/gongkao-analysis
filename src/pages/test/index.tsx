@@ -4,19 +4,22 @@ import { useMount, useSafeState } from 'ahooks';
 import { useRef, useState, useMemo, useCallback, useEffect } from 'react';
 import { ScoreItem } from '@/interface'; // 进面名单文件需要转换成的json格式类型
 import xlsx from 'xlsx';
+import { parsePDF2JSON, gongkaoluoyangFormat } from '@/utils/convert';
 import './index.scss';
 
 const Test: React.FC = () => {
   // filepath 目录在/public下
   // 获取省考岗位数据
-  const getShengkaoPostJSONFromXlsx = async (filepath = './shengkao-2025.xls') => {
+  const getShengkaoPostJSONFromXlsx = async (
+    filepath = './shengkao-2025.xls',
+  ) => {
     // 注意，这里的相对路径是相对于/public目录
     const f = await fetch(filepath);
     const ab = await f.arrayBuffer();
     const wb = xlsx.read(ab);
     let titles: Record<string, string | number> = {};
     const name2key: Record<string, string> = {
-      '专业': 'majorType',
+      专业: 'majorType',
       体检标准: 'physicalExaminationStandard',
       其他要求: 'otherRequirement',
       学位要求: 'degreeRequirement',
@@ -46,6 +49,14 @@ const Test: React.FC = () => {
       });
     }).reduce((p, c) => [...p, ...c], []);
     console.log(JSON.stringify(data));
+  };
+
+  const getShengkaoScoreFromPdf = async (filepath = './luoyang-shengkao-2025.pdf') => {
+    const f = await fetch(filepath);
+    const ab = await f.blob();
+    parsePDF2JSON(ab, (res) => {
+      gongkaoluoyangFormat(res);
+    });
   };
 
   // 获取国考岗位数据
@@ -126,9 +137,11 @@ const Test: React.FC = () => {
     });
     console.log(JSON.stringify(result));
   };
+
   useMount(() => {
     // getShengkaoPostJSONFromXlsx();
     // getGuokaoPostJSONFromXlsx();
+    getShengkaoScoreFromPdf();
   });
   const [milestone] = useSafeState([
     {

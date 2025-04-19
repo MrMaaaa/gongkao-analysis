@@ -276,10 +276,12 @@ const App: React.FC = () => {
       shenlun: 0,
       gongan: 0,
     };
+
     originList.forEach((ori) => {
       // 获取总成绩、行测、申论、公安的最高、最低分
       scoreTypeList.forEach((item) => {
         if (!obj[item] || !ori[item]) return;
+        
         sumValue[item] += ori[item];
         if (
           (!obj[item].max && ori[item]) ||
@@ -358,6 +360,7 @@ const App: React.FC = () => {
             return prev + curr[key];
           }, 0);
 
+          
           // 获取总成绩、行测、申论、公安的最高、最低分
           if (
             (!curr[key]?.max && el[key] !== 0) ||
@@ -605,6 +608,8 @@ const App: React.FC = () => {
     return !filterData.score.max?.xingce;
   }, [filterData.score.max?.xingce]);
 
+  console.log(filterData);
+
   return (
     <div className="analysis-container">
       <Typography.Title level={3} className="page-title">
@@ -670,16 +675,15 @@ const App: React.FC = () => {
                 total: filterData.score.ave,
                 name: '平均',
               },
-
               {
-                xingce: filterData.score.max?.xingce,
-                shenlun: filterData.score.max?.shenlun,
+                xingce: filterData.xingce.max?.xingce,
+                shenlun: filterData.shenlun.max?.shenlun,
                 total: filterData.score.max?.score,
                 name: '最高',
               },
               {
-                xingce: filterData.score.min?.xingce,
-                shenlun: filterData.score.min?.shenlun,
+                xingce: filterData.xingce.min?.xingce,
+                shenlun: filterData.shenlun.min?.shenlun,
                 total: filterData.score.min?.score,
                 name: '最低',
               },
