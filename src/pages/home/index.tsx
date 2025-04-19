@@ -4,8 +4,8 @@ import './index.scss';
 
 const linkList = [
   {
-    name: '省考-河南-2025-报考岗位选择',
-    to: '/sk/post/select/henan/2025',
+    name: '省考-洛阳-2024-成绩分析',
+    to: '/sk/score/analysis/luoyang/2025',
     actived: true,
   },
   {
