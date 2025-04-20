@@ -4,7 +4,7 @@ import './index.scss';
 
 const linkList = [
   {
-    name: '省考-洛阳-2024-成绩分析',
+    name: '省考-洛阳-2025-成绩分析',
     to: '/sk/score/analysis/luoyang/2025',
     actived: true,
   },
