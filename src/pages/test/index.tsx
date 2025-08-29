@@ -1,9 +1,10 @@
 // 对xls或者pdf文件格式进行转换
-import { Input } from 'antd';
+import { Input, Button, Popover } from 'antd';
 import { useMount, useSafeState } from 'ahooks';
 import { useRef, useState, useMemo, useCallback, useEffect } from 'react';
 import { ScoreItem } from '@/interface'; // 进面名单文件需要转换成的json格式类型
 import xlsx from 'xlsx';
+import TextOverflow from '@/components/text-overflow';
 import { parsePDF2JSON, gongkaoluoyangFormat } from '@/utils/convert';
 import './index.scss';
 
@@ -51,7 +52,9 @@ const Test: React.FC = () => {
     console.log(JSON.stringify(data));
   };
 
-  const getShengkaoScoreFromPdf = async (filepath = './luoyang-shengkao-2025.pdf') => {
+  const getShengkaoScoreFromPdf = async (
+    filepath = './luoyang-shengkao-2025.pdf',
+  ) => {
     const f = await fetch(filepath);
     const ab = await f.blob();
     parsePDF2JSON(ab, (res) => {
@@ -141,7 +144,7 @@ const Test: React.FC = () => {
   useMount(() => {
     // getShengkaoPostJSONFromXlsx();
     // getGuokaoPostJSONFromXlsx();
-    getShengkaoScoreFromPdf();
+    // getShengkaoScoreFromPdf();
   });
   const [milestone] = useSafeState([
     {
@@ -211,6 +214,9 @@ const Test: React.FC = () => {
     }
   }, [milestoneRef]);
 
+  const popoverTextRef = useRef<HTMLElement>(null);
+  const [isPopoverTextOver, setIsPopoverTextOver] = useSafeState(false);
+
   useEffect(() => {
     onResize();
     window.addEventListener('resize', onResize, false);
@@ -218,6 +224,22 @@ const Test: React.FC = () => {
       window.removeEventListener('resize', onResize, false);
     };
   }, [onResize]);
+
+  useEffect(() => {
+    if (popoverTextRef.current) {
+      setIsPopoverTextOver(Math.round(popoverTextRef.current.scrollWidth) > Math.round(popoverTextRef.current?.getBoundingClientRect().width));
+      console.log(
+        'popoverTextRef.current',
+        popoverTextRef.current.scrollWidth,
+        popoverTextRef.current?.getBoundingClientRect().width,
+        getComputedStyle(popoverTextRef.current).getPropertyValue(
+          'line-height',
+        ),
+      );
+    }
+  }, [popoverTextRef.current]);
+
+  const [toggleHiddenStyle, setToggleHiddenStyle] = useState(true);
 
   return (
     <div>
@@ -299,6 +321,56 @@ const Test: React.FC = () => {
           <div className="corner-mark-icon corner-mark-icon-fy">法研</div>
         </div>
       </div>
+
+      <div className={'textOverflowWrapperIOS'}>
+        <div
+          className={'textOverflowIOS' + ' raw-text-content'}
+          style={{
+            WebkitLineClamp: !toggleHiddenStyle ? 999 : 2,
+          }}
+        >
+          {navigator.userAgent +
+            (navigator.userAgent.includes('iPhone') ||
+            navigator.userAgent.includes('iPad')
+              ? 'true'
+              : 'false') +
+            '有些事情一旦到了年纪，看透了人情冷暖世态炎凉，悟透了何为人性，世界仿佛也更露骨了起来。大家为什么找詹呢？因为香蕉船兄弟声名在外十多年有些事情一旦到了年纪，看透了人情冷暖世态炎凉，悟透了何为人性，世界仿佛也更露骨了起来。大家为什么找詹呢？因为香蕉船兄弟声名在外十多年有些事情一旦到了年纪，看透了人情冷暖世态炎凉，悟透了何为人性，世界仿佛也更露骨了起来。大家为什么找詹呢？因为香蕉船兄弟声名在外十多年有些事情一旦到了年纪，看透了人情冷暖世态炎凉，悟透了何为人性，世界仿佛也更露骨了起来。大家为什么找詹呢？因为香蕉船兄弟声名在外十多年'}
+        </div>
+        {
+          <Button
+            className={'toggleHiddenBtnIOS'}
+            onClick={() => {
+              setToggleHiddenStyle((v) => !v);
+            }}
+            type="link"
+          >
+            {toggleHiddenStyle ? '展开' : '收起'}
+          </Button>
+        }
+      </div>
+
+      <div className="tag-container">
+        <div className="tag-row" id="tagRow">
+          <span className="tag-row-item">超甲级/甲级写字楼</span>
+          <span className="tag-row-item">光伏储能</span>
+          <span className="tag-row-item">整栋公寓</span>
+        </div>
+      </div>
+
+      <span
+        style={{
+          display: 'block',
+          width: '300px',
+          textOverflow: 'ellipsis',
+          overflow: 'hidden',
+          whiteSpace: 'nowrap',
+          marginTop: 50,
+        }}
+        ref={popoverTextRef}
+        title={isPopoverTextOver ? '这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字' : undefined}
+      >
+        这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字
+      </span>
     </div>
   );
 };

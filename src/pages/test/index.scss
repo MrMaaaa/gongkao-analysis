@@ -172,6 +172,25 @@
   }
 }
 
+.textOverflowWrapperIOS {
+  display: flex;
+  .textOverflowIOS {
+    font-size: 14px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-all;
+  }
+  .toggleHiddenBtnIOS {
+    align-self: end;
+    display: block;
+    height: 18px;
+    line-height: 18px;
+    padding: 0;
+  }
+}
+
 .corner-mark-wrapper {
   margin: 15px;
   border: 1px solid #fff;
@@ -204,5 +223,23 @@
         background-color: #81b337;;
       }
     }
+  }
+}
+.tag-container {
+  width: 300px;
+  background-color: lightcoral;
+}
+.tag-row {
+  &-item {
+    display: inline-block;
+    min-width: 88px;
+    height: 28px;
+    line-height: 28px;
+    margin-right: 8px;
+    padding: 0 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    text-align: center;
+    background-color: lightblue;
   }
 }
