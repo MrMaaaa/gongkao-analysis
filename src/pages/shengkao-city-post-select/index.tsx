@@ -21,6 +21,7 @@ interface FormSubmit {
   mustHavePastScore: boolean;
   isUndergraduate: boolean;
   isPostgraduate: boolean;
+  skipNoLimitMajorType: boolean;
 }
 
 const initialValues = {
@@ -30,6 +31,7 @@ const initialValues = {
   mustHavePastScore: false,
   isUndergraduate: true,
   isPostgraduate: false,
+  skipNoLimitMajorType: false,
 };
 
 interface PostScoreRecruitmentItem extends PostRecruitmentItem {
@@ -296,6 +298,9 @@ const TableForm: React.FC<{
       <Form.Item name="mustHavePastScore" valuePropName="checked">
         <Checkbox>过滤无历年进面成绩岗位</Checkbox>
       </Form.Item>
+      <Form.Item name="skipNoLimitMajorType" valuePropName="checked">
+        <Checkbox>过滤【不限专业】</Checkbox>
+      </Form.Item>
       <Form.Item className="ant-form-item__operation">
         <Button.Group>
           <Button type="primary" htmlType="submit">
@@ -351,7 +356,7 @@ const Index: React.FC = () => {
         }
       })
       .filter((item) => {
-        if (!values.majorType) {
+        if (!values.majorType || (!values.skipNoLimitMajorType && item.majorType.includes('不限专业'))) {
           return true;
         } else {
           return values.majorType.split('+').some((el) => {
