@@ -12,7 +12,7 @@ const Test: React.FC = () => {
   // filepath 目录在/public下
   // 获取省考岗位数据
   const getShengkaoPostJSONFromXlsx = async (
-    filepath = './shengkao-2025.xls',
+    filepath = './20260104161140859.xlsx',
   ) => {
     // 注意，这里的相对路径是相对于/public目录
     const f = await fetch(filepath);
@@ -25,7 +25,7 @@ const Test: React.FC = () => {
       其他要求: 'otherRequirement',
       学位要求: 'degreeRequirement',
       学历要求: 'educationRequirement',
-      工作经历: 'workExperience',
+      工作经历要求: 'workExperience',
       年龄要求: 'ageRequirement',
       招录人数: 'recruitmentNumber',
       '招录机关（单位）': 'recruitmentInstitution',
@@ -142,7 +142,7 @@ const Test: React.FC = () => {
   };
 
   useMount(() => {
-    // getShengkaoPostJSONFromXlsx();
+    getShengkaoPostJSONFromXlsx();
     // getGuokaoPostJSONFromXlsx();
     // getShengkaoScoreFromPdf();
   });
@@ -217,6 +217,20 @@ const Test: React.FC = () => {
   const popoverTextRef = useRef<HTMLElement>(null);
   const [isPopoverTextOver, setIsPopoverTextOver] = useSafeState(false);
 
+  const downloadJSON = useCallback((json = '{}', filename = 'jsonfile') => {
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${filename}.json`;
+    a.textContent = 'download';
+    document.body.appendChild(a);
+    a.click();
+    URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+  }, []);
+  
+
   useEffect(() => {
     onResize();
     window.addEventListener('resize', onResize, false);
@@ -227,7 +241,10 @@ const Test: React.FC = () => {
 
   useEffect(() => {
     if (popoverTextRef.current) {
-      setIsPopoverTextOver(Math.round(popoverTextRef.current.scrollWidth) > Math.round(popoverTextRef.current?.getBoundingClientRect().width));
+      setIsPopoverTextOver(
+        Math.round(popoverTextRef.current.scrollWidth) >
+          Math.round(popoverTextRef.current?.getBoundingClientRect().width),
+      );
       console.log(
         'popoverTextRef.current',
         popoverTextRef.current.scrollWidth,
@@ -367,7 +384,11 @@ const Test: React.FC = () => {
           marginTop: 50,
         }}
         ref={popoverTextRef}
-        title={isPopoverTextOver ? '这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字' : undefined}
+        title={
+          isPopoverTextOver
+            ? '这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字'
+            : undefined
+        }
       >
         这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字这是一段说明文字
       </span>

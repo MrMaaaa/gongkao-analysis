@@ -5,6 +5,7 @@ import GuokaoPostSelect from '@/pages/guokao-post-select';
 import Skly from '@/pages/shengkao-luoyang';
 import SHCityScoreAnalysisYear from '@/pages/shengkao-city-score-analysis';
 import SHPostDetail from '@/pages/shengkao-post-detail';
+import ExcelParse from '@/pages/excel-parse';
 import TestPage from '@/pages/test';
 import NotFound from '@/pages/404';
 
@@ -27,6 +28,7 @@ const Router = () => {
           path="/sk/post/detail/:province/:year"
           element={<SHPostDetail />}
         />
+        <Route path="/excel-parse" element={<ExcelParse />} />
         <Route path="/test" element={<TestPage />} />
         <Route path="/*" element={<NotFound />} />
       </Routes>
