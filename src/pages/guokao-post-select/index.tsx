@@ -504,7 +504,7 @@ const Index: React.FC = () => {
         className="table"
         dataSource={postShowList}
         columns={columns}
-        scroll={{ x: 800 }}
+        scroll={{ x: 800, scrollToFirstRowOnChange: true }}
         bordered
         size={'small'}
         pagination={{

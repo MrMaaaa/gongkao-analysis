@@ -465,7 +465,7 @@ const Index: React.FC = () => {
         dataSource={postShowList}
         rowKey="postId"
         columns={columns}
-        scroll={{ x: 800 }}
+        scroll={{ x: 800, scrollToFirstRowOnChange: true }}
         bordered
         size={'small'}
         pagination={{
