@@ -17,16 +17,16 @@ const linkList = [
     to: '/shengkao-luoyang',
   },
   {
+    name: '省考-洛阳-2026-成绩分析',
+    to: '/sk/score/analysis/luoyang/2026',
+  },
+  {
+    name: '省考-洛阳-2025-成绩分析',
+    to: '/sk/score/analysis/luoyang/2025',
+  },
+  {
     name: '省考-洛阳-2024-成绩分析',
     to: '/sk/score/analysis/luoyang/2024',
-  },
-  {
-    name: '省考-洛阳-2023-成绩分析',
-    to: '/sk/score/analysis/luoyang/2023',
-  },
-  {
-    name: '省考-洛阳-2022-成绩分析',
-    to: '/sk/score/analysis/luoyang/2022',
   },
   {
     name: '省考-郑州-2024-成绩分析',

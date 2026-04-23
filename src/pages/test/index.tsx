@@ -6,6 +6,7 @@ import { ScoreItem } from '@/interface'; // 进面名单文件需要转换成的
 import xlsx from 'xlsx';
 import TextOverflow from '@/components/text-overflow';
 import { parsePDF2JSON, gongkaoluoyangFormat } from '@/utils/convert';
+import { readJSON } from '@/utils';
 import './index.scss';
 
 const Test: React.FC = () => {
@@ -53,12 +54,15 @@ const Test: React.FC = () => {
   };
 
   const getShengkaoScoreFromPdf = async (
-    filepath = './luoyang-shengkao-2025.pdf',
+    filepath = './luoyang-shengkao-2026.pdf',
   ) => {
     const f = await fetch(filepath);
     const ab = await f.blob();
+    const list = readJSON<any[]>(() =>
+      require(`@/files/post-shengkao-henan-2026.json`),
+    );
     parsePDF2JSON(ab, (res) => {
-      gongkaoluoyangFormat(res);
+      gongkaoluoyangFormat(res, 3, list);
     });
   };
 
@@ -142,7 +146,7 @@ const Test: React.FC = () => {
   };
 
   useMount(() => {
-    getShengkaoPostJSONFromXlsx();
+    // getShengkaoPostJSONFromXlsx();
     // getGuokaoPostJSONFromXlsx();
     // getShengkaoScoreFromPdf();
   });

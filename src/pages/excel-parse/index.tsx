@@ -50,7 +50,7 @@ const getShengkaoScoreFromPdf = async (
   const f = await fetch(filepath);
   const ab = await f.blob();
   parsePDF2JSON(ab, (res) => {
-    gongkaoluoyangFormat(res);
+    gongkaoluoyangFormat(res, 0, []);
   });
 };
 
