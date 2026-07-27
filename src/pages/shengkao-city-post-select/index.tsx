@@ -371,7 +371,9 @@ const Index: React.FC = () => {
                 new RegExp(`[^\u4e00-\u9fa5]${el}[^\u4e00-\u9fa5]`),
               );
             } else {
-              return content.includes(el);
+              return !!content.match(
+                new RegExp(`[^0-9]${el}[^0-9]`),
+              );
             }
           });
         }
