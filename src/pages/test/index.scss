@@ -19,159 +19,6 @@
   }
 }
 
-.milestone {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  .scroll-icon {
-    order: 1;
-    cursor: pointer;
-    flex-shrink: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 35px;
-    height: 80px;
-    margin: 0 20px;
-    border-radius: 8px;
-    background-color: #f6e4cc;
-    &-head {
-      order: 0;
-    }
-    &-left {
-      display: inline-block;
-      width: 10px;
-      height: 10px;
-      border-width: 0 0 2px 2px;
-      border-style: solid;
-      border-color: #fff;
-      transform: translateX(2px) rotateZ(45deg);
-    }
-    &-right {
-      display: inline-block;
-      width: 10px;
-      height: 10px;
-      border-width: 0 0 2px 2px;
-      border-style: solid;
-      border-color: #fff;
-      transform: translateX(-2px) rotateZ(225deg);
-    }
-  }
-  &-container {
-    order: 1;
-    display: flex;
-    align-items: center;
-    width: 100%;
-    overflow-x: scroll;
-    scroll-behavior: smooth;
-    &::-webkit-scrollbar {
-      display: none;
-    }
-    &.hide-arrow {
-      & ~ .scroll-icon {
-        display: none;
-      }
-    }
-  }
-  &-item {
-    flex-shrink: 0;
-    position: relative;
-    z-index: 2;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    padding: 0 10px;
-    &::before {
-      content: '';
-      position: absolute;
-      top: 8px;
-      left: 0;
-      z-index: 1;
-      width: 50%;
-      height: 1px;
-      background-color: #797979;
-    }
-    &::after {
-      content: '';
-      position: absolute;
-      top: 8px;
-      right: 0;
-      z-index: 1;
-      width: 50%;
-      height: 1px;
-      background-color: #797979;
-    }
-  }
-  &-item:first-of-type {
-    padding-left: 0;
-    &::before {
-      display: none;
-    }
-  }
-  &-item:last-of-type {
-    padding-right: 0;
-    &::after {
-      display: none;
-    }
-  }
-  &-circle {
-    position: relative;
-    z-index: 10;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 16px;
-    height: 16px;
-    &-stage {
-      width: 15px;
-      height: 15px;
-      border-radius: 15px;
-      border: 1px solid #797979;
-      background-color: #000;
-    }
-    &-task-1-finished {
-      width: 15px;
-      height: 15px;
-      border-radius: 15px;
-      border: 1px solid #797979;
-      background-color: #fff;
-    }
-    &-task-1-unfinish {
-      width: 15px;
-      height: 15px;
-      border-radius: 15px;
-      border: 1px solid #d6a059;
-      background-color: #fff;
-    }
-    &-task-2-finished {
-      width: 7px;
-      height: 7px;
-      border-radius: 7px;
-      border: 1px solid #797979;
-      background-color: #000;
-    }
-    &-task-2-unfinish {
-      width: 7px;
-      height: 7px;
-      border-radius: 7px;
-      border: 1px solid #d6a059;
-      background-color: #e0a251;
-    }
-  }
-  &-status {
-    margin-top: 10px;
-    font-size: 14px;
-    &-bolder {
-      font-weight: bolder;
-    }
-  }
-  &-date {
-    margin-top: 10px;
-    font-size: 12px;
-  }
-}
-
 .textOverflowWrapperIOS {
   display: flex;
   .textOverflowIOS {
@@ -242,4 +89,45 @@
     text-align: center;
     background-color: lightblue;
   }
+}
+
+button {
+  width: 100%;
+  appearance: button;
+  background-color: transparent;
+  border-color: transparent;
+  padding: 12px 18px;
+  cursor: pointer;
+  color: rgb(100, 116, 139);
+  .num {
+    display: block;
+    width: 22px;
+    height: 22px;
+    line-height: 22px;
+    border-radius: 50px;
+    background-color: #f1f5f9;
+    color: #64748b;
+  }
+  &:hover:not(.active) {
+    background-color: #f8fafc;
+    transition: all .3s;
+    color: rgb(51 65 85);
+  }
+  &.active {
+    border-bottom-color: rgb(37, 99, 235);
+    color: rgb(29, 78, 216);
+    .num {
+      background-color: #fee2e2;
+      color: #dc2626;
+    }
+    & svg {
+      color: rgb(220, 38, 38);
+    }
+  }
+}
+.flex {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
 }

@@ -233,7 +233,6 @@ const Test: React.FC = () => {
     URL.revokeObjectURL(url);
     document.body.removeChild(a);
   }, []);
-  
 
   useEffect(() => {
     onResize();
@@ -268,7 +267,17 @@ const Test: React.FC = () => {
         type="file"
         placeholder="这里上传省考进面名单信息"
         onChange={(e) => {
-          console.log(e);
+          const fd = new FormData();
+          fd.append('file', e.target.files?.[0]!);
+          const req = new XMLHttpRequest();
+          req.open(
+            'post',
+            'http://39.170.31.244:8108/biz/modularityUpload/project1723274963761854/uploadLocalesToOss',
+          );
+          req.send(fd);
+          req.onload = (res) => {
+            console.log(res);
+          };
         }}
       />
       <div className="match-percent">
@@ -288,53 +297,95 @@ const Test: React.FC = () => {
           </span>
         </div>
       </div>
-      <div className="milestone">
-        <div className="milestone-container" ref={milestoneRef}>
-          {milestone.map((item, index) => {
-            return (
-              <div className="milestone-item" key={index}>
-                <div className="milestone-circle">
-                  <div
-                    className={`${
-                      !!item.stage
-                        ? 'milestone-circle-stage'
-                        : `milestone-circle-task-${item.taskType}-${
-                            item.taskStatus === 0 ? 'unfinish' : 'finished'
-                          }`
-                    }`}
-                  ></div>
-                </div>
-                <div
-                  className={`milestone-status ${
-                    !!item.stage ? 'milestone-status-bolder' : ''
-                  }`}
-                >
-                  {item.stage || item.nodeName || '-'}
-                </div>
-                <div className="milestone-date">
-                  {item.filingDate || item.initDate || '-'}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-        <div
-          className="scroll-icon scroll-icon-head"
-          onClick={() => {
-            scrollTo('left');
-          }}
+
+      <div className="flex">
+        <button
+          className="tab-btn flex"
+          data-tab-id="judicial"
         >
-          <div className="scroll-icon-left"></div>
-        </div>
-        <div
-          className="scroll-icon"
-          onClick={() => {
-            scrollTo('right');
-          }}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            data-lucide="scale"
+            aria-hidden="true"
+            className="lucide lucide-scale w-4 h-4 text-red-600"
+          >
+            <path d="M12 3v18"></path>
+            <path d="m19 8 3 8a5 5 0 0 1-6 0zV7"></path>
+            <path d="M3 7h1a17 17 0 0 0 8-2 17 17 0 0 0 8 2h1"></path>
+            <path d="m5 8 3 8a5 5 0 0 1-6 0zV7"></path>
+            <path d="M7 21h10"></path>
+          </svg>
+          <span>司法风险</span>
+          <span className="num">
+            2
+          </span>
+        </button>
+
+        <button
+          className="tab-btn flex"
+          data-widget-id="1778722256249"
+          data-tab-id="regulatory"
         >
-          <div className="scroll-icon-right"></div>
-        </div>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            data-lucide="shield-alert"
+            aria-hidden="true"
+            className="lucide lucide-shield-alert w-4 h-4 text-slate-400"
+          >
+            <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path>
+            <path d="M12 8v4"></path>
+            <path d="M12 16h.01"></path>
+          </svg>
+          <span>监管风险</span>
+          <span className="num">
+            1
+          </span>
+        </button>
+
+        <button
+          className="tab-btn flex active"
+          data-widget-id="1778722256249"
+          data-tab-id="operational"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            data-lucide="activity"
+            aria-hidden="true"
+            className="lucide lucide-activity w-4 h-4 text-slate-400"
+          >
+            <path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2"></path>
+          </svg>
+          <span>经营风险</span>
+          <span className="num">
+            1
+          </span>
+        </button>
       </div>
+
       <div className="corner-mark-wrapper">
         <div className="corner-mark">
           主审案号
