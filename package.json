@@ -35,6 +35,9 @@
     "test": "craco test",
     "eject": "craco eject"
   },
+  "engines": {
+    "canvas": "^3.2.3"
+  },
   "eslintConfig": {
     "extends": [
       "react-app",
