@@ -1489,7 +1489,7 @@
 
 "@craco/craco@^7.1.0":
   version "7.1.0"
-  resolved "https://registry.npmmirror.com/@craco/craco/-/craco-7.1.0.tgz"
+  resolved "https://registry.npmmirror.com/@craco/craco/-/craco-7.1.0.tgz#12bd394c7f0334e214302e4d35a1768f68042fbb"
   integrity sha512-oRAcPIKYrfPXp9rSzlsDNeOaVtDiKhoyqSXUoqiK24jCkHr4T8m/a2f74yXIzCbIheoUWDOIfWZyRgFgT+cpqA==
   dependencies:
     autoprefixer "^10.4.12"
