@@ -6,13 +6,17 @@ import { useSafeState } from 'ahooks';
 
 const TextOverflow: React.FC<{
   text: string | React.ReactNode;
-  lines?: number,
+  lines?: number;
 }> = ({ text, lines = 2 }) => {
   const textRef = useRef<HTMLDivElement | null>(null);
   const [withHiddenStyle, setWithHiddenStyle] = useSafeState(false);
   const [toggleHiddenStyle, setToggleHiddenStyle] = useSafeState(false);
   useEffect(() => {
-    if (!!text && textRef.current && textRef.current?.getBoundingClientRect().height > lines * 22) {
+    if (
+      !!text &&
+      textRef.current &&
+      textRef.current?.getBoundingClientRect().height > lines * 22
+    ) {
       setWithHiddenStyle(true);
       setToggleHiddenStyle(true);
     }
@@ -26,19 +30,19 @@ const TextOverflow: React.FC<{
         }}
         ref={textRef}
       >
-        {withHiddenStyle && (
-          <Button
-            className="toggle-hidden-btn"
-            onClick={() => {
-              setToggleHiddenStyle((v) => !v);
-            }}
-            type="link"
-          >
-            {toggleHiddenStyle ? '展开' : '收起'}
-          </Button>
-        )}
         {text}
       </div>
+      {withHiddenStyle && (
+        <Button
+          className="toggle-hidden-btn"
+          onClick={() => {
+            setToggleHiddenStyle((v) => !v);
+          }}
+          type="link"
+        >
+          {toggleHiddenStyle ? '展开' : '收起'}
+        </Button>
+      )}
     </div>
   );
 };

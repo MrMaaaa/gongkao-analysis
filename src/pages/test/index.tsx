@@ -13,7 +13,7 @@ const Test: React.FC = () => {
   // filepath 目录在/public下
   // 获取省考岗位数据
   const getShengkaoPostJSONFromXlsx = async (
-    filepath = './20260104161140859.xlsx',
+    filepath = './2027.xls',
   ) => {
     // 注意，这里的相对路径是相对于/public目录
     const f = await fetch(filepath);
@@ -67,7 +67,7 @@ const Test: React.FC = () => {
   };
 
   // 获取国考岗位数据
-  const getGuokaoPostJSONFromXlsx = async (filepath = './guokao-2025.xls') => {
+  const getGuokaoPostJSONFromXlsx = async (filepath = './2027.xls') => {
     // 注意，这里的相对路径是相对于/public目录
     const f = await fetch(filepath);
     const ab = await f.arrayBuffer();

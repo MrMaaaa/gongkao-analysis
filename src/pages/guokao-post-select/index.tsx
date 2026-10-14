@@ -371,7 +371,19 @@ const TableForm: React.FC<{
         <SubjectPicker />
       </Form.Item> */}
       <Form.Item name="majorType" className="ant-form-item__major-type">
-        <Input placeholder="专业名称或代码，多个用+连接" allowClear />
+        <Input
+          placeholder="专业名称或代码，多个用+连接"
+          allowClear
+          addonAfter={
+            <a
+              href="http://www.hnrsks.com/sitesources/hnsrskszx/upload/202501/20250104093021921.pdf"
+              target="_blank"
+              rel="noreferrer"
+            >
+              本科专业目录
+            </a>
+          }
+        />
       </Form.Item>
       {/* <Form.Item
         name="bureauName"

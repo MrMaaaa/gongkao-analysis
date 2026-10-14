@@ -4,13 +4,9 @@ import './index.scss';
 
 const linkList = [
   {
-    name: '省考-河南-2026-报考岗位选择',
-    to: '/sk/post/select/henan/2026',
+    name: '国考-2027-报考岗位选择',
+    to: '/gk/post/select/2027',
     actived: true,
-  },
-  {
-    name: '国考-2025-报考岗位选择',
-    to: '/gk/post/select/2025',
   },
   {
     name: '省考-洛阳-历年数据分析',
