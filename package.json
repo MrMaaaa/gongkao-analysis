@@ -17,7 +17,6 @@
     "antd": "^5.16.5",
     "classnames": "^2.5.1",
     "craco-sass-resources-loader": "^1.1.0",
-    "pdfjs-dist": "^4.1.392",
     "query-string": "^9.0.0",
     "react": "^18.2.0",
     "react-copy-to-clipboard": "^5.1.0",
@@ -54,7 +53,8 @@
     ]
   },
   "devDependencies": {
-    "@craco/craco": "^7.1.0"
+    "@craco/craco": "^7.1.0",
+    "pdfjs-dist": "^4.1.392"
   },
   "homepage": "."
 }
