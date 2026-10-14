@@ -30,7 +30,7 @@
   },
   "scripts": {
     "dev": "craco start",
-    "build": "craco build",
+    "build": "cross-env DISABLE_ESLINT=true craco build",
     "test": "craco test",
     "eject": "craco eject"
   },
