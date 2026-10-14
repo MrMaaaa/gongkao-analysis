@@ -1,7 +1,8 @@
-import * as pdfjsLib from 'pdfjs-dist';
-import { PDFDocumentProxy } from 'pdfjs-dist';
-pdfjsLib.GlobalWorkerOptions.workerSrc =
-  'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.1.392/pdf.worker.mjs';
+// import * as pdfjsLib from 'pdfjs-dist';
+// import { PDFDocumentProxy } from 'pdfjs-dist';
+interface PDFDocumentProxy {};
+// pdfjsLib.GlobalWorkerOptions.workerSrc =
+  // 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.1.392/pdf.worker.mjs';
 
 export const parsePDF2JSON = (
   file: Blob,
@@ -9,13 +10,13 @@ export const parsePDF2JSON = (
 ) => {
   const reader = new FileReader();
 
-  reader.readAsArrayBuffer(file);
-  reader.addEventListener('loadend', (e) => {
-    const loadingTask = pdfjsLib.getDocument(e.target?.result as ArrayBuffer);
-    loadingTask.promise.then(async (doc) => {
-      fn(doc);
-    });
-  });
+  // reader.readAsArrayBuffer(file);
+  // reader.addEventListener('loadend', (e) => {
+  //   const loadingTask = pdfjsLib.getDocument(e.target?.result as ArrayBuffer);
+  //   loadingTask.promise.then(async (doc) => {
+  //     fn(doc);
+  //   });
+  // });
 };
 
 const isTransform4BetweenPosition = (transform4: number) => {
@@ -40,78 +41,78 @@ const name2Key: Record<string, string> = {
 export const gongkaoluoyangFormat = async (doc: PDFDocumentProxy, sliceContentItemsCount: number, postList: any[]) => {
   let titles: string[] = [];
   let pdfTexts: any[] = [];
-  for (let pageNum = 1; pageNum <= doc.numPages; pageNum++) {
-    const page = await doc.getPage(pageNum);
-    const content = await page.getTextContent();
-    let isMergePrev = false;
-    const oriData: any[] = content.items
-      .filter((el: any) => el.str !== '' && el.str !== ' ')
-      // .slice(sliceContentItemsCount ?? 0)
-      // .reduce((prev: any[], curr: any) => {
-      //   if (isTransform4BetweenPosition(curr.transform[4])) {
-      //     if (
-      //       isMergePrev &&
-      //       isTransform4BetweenPosition(prev[prev.length - 1].transform[4])
-      //     ) {
-      //       const last = prev.splice(-1)[0];
-      //       curr.str = last.str + curr.str;
-      //       return [...prev, curr];
-      //     } else {
-      //       isMergePrev = true;
-      //     }
-      //   }
-      //   return [...prev, curr];
-      // }, [])
-      .map((el: any) => el.str);
+  // for (let pageNum = 1; pageNum <= doc.numPages; pageNum++) {
+  //   const page = await doc.getPage(pageNum);
+  //   const content = await page.getTextContent();
+  //   let isMergePrev = false;
+  //   const oriData: any[] = content.items
+  //     .filter((el: any) => el.str !== '' && el.str !== ' ')
+  //     // .slice(sliceContentItemsCount ?? 0)
+  //     // .reduce((prev: any[], curr: any) => {
+  //     //   if (isTransform4BetweenPosition(curr.transform[4])) {
+  //     //     if (
+  //     //       isMergePrev &&
+  //     //       isTransform4BetweenPosition(prev[prev.length - 1].transform[4])
+  //     //     ) {
+  //     //       const last = prev.splice(-1)[0];
+  //     //       curr.str = last.str + curr.str;
+  //     //       return [...prev, curr];
+  //     //     } else {
+  //     //       isMergePrev = true;
+  //     //     }
+  //     //   }
+  //     //   return [...prev, curr];
+  //     // }, [])
+  //     .map((el: any) => el.str);
 
-    let data = null;
+  //   let data = null;
 
-    // 如果第一页
-    if (pageNum === 1) {
-      // 删除前1个字符，后3个字符
-      // data = oriData.slice(11).slice(0, -3);
-      data = oriData.slice(9).slice(0, -3);
-      // 取第5-15个内容作为json字段
-      // titles = oriData.slice(1, 11);
-      titles = oriData.slice(5, 9);
-    } else {
-      // 如果不是第一页
-      // 需要将前n（1、2、3...）个字符合并（是序号，只有每页第一行会分成多个字符）
-      let numberIndex = 0;
-      for (let oi = 1; oi < oriData.length - 1; oi++) {
-        if (/[0-9]+/.test(oriData[oi])) {
-          numberIndex = oi;
-        } else {
-          break;
-        }
-      }
-      // data = oriData.slice(numberIndex).slice(0, -3);
-      data = oriData.slice(4).slice(0, -3);
-    }
+  //   // 如果第一页
+  //   if (pageNum === 1) {
+  //     // 删除前1个字符，后3个字符
+  //     // data = oriData.slice(11).slice(0, -3);
+  //     data = oriData.slice(9).slice(0, -3);
+  //     // 取第5-15个内容作为json字段
+  //     // titles = oriData.slice(1, 11);
+  //     titles = oriData.slice(5, 9);
+  //   } else {
+  //     // 如果不是第一页
+  //     // 需要将前n（1、2、3...）个字符合并（是序号，只有每页第一行会分成多个字符）
+  //     let numberIndex = 0;
+  //     for (let oi = 1; oi < oriData.length - 1; oi++) {
+  //       if (/[0-9]+/.test(oriData[oi])) {
+  //         numberIndex = oi;
+  //       } else {
+  //         break;
+  //       }
+  //     }
+  //     // data = oriData.slice(numberIndex).slice(0, -3);
+  //     data = oriData.slice(4).slice(0, -3);
+  //   }
 
-    pdfTexts = [...pdfTexts, ...data];
-  }
-  const formatData: any = [];
-  for (let index = 0; index < pdfTexts.length; index += 4) {
-    const data: any[] = pdfTexts.slice(index, index + 4);
-    formatData.push(
-      data.reduce((prev, curr, currIndex) => {
-        const obj = {
-          ...prev,
-          [name2Key[titles[currIndex] as any]]: curr,
-        };
+  //   pdfTexts = [...pdfTexts, ...data];
+  // }
+  // const formatData: any = [];
+  // for (let index = 0; index < pdfTexts.length; index += 4) {
+  //   const data: any[] = pdfTexts.slice(index, index + 4);
+  //   formatData.push(
+  //     data.reduce((prev, curr, currIndex) => {
+  //       const obj = {
+  //         ...prev,
+  //         [name2Key[titles[currIndex] as any]]: curr,
+  //       };
 
-        obj.score = Number(obj.score);
-        obj.xingce = Number(obj.xingce);
-        obj.shenlun = Number(obj.shenlun);
-        obj.gongan = Number(obj.gongan);
-        if (!obj.post && postList.length > 0) {
-          obj.post = postList.find(p => String(p.postId) === obj.postId)?.recruitmentInstitution;
-          console.log('obj.post', obj.post);
-        }
-        return obj;
-      }, {}),
-    );
-  }
-  console.log('formatData', JSON.stringify(formatData));
+  //       obj.score = Number(obj.score);
+  //       obj.xingce = Number(obj.xingce);
+  //       obj.shenlun = Number(obj.shenlun);
+  //       obj.gongan = Number(obj.gongan);
+  //       if (!obj.post && postList.length > 0) {
+  //         obj.post = postList.find(p => String(p.postId) === obj.postId)?.recruitmentInstitution;
+  //         console.log('obj.post', obj.post);
+  //       }
+  //       return obj;
+  //     }, {}),
+  //   );
+  // }
+  // console.log('formatData', JSON.stringify(formatData));
 };
