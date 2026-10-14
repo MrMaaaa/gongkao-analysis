@@ -53,8 +53,7 @@
     ]
   },
   "devDependencies": {
-    "@craco/craco": "^7.1.0",
-    "pdfjs-dist": "^4.1.392"
+    "@craco/craco": "^7.1.0"
   },
   "homepage": "."
 }
